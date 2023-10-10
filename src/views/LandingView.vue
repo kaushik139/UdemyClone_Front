@@ -1,12 +1,12 @@
 <template>
-<div class="container mt-2">
-  <div class="row">
-    <div class="col-md-12">
-      Home Page
-      <p>{{ a }}</p>
-    </div>
-  </div>
-</div>
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+      {{ a }}
+      <p>Landing Page</p>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -15,7 +15,7 @@ import { defineComponent } from 'vue';
 // Components
 
 export default defineComponent({
-  name: 'HomeView',
+  name: 'LandingView',
   components: {
     
   },
@@ -24,6 +24,5 @@ export default defineComponent({
       a: 'data'
     }
   }
-
 });
 </script>
