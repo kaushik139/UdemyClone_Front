@@ -1,8 +1,11 @@
 <template>
-  <div class="container mt-2" style="text-align: center">
+  <div class="contain" style="text-align: center">
+
+    <nav-bar class="navi"></nav-bar>
+   <!-- user: {{ userInitial }} -->
     <div class="row">
-      <div class="col-md-12">
-        Auth Page
+      <div class="col-md-12 mt-16">
+        <!-- Auth Page -->
         <!-- <p>{{ loader }}</p> -->
 
         <component :is="currentComp"></component>
@@ -19,6 +22,7 @@ import { defineComponent } from "vue";
 import login from "../components/logIn.vue";
 import signup from "../components/signUp.vue";
 import chalk from 'chalk';
+import NavBar from "../components/navBar.vue";
 
 
 export default defineComponent({
@@ -26,11 +30,12 @@ export default defineComponent({
   components: {
     signup,
     login,
+    NavBar,
   },
   computed: {
-    // loader() {
-    //   return window.location.href.slice(-1);
-    // },
+    userInitial() {
+      return this.$store.state.User[0];
+    },
     //     currentComp() {
     //   return this.loader === "l" ? login : signup;
     // }
@@ -44,10 +49,10 @@ export default defineComponent({
   },
   methods: {
     test() {
-      console.log(chalk.greenBright('http://localhost:3000/${this.getuser}/newSignup'));
-      console.log(chalk.blue('This text is blue.'));
-      console.log(chalk.red.inverse('This text has a red background.'));
-      console.log(chalk.yellow.bgRed('hello'));
+      // console.log(chalk.greenBright('http://localhost:3000/${this.getuser}/newSignup'));
+      // console.log(chalk.blue('This text is blue.'));
+      // console.log(chalk.red.inverse('This text has a red background.'));
+      console.log(chalk.yellow.bgRed('userInitial: '+this.userInitial));
 
 
     },
@@ -68,6 +73,9 @@ export default defineComponent({
 <style>
 a{
   text-decoration: none;
+}
+.contain{
+  margin-top: 0px;
 }
 </style>
     

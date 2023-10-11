@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import studentHomeView from '../views/student/HomeView.vue'
 
 const routes = [
   {
-    path: '/home',
-    name: 'home',
-    component: HomeView
+    path: '',
+    name: '',
+    component: () => import('../views/LandingView.vue')
   },
   {
     path: '/',
@@ -13,13 +13,28 @@ const routes = [
     component: () => import('../views/LandingView.vue')
   },
   {
-    path: '/login',
-    name: 'landingPage',
-    component: () => import('../views/AuthView.vue')
+    path: '/sHome',
+    name: 'StudentHome',
+    component: studentHomeView
+  },
+  {
+    path: '/iHome',
+    name: 'InstructorHome',
+    component: () => import('../views/instructor/HomeView.vue')
+  },
+  {
+    path: '/create',
+    name: 'createCourse',
+    component: () => import('../views/instructor/CreateCourse.vue')
+  },
+  {
+    path: '/iMessage',
+    name: 'InstructorMessages',
+    component: () => import('../views/instructor/Messages.vue')
   },
   {
     path: '/auth/:id',
-    name: 'landingPage',
+    name: 'authPage',
     component: () => import('../views/AuthView.vue')
   },
 ]

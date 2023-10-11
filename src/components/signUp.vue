@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="500" class="mx-auto p-3" style="text-align: center;">
+  <v-sheet width="500" class="mx-auto p-3" style="text-align: center;margin-top: -30px;">
 
     <v-form fast-fail @submit.prevent>
       <div :class="[contain]">
@@ -31,7 +31,7 @@
       <v-btn block class="mt-2" :class="[bttn]" @click="clearForm">Clear</v-btn>
 
       <br>
-      <p>already registered? 
+      <p>Already registered? 
         <a href="#"><router-link to="/auth/l" class="nav-link">Login ></router-link></a>
       </p>
 
@@ -91,11 +91,11 @@ export default {
 
   methods: {
     async submit() {
-      const data = {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      }
+      // const data = {
+      //   name: this.name,
+      //   email: this.email,
+      //   password: this.password
+      // }
       if (
         !/\d/.test(name) &&
         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
@@ -120,7 +120,6 @@ export default {
       else {
         alert('Bad Request! Try again')
       }
-      // console.log(this.nameRules.target);
     },
 
 
@@ -137,8 +136,6 @@ export default {
 .containStu{
   padding: 30px 50px;
   border-radius: 10px;
-  /* min-width: 50%; */
-  /* min-height: 420px; */
   box-shadow: 3px 3px 8px -3px purple;
 }
 .containIns{

@@ -1,6 +1,6 @@
 <template>
   <!-- <div class="container" style="width: 100vw; margin: 0px; padding: 0px;"> -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="[navbar]" style="width: 99vw">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="[navbar]">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><span :class="[logo]">U</span>DEMY</a>
       <button

@@ -7,13 +7,16 @@
       :class="[contain]"
     >
       <!-- elevation="8" -->
-      <h3 class="headdingPurple">Login<span :style="{color: symbol}">!</span></h3>
+      <h3 class="headdingPurple">
+        Login<span :style="{ color: symbol }">!</span>
+      </h3>
 
       <v-text-field
         density="compact"
         placeholder="Email address"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
+        v-model="email"
       ></v-text-field>
 
       <div
@@ -39,6 +42,7 @@
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
         @click:append-inner="visible = !visible"
+        v-model="password"
       ></v-text-field>
 
       <!-- <v-card
@@ -54,6 +58,7 @@
       <v-btn block type="submit" :class="[bttn]" @click="login"> Log In </v-btn>
 
       <v-card-text class="text-center">
+        Not a user?
         <a
           class="text-blue text-decoration-none"
           href="#"
@@ -63,6 +68,8 @@
           <router-link to="/auth/s">Sign up now</router-link>
           <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
+        <br>
+        <span class="errMsg" v-show="errMessageVisible">{{ errMessage }}</span>
       </v-card-text>
     </v-card>
   </div>
@@ -70,8 +77,9 @@
 
 
   <script>
+import axios from "axios";
 import { mapGetters } from "vuex";
-import chalk from 'chalk';
+import chalk from "chalk";
 
 export default {
   computed: {
@@ -83,18 +91,57 @@ export default {
     },
     symbol() {
       return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+          },
+          userInitial() {
+        return this.getUser[0]
     },
     ...mapGetters(["getUser"]),
   },
   data: () => ({
-    visible: false,
-      }),
+        visible: false,
+        email: '',
+        password: '',
+        errMessage: '',
+        errMessageVisible : false,
+  }),
 
-      methods: {
-            login() {
-            console.log(chalk.red('login'));
-        }
-      },
+  methods: {
+    async login() {
+            console.log(chalk.red("login triggered:->"));
+            if (this.email && this.password) {
+                console.log('in');
+                try {
+                    const response = await axios.post(
+                        `http://localhost:3000/${this.getUser}/login`,
+                        {
+                            email: this.email,
+                            password: this.password,
+                        }
+                    )
+                    if (response) {
+                        localStorage.setItem('token', response.data.token);
+                        localStorage.setItem('email', this.email);
+                        // localStorage.setItem('token', response.data.token);
+                        // console.log('response: ' + response.data.token);
+                        this.$router.push(`/${this.userInitial}home`);
+                    }
+                }
+                catch (error) {
+                    this.showError(error.response.data.message);
+                    console.log(chalk.red(error.response.data.message));
+                }
+            }
+            else this.showError('All fields required!');
+        },
+
+        showError(val) {
+            this.errMessage = val;
+          this.errMessageVisible = true;
+              setTimeout(() => {
+                  this.errMessageVisible = false;
+              }, 2000);
+    }
+  },
 };
 </script>
 
@@ -128,5 +175,10 @@ export default {
 .bttnIns:hover {
   color: white;
   background: rgb(131, 0, 0);
+}
+
+.errMsg{
+    color: red;
+    font-size: 15px;
 }
 </style>
