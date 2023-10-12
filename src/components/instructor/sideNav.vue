@@ -1,7 +1,8 @@
 <template>
-    <v-card>
+    <v-card class="mainCard">
       <v-layout>
         <v-navigation-drawer
+        style="color:rgb(131, 0, 0);"
           expand-on-hover
           rail
           app permanent
@@ -45,3 +46,8 @@
   };
   </script>
   
+  <style scoped>
+  .mainCard{
+    z-index: 2;
+  }
+  </style>
