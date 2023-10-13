@@ -22,7 +22,6 @@
             
                 <component :is="displayComponent" @changeComp="recievedComponent"></component>
 
-
               </v-col
             >
           </v-row>
@@ -41,6 +40,7 @@ import SideNav from "../../components/instructor/sideNav.vue";
 import NavBar from "../../components/navBar.vue";
 import PlanCourse from "../../components/instructor/createCourse/planCourse.vue";
 import LandingPage from "../../components/instructor/createCourse/landingPage.vue";
+import PricingPage from "../../components/instructor/createCourse/pricingPage.vue";
 
 
 // Components
@@ -54,7 +54,8 @@ export default defineComponent({
     CreatePage,
     OtherPage,
     PlanCourse,
-    LandingPage
+    LandingPage,
+    PricingPage
   },
   data() {
        return {

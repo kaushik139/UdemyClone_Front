@@ -16,11 +16,11 @@
         </v-window-item>
 
         <v-window-item value="video">
-          Two
+          <video-page></video-page>
         </v-window-item>
 
         <v-window-item value="exercise">
-          Three
+          <exercises-page></exercises-page>
         </v-window-item>
       </v-window>
     </v-card-text>
@@ -29,11 +29,13 @@
 
   
   <script>
+import ExercisesPage from './exercisesPage.vue'
 import sectionPage from './sectionPage.vue'
+import VideoPage from './videoPage.vue'
   
   export default {
-  components: { sectionPage },
-    name: 'Create Page',
+  components: { sectionPage, VideoPage, ExercisesPage },
+    name: 'CreatePage',
   
     data: () => ({
       tab: null

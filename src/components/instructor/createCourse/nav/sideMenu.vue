@@ -12,12 +12,12 @@
           prepend-icon="mdi-page-next"
           title="Landing Page"
           value="landingPage"
-          @click="currentComponent('OtherPage')"
+          @click="currentComponent('LandingPage')"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-folder-plus-outline"
           title="Create Content"
-          value="createContent"
+          value="CreatePage"
           @click="currentComponent('CreatePage')"
         >
         </v-list-item>
@@ -25,7 +25,8 @@
           prepend-icon="mdi-currency-inr"
           title="Pricing"
           value="pricing"
-          @click="currentComponent('OtherPage')"
+          :active = false
+          @click="currentComponent('PricingPage')"
         ></v-list-item>
         <v-list-item
           prepend-icon="mdi-bullhorn"
@@ -40,6 +41,8 @@
           @click="currentComponent('OtherPage')"
         ></v-list-item>
       </v-list>
+
+      <!-- <button class="btn btn-primary" @click="test">Test</button> -->
     </v-card>
   </v-card>
 </template>
@@ -51,11 +54,15 @@ export default {
     currentComp: String,
   },
   data: () => ({
-    return: {},
+    activeTab: "publishCourse",
   }),
   methods: {
     currentComponent(val) {
       this.$emit("currentComp", val);
+    },
+    test() {
+      this.activeTab = "landingPage";
+      console.log("test");
     },
   },
 };
