@@ -2,8 +2,9 @@
   <v-container>
     <v-row class="text-center">
       <v-col cols="12">
-      {{ a }}
-      <p>Landing Page</p>
+      <h4>This is Landing Page</h4>
+      
+      <v-btn class="bg-dark text-white mt-5" @click="this.$router.push('/auth/l')">Get Started</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -21,7 +22,7 @@ export default defineComponent({
   },
   data() {
     return {
-      a: 'data'
+
     }
   }
 });

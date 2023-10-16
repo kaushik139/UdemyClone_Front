@@ -1,6 +1,9 @@
 <template>
   <!-- <div class="container" style="width: 100vw; margin: 0px; padding: 0px;"> -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="[navbar]">
+
+    <div class="btn btn" @click="test">Test</div>
+
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><span :class="[logo]">U</span>DEMY</a>
       <button
@@ -25,6 +28,10 @@
           </li>
           <li class="nav-item">
             <router-link to="/auth/s" class="nav-link">Sign Up</router-link>
+            <!-- <a class="nav-link" href="#">Sign Up</a> -->
+          </li>
+          <li v-if="showTeachBtn === true" class="nav-item" @click="switchToTeacher">
+            <router-link to="/auth/s" class="nav-link">Teach</router-link>
             <!-- <a class="nav-link" href="#">Sign Up</a> -->
           </li>
           <li class="nav-item dropdown">
@@ -78,12 +85,34 @@ export default {
             },
             logo() {
                 return this.getUser === 'instructors' ? 'logoIns' : 'logoStu';
+          },
+          showTeachBtn() {
+            //   if (this.getUser === 'student') {
+            //     console.log("this.getUser === 'student'");
+            //       if (this['auth/tokenGetter'] === '') {
+            //         console.log("this['auth/tokenGetter'] === ''");
+            //         return true;
+            //     }
+            //   }
+            // else return false;
+
+           return this.getUser === 'students' ? this['auth/tokenGetter'] === '' ? true : false : false;
+
             },
-    ...mapGetters(['getUser'])
+    ...mapGetters(['getUser', 'auth/tokenGetter'])
   },
   data: () => ({
-    return: {},
+
   }),
+
+    methods: {
+        switchToTeacher() {
+        this.$store.commit('changeUser', 'instructors')
+      },
+        test() {
+        console.log(this['auth/tokenGetter']);
+      }
+  }
 };
 </script>
 

@@ -1,9 +1,18 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
+import authModule from "./modules/authModule/index"
+import InstructorModule from './modules/InstructorModule/index';
 
 export default createStore({
   state: () => ({
-    User: 'instructors'
+    User: 'students'
   }),
+
+  modules: {
+    auth: authModule,
+    instructor: InstructorModule,
+
+
+  },
 
   getters: {
     getUser: (state) => state.User
@@ -12,7 +21,8 @@ export default createStore({
   mutations: {
     changeUser(state, val) {
       state.User = val;
-    }
+    },
+
   },
 
   actions: {
@@ -21,5 +31,4 @@ export default createStore({
     },
   },
 
-  modules: {}
 })

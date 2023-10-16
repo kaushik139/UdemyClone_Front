@@ -28,17 +28,17 @@
           :active = false
           @click="currentComponent('PricingPage')"
         ></v-list-item>
-        <v-list-item
+        <!-- <v-list-item
           prepend-icon="mdi-bullhorn"
           title="Promotions"
           value="promotions"
           @click="currentComponent('OtherPage')"
-        ></v-list-item>
+        ></v-list-item> -->
         <v-list-item
           prepend-icon="mdi-book-education"
           title="Publish Course"
           value="publishCourse"
-          @click="currentComponent('OtherPage')"
+          @click="currentComponent('PublishPage')"
         ></v-list-item>
       </v-list>
 

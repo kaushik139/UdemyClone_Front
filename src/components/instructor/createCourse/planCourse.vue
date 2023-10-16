@@ -32,6 +32,8 @@ export default {
             submit() {
                 if (this.planData.name !== '' && this.planData.miniDesc !== '' && this.planData.category !== '') {
                     console.log(this.planData);
+
+                    
                     alert('Course Planning Completed!')
                     this.$emit('changeComp', 'LandingPage')
                 }

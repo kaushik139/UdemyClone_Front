@@ -95,7 +95,7 @@ export default {
           userInitial() {
         return this.getUser[0]
     },
-    ...mapGetters(["getUser"]),
+    ...mapGetters(["getUser", 'auth/loginErrorGetter', 'auth/routePathGetter']),
   },
   data: () => ({
         visible: false,
@@ -108,38 +108,50 @@ export default {
   methods: {
     async login() {
             console.log(chalk.red("login triggered:->"));
-            if (this.email && this.password) {
-                console.log('in');
-                try {
-                    const response = await axios.post(
-                        `http://localhost:3000/${this.getUser}/login`,
-                        {
-                            email: this.email,
-                            password: this.password,
-                        }
-                    )
-                    if (response) {
-                        localStorage.setItem('token', response.data.token);
-                        localStorage.setItem('email', this.email);
-                        // localStorage.setItem('token', response.data.token);
-                        // console.log('response: ' + response.data.token);
-                        this.$router.push(`/${this.userInitial}home`);
-                    }
-                }
-                catch (error) {
-                    this.showError(error.response.data.message);
-                    console.log(chalk.red(error.response.data.message));
-                }
+        if (this.email && this.password) {
+          const info = {
+            email: this.email,
+            password: this.password
+          }
+          await this.$store.dispatch('auth/login', { value: info });
+          this.showError(this["auth/loginErrorGetter"]);
+
+          if (this["auth/routePathGetter"] !== null) {
+                console.log("from .vue::::: " + this['auth/routePathGetter']);
+              this.$router.push(`/${this["auth/routePathGetter"]}`);
+            }
+
+
+           
+                // try {
+                //     const response = await axios.post(
+                //         `http://localhost:3000/${this.getUser}/login`,
+                //         {
+                //             email: this.email,
+                //             password: this.password,
+                //         }
+                //     )
+                //     if (response.data.token) {
+                //         localStorage.setItem('token', response.data.token);
+                //         localStorage.setItem('email', this.email);
+                //         this.$router.push(`/${this.userInitial}home`);
+                //     }
+                // }
+                // catch (error) {
+                //     this.showError(error.response.data.message);
+                //     console.log(chalk.red(error.response.data.message));
+            // }
+      
             }
             else this.showError('All fields required!');
         },
 
-        showError(val) {
+      showError(val) {
             this.errMessage = val;
           this.errMessageVisible = true;
               setTimeout(() => {
                   this.errMessageVisible = false;
-              }, 2000);
+              }, 2500);
     }
   },
 };
