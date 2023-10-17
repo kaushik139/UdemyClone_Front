@@ -65,15 +65,20 @@ export default {
   computed: {
     bttn() {
       return this.getUser === "instructors" ? "bttnIns" : "bttnStu";
+      // return localStorage.getItem("role") === "instructors" ? "bttnIns" : "bttnStu";
     },
     contain() {
       return this.getUser === "instructors" ? "containIns" : "containStu";
+      // return localStorage.getItem("role") === "instructors" ? "containIns" : "containStu";
+
     },
     symbol() {
       return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+      // return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+
     },
 
-    ...mapGetters(["getUser", 'auth/routeToLoginGetter']),
+    ...mapGetters(["getUser", "auth/routeToLoginGetter"]),
   },
 
   data: () => ({
@@ -116,9 +121,10 @@ export default {
           password: this.password,
         };
 
-       await this.$store.dispatch("auth/signUp", { value: user });
-        if (this["auth/routeToLoginGetter"] === true) await this.$router.push('/auth/l');
-            
+        await this.$store.dispatch("auth/signUp", { value: user });
+        if (this["auth/routeToLoginGetter"] === true)
+          await this.$router.push("/auth/l");
+
         // console.log(chalk.red.bgYellowBright(`http://localhost:3000/${this.getUser}/newSignup`));
         // await axios
         //   .post(`http://localhost:3000/${this.getUser}/newSignup`, {
@@ -134,7 +140,6 @@ export default {
         //   .catch((err) => {
         //     console.log(err);
         //   });
-
       } else {
         alert("Bad Request! Try again");
       }

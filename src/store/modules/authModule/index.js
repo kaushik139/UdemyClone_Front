@@ -28,14 +28,14 @@ export default {
             state.loginError = val.value;
         },
         setRoutePath(state, val) {
-            console.log('setRoute::: '+ val);
+            console.log('setRoute::: ' + val);
             state.routePath = val;
         },
         setUserData(state, val) {
             state.userData.name = val.name;
             state.userData.email = val.email;
             state.userData.token = val.token;
-            console.log('from mutation: ' +val.token);
+            console.log('from mutation: ' + val.token);
         },
 
     },
@@ -73,31 +73,32 @@ export default {
         // Login
         async login({ commit, rootState, state }, { value }) {
 
-            // try {
-                const response = await axios.post(
-                    `http://localhost:3000/${rootState.User}/login`,
-                    {
-                        email: value.email,
-                        password: value.password,
-                    }
-                )
+            try {
+            const response = await axios.post(
+                `http://localhost:3000/${rootState.User}/login`,
+                {
+                    email: value.email,
+                    password: value.password,
+                }
+            )
             if (response.data.token) {
-                    console.log(response.data.token);
-                    console.log(response.data.name);
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('name', response.data.name);
-                    localStorage.setItem('email', value.email);
-                    commit('setUserData', {name: response.data.name, email: value.email, token: response.data.token })
+                // console.log(response.data.token);
+                // console.log("name: " + response.data.name);
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('name', response.data.name);
+                localStorage.setItem('email', value.email);
+                localStorage.setItem('role', rootState.User);
+                commit('setUserData', { name: response.data.name, email: value.email, token: response.data.token })
                 commit('setRoutePath', `${rootState.User[0]}Home`);
                 // router.push({ name: `${rootState.User[0]}Home` });
 
-                }
-            // }
-            // catch (error) {
-            //     console.log(chalk.red(error.response.data.message));
-            //     commit('setLoginError', { value: error.response.data.message });
-            //     if (error) commit('setLoginError', { value: error });
-            // }
+            }
+            }
+            catch (error) {
+                console.log(chalk.red(error.response.data.message));
+                commit('setLoginError', { value: error.response.data.message });
+                // if (error) commit('setLoginError', { value: error });
+            }
         }
     },
 
@@ -118,7 +119,6 @@ export default {
             return state.routePath;
         },
         tokenGetter(state) {
-            console.log('from getter : ' + state.userData.token);
             return state.userData.token;
         },
 

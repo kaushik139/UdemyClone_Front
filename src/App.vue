@@ -20,6 +20,10 @@ export default {
   data: () => ({
     //
   }),
+  mounted() {
+    this.$store.dispatch('changeUser', (localStorage.getItem('role') || 'students'));
+  }
+ 
 };
 </script>
 

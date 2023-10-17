@@ -2,7 +2,7 @@
   <!-- <div class="container" style="width: 100vw; margin: 0px; padding: 0px;"> -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="[navbar]">
 
-    <div class="btn btn" @click="test">Test</div>
+    <!-- <div class="btn btn-primary" @click="test">Test</div> -->
 
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><span :class="[logo]">U</span>DEMY</a>
@@ -82,9 +82,11 @@ export default {
       computed:{
             navbar() {
                 return this.getUser === 'instructors' ? 'navbarIns' : 'navbarStu';
+                // return localStorage.getItem('role') === 'instructors' ? 'navbarIns' : 'navbarStu';
             },
             logo() {
                 return this.getUser === 'instructors' ? 'logoIns' : 'logoStu';
+                // return localStorage.getItem('role') === 'instructors' ? 'logoIns' : 'logoStu';
           },
           showTeachBtn() {
             //   if (this.getUser === 'student') {
@@ -97,6 +99,7 @@ export default {
             // else return false;
 
            return this.getUser === 'students' ? this['auth/tokenGetter'] === '' ? true : false : false;
+          //  return localStorage.getItem('role') === 'students' || localStorage.getItem('role') === null ? (localStorage.getItem('token') === null ? true : false) : false;
 
             },
     ...mapGetters(['getUser', 'auth/tokenGetter'])
@@ -108,9 +111,10 @@ export default {
     methods: {
         switchToTeacher() {
         this.$store.commit('changeUser', 'instructors')
+        localStorage.setItem('role', 'instructors');
       },
         test() {
-        console.log(this['auth/tokenGetter']);
+            // console.log(this['auth/tokenGetter']);
       }
   }
 };

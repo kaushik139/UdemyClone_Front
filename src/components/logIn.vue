@@ -85,12 +85,15 @@ export default {
   computed: {
     contain() {
       return this.getUser === "instructors" ? "containIns" : "containStu";
+      // return localStorage.getItem('role') === "instructors" ? "containIns" : "containStu";
     },
     bttn() {
       return this.getUser === "instructors" ? "bttnIns" : "bttnStu";
+      // return localStorage.getItem('role') === "instructors" ? "bttnIns" : "bttnStu";
     },
     symbol() {
       return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+      // return localStorage.getItem('role') === "instructors" ? "rgb(131, 0, 0)" : "purple";
           },
           userInitial() {
         return this.getUser[0]

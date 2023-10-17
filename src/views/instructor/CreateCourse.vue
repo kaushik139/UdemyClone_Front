@@ -4,19 +4,20 @@
     <v-row class="text-center">
       <v-col cols="12">
         <side-nav></side-nav>
-
+        
         <!--main content here-->
         <div class="main">
           <v-row class="">
-
+            
             <!-- SideNav -->
             <v-col cols="12" md="3" class="navi2">
               <side-menu @currentComp="recievedComponent"></side-menu>
             </v-col>
-
+            
             <!-- changing content -->
             <v-col cols="12" md="9" class="form1">
-                <component :is="displayComponent" @changeComp="recievedComponent"></component>
+
+              <component :is="currentCompGetter" @changeComp="recievedComponent"></component>
                 </v-col
             >
           </v-row>
@@ -28,6 +29,7 @@
   
   <script>
 import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
 import CreatePage from "../../components/instructor/createCourse/createContent/createPage.vue";
 import SideMenu from "../../components/instructor/createCourse/nav/sideMenu.vue";
 import SideNav from "../../components/instructor/sideNav.vue";
@@ -52,15 +54,22 @@ export default defineComponent({
     PricingPage,
     PublishPage
   },
+
   data() {
        return {
-            displayComponent: 'PlanCourse',
+            // displayComponent: 'PlanCourse',
     };
-      },
+    },
+
+    computed: {
+        // ...mapGetters(['instructor/currentCompGetter']),
+        ...mapGetters('instructor', ['currentCompGetter'])
+    },
+    
       methods: {
-        recievedComponent(val) {
-                this.displayComponent = val;
-    }
+    //     recievedComponent(val) {
+    //             this.displayComponent = val;
+    // }
   },
 });
 </script>

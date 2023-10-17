@@ -185,6 +185,24 @@ export default {
     },
 
     methods: {
+      //method to submit form
+        submit() {
+        const pricing = {
+          basePrice: this.basePrice,
+          discountType: this.discountType,
+          discountAmount: this.discountAmount,
+          discountPercent: this.discountPercent,
+          priceAfterDiscount: this.priceAfterDiscount,
+          tax: this.tax,
+          finalPrice: this.finalPrice,
+        }
+
+        this.$store.dispatch('instructor/pricingAction', {value: pricing});
+
+
+      },
+
+      //method to clear form
         reset() {
           this.basePrice = 0;
           this.discountType = 'amount';

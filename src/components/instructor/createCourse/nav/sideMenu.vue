@@ -50,15 +50,12 @@
 <script>
 export default {
   name: "SideMenu",
-  emits: {
-    currentComp: String,
-  },
   data: () => ({
     activeTab: "publishCourse",
   }),
   methods: {
     currentComponent(val) {
-      this.$emit("currentComp", val);
+      this.$store.commit('instructor/changeCurrentComp', val)
     },
     test() {
       this.activeTab = "landingPage";
