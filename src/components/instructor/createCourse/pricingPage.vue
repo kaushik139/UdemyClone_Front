@@ -150,6 +150,7 @@
 </template>
   
   <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "PricingPage",
       computed: {
@@ -168,10 +169,13 @@ export default {
             },
             finalPrice() {
                   return this.priceAfterDiscount + this.tax;
-        }
+              },
+        ...mapGetters(['instructor/courseDraftGetter'])
+        
     },
   data: () => ({
     basePrice: 0,
+    baseSavedValue : false,
     discountType: "amount",
     discountAmount: 0,
     discountPercent: 0,
@@ -180,7 +184,11 @@ export default {
 
     watch: {
         basePrice(newValue, oldValue) {
-        this.discountAmount = 0;
+          if (this.baseSavedValue === true) {
+            this.discountAmount = this['instructor/courseDraftGetter'].pricing.discountAmount;
+            this.baseSavedValue = false;
+          }
+          else this.discountAmount = 0;
       }
     },
 
@@ -208,9 +216,19 @@ export default {
           this.discountType = 'amount';
           this.discountAmount = 0;
           this.discountPercent = 0;
-          this.mdiCurrencyInr = 'mdi-currency-inr';
     }
+  },
+
+    mounted() {
+        setTimeout(() => {
+          console.log(this['instructor/courseDraftGetter'].pricing.basePrice);
+            this.basePrice = this['instructor/courseDraftGetter'].pricing.basePrice;
+            this.discountType = this['instructor/courseDraftGetter'].pricing.discountType;
+          this.baseSavedValue = true;
+          this.discountPercent = this['instructor/courseDraftGetter'].pricing.discountPercent;
+    },1)
   }
+
 };
 </script>
   

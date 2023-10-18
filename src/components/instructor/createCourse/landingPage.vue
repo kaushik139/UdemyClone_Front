@@ -57,11 +57,13 @@ export default {
     submit() {
       if (this.selectedFile.length !== 0 && this.fullDesc) {
         const landingPageData = {
-          backGroundImage: this.selectedFile[0].name,
-          fullDesc: this.fullDesc,
+          // backGroundImage: this.selectedFile[0].name,
+          fullDescription: this.fullDesc,
         };
-        console.log(landingPageData);
-        this.$emit("changeComp", "CreatePage");
+
+        this.$store.dispatch('instructor/landingPageAction', {value: landingPageData})
+
+        // console.log(landingPageData);
       } else alert("Please fill form Completely!");
     },
   },

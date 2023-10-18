@@ -57,7 +57,9 @@ export default defineComponent({
 
   data() {
        return {
-            // displayComponent: 'PlanCourse',
+           // displayComponent: 'PlanCourse',
+           draftName: '',
+
     };
     },
 
@@ -71,6 +73,13 @@ export default defineComponent({
     //             this.displayComponent = val;
     // }
   },
+
+    async mounted() {
+      this.draftID = localStorage.getItem('courseDraft');
+        if (this.draftID !== null) {
+          await this.$store.dispatch('instructor/getDraftCourse', this.draftID);
+      }
+  }
 });
 </script>
 

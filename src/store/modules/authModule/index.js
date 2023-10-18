@@ -42,10 +42,6 @@ export default {
 
 
     actions: {
-        // stringAction({ commit }, {value}) {
-        // console.log(value);
-        //     // commit('userDataUpdate', value);
-        // },
 
         // signUp
         async signUp({ commit, rootState }, { value }) {
@@ -83,7 +79,7 @@ export default {
             )
             if (response.data.token) {
                 // console.log(response.data.token);
-                // console.log("name: " + response.data.name);
+                console.log("name: " + response.data.name);
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('name', response.data.name);
                 localStorage.setItem('email', value.email);

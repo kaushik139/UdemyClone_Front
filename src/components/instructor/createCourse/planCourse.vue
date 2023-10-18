@@ -21,8 +21,13 @@
 
 
   <script >
+import { mapGetters } from 'vuex'
 export default {
   name: "PlanCourse",
+
+   computed: {
+ ...mapGetters(['instructor/courseDraftGetter'])
+  },
 
   data: () => ({
     items1: ["Category A", "Category B", "Category C"],
@@ -60,6 +65,20 @@ export default {
       this.planData.category = "";
     },
   },
+
+    mounted() {
+        setTimeout(() => {
+          if (this['instructor/courseDraftGetter']) {
+          // console.log(this['instructor/courseDraftGetter']);
+          // console.log(this['instructor/courseDraftGetter'].title);
+              this.planData.name = this['instructor/courseDraftGetter'].title;
+              this.planData.miniDesc = this['instructor/courseDraftGetter'].miniDescription;
+              this.planData.category = this['instructor/courseDraftGetter'].category;
+
+      }
+        },1)
+  }
+
 };
 </script>
 
