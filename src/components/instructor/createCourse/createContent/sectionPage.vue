@@ -82,8 +82,8 @@ export default {
     selectedSection: {},
     selectedSectionIndex: 1,
     showSectionDiv: false,
-    loading: false,
-    timeout: null,
+    // loading: false,
+    // timeout: null,
     sectionName: "",
     tab: null,
     showModal: false,
@@ -96,7 +96,7 @@ export default {
     nameRules: [
       (value) => {
         if (value) return true;
-        console.log("val" + value);
+        // console.log("val" + value);
         return "Please enter a name!";
       },
     ],
@@ -114,11 +114,14 @@ export default {
       this.modalSectionNo = this.sectionArray.length + 1;
       this.showModal = true;
     },
+
     submitForm() {
       if (this.modalTitle === "Adding") {
         // Add New Section
         if (this.formData.sectionName) {
-          console.log("Form data submitted:", this.formData);
+          console.log("Form data submitted: ", this.formData);
+
+          this.$store.dispatch('instructor/updateSection', this.formData);
 
           this.sectionArray.push({
             sectionName: this.formData.sectionName,
@@ -144,16 +147,19 @@ export default {
         } else alert("Please Fill Form Completely!");
       }
     },
+
     clear() {
       this.formData.sectionName = "";
       this.formData.sectionDescription = "";
     },
+
     showSection(val) {
       this.showSectionDiv = true;
       this.selectedSection = this.sectionArray[val];
       console.log(this.selectedSection.index);
       this.selectedSectionIndex = val + 1;
     },
+
     editSection() {
       this.modalTitle = "Editing";
       this.modalSectionNo = this.selectedSectionIndex;

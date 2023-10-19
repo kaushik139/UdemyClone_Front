@@ -20,7 +20,7 @@
   
           <v-list density="compact" nav>
              <v-list-item prepend-icon="mdi-home" title="Home" value="home" @click="this.$router.push('/iHome')"></v-list-item>
-            <v-list-item prepend-icon="mdi-plus" title="Create Course" value="createCourse" @click="this.$router.push('/create')"></v-list-item>
+            <v-list-item prepend-icon="mdi-plus" title="Create Course" value="createCourse" @click="create"></v-list-item>
             <v-list-item prepend-icon="mdi-message" title="Messages" value="messages" @click="this.$router.push('/iMessage')"></v-list-item>
             <!-- <v-list-item prepend-icon="mdi-star" title="Starred" value="starred"></v-list-item> -->
           </v-list>
@@ -39,8 +39,11 @@
       };
     },
       methods: {
-            createCourse() {
-            console.log('CreateCourse');
+            create() {
+            localStorage.removeItem('courseDraft');
+            this.$store.commit('instructor/clearCourseDraft');
+            this.$store.commit('instructor/changeCurrentComp', 'PlanCourse')
+            this.$router.push('/create');
         }
     }
   };

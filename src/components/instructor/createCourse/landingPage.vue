@@ -5,14 +5,26 @@
         <h5>Create a Landing Page</h5>
 
         <!-- BackGround Image -->
-        <div>
+        <div class="mb-6">
           <v-file-input
             label="Add a Background Image"
             v-model="selectedFile"
             accept="image/*"
           ></v-file-input>
 
-          <v-btn class="btn" @click="uploadFile">Upload</v-btn>
+          <v-btn class="btn" @click="upload">Upload</v-btn>
+
+          <!-- preview image -->
+          <div
+            style="
+              width: 25vh;
+              height: 100px;
+              margin-left: auto;
+              margin-right: 10%;
+            "
+          >
+            <v-img :src="imgURL" alt="Preview Image" />
+          </div>
 
           <div v-if="isSelectedFile" class="mt-2">
             <p>Selected File: {{ selectedFile[0].name }}</p>
@@ -36,6 +48,7 @@
 </template>
   
   <script>
+import { mapGetters } from "vuex";
 export default {
   name: "LandingPage",
 
@@ -43,29 +56,45 @@ export default {
     isSelectedFile() {
       return this.selectedFile.length === 0 ? false : true;
     },
+    ...mapGetters(["instructor/courseDraftGetter"]),
   },
 
   data: () => ({
     selectedFile: [],
     fullDesc: "",
+    previewImage: false,
+    imgURL: "",
   }),
 
   methods: {
-    uploadFile() {
-      console.log(this.selectedFile[0].name);
+    upload() {
+      if (this.selectedFile.length !== 0) {
+        // console.log(this.selectedFile[0]);
+        this.$store.dispatch("instructor/bgImageUpload", this.selectedFile[0]);
+      } else alert("No Image Selected!");
+         this.getPreview();
     },
+
     submit() {
-      if (this.selectedFile.length !== 0 && this.fullDesc) {
-        const landingPageData = {
-          // backGroundImage: this.selectedFile[0].name,
-          fullDescription: this.fullDesc,
-        };
-
-        this.$store.dispatch('instructor/landingPageAction', {value: landingPageData})
-
-        // console.log(landingPageData);
+      if (this.fullDesc) {
+        this.$store.dispatch("instructor/landingPageAction", this.fullDesc);
       } else alert("Please fill form Completely!");
     },
+
+    getPreview() {
+      setTimeout(() => {
+         const res = `http://localhost:3000/Images/${this.$store.getters['instructor/courseDraftGetter'].image.bgImage}`;
+        // console.log(this.$store.getters['instructor/courseDraftGetter'].image.bgImage);
+        this.imgURL = res;
+      },100)
+    },
+  },
+
+  mounted() {
+    if (this["instructor/courseDraftGetter"]) {
+      this.fullDesc = this["instructor/courseDraftGetter"].fullDescription;
+      this.getPreview();
+    }
   },
 };
 </script>

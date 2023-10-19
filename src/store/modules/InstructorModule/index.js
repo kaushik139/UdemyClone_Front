@@ -13,6 +13,10 @@ export default {
             instructor: '',
             category: '',
             fullDescription: '',
+            image: {
+                thumbnail: null,
+                bgImage: null,
+            },
             pricing: {
                 basePrice: 0,
                 discountType: '',
@@ -22,6 +26,11 @@ export default {
                 tax: 0,
                 finalPrice: 0
             },
+            currentSectionsTitle: '',
+            currentVideoTitle: '',
+            currentVideoPath: '',
+            CurrentExerciseTitle: '',
+            CurrentExercisePath: '',
             rating: '',
             duration: '',
             lectures: '',
@@ -54,9 +63,40 @@ export default {
             state.courseDraft.pricing.finalPrice = val.finalPrice;
         },
 
-        landingPage(state, val) {
-            state.fullDescription = val.fullDescription;
+        updateCourseDraft(state, val) {
+            if (val.fullDescription) state.courseDraft.fullDescription = val.fullDescription;
+            if (val.bgImage) state.courseDraft.image.bgImage = val.bgImage;
+        },
+
+        clearCourseDraft(state) {
+            state.courseDraft.id = '';
+            state.courseDraft.title = '';
+            state.courseDraft.miniDescription = '';
+            state.courseDraft.instructor = '';
+            state.courseDraft.category = '';
+            state.courseDraft.fullDescription = '';
+            state.courseDraft.image.thumbnail = null;
+            state.courseDraft.image.bgImage = null;
+            state.courseDraft.pricing.basePrice = 0;
+            state.courseDraft.pricing.discountType = '';
+            state.courseDraft.pricing.discountAmount = 0;
+            state.courseDraft.pricing.discountPercent = 0;
+            state.courseDraft.pricing.priceAfterDiscount = 0;
+            state.courseDraft.pricing.tax = 0;
+            state.courseDraft.pricing.finalPrice = 0;
+            state.courseDraft.currentSectionsTitle = '';
+            state.courseDraft.currentVideoTitle = '';
+            state.courseDraft.currentVideoPath = '';
+            state.courseDraft.CurrentExerciseTitle = '';
+            state.courseDraft.CurrentExercisePath = '';
+            state.courseDraft.rating = '';
+            state.courseDraft.duration = '';
+            state.courseDraft.lectures = '';
+            state.courseDraft.status = '';
+            console.log('Cleared!');
         }
+
+
 
     },
 
@@ -65,7 +105,7 @@ export default {
 
         //for getting current draft course
         async getDraftCourse({ commit, state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
@@ -87,6 +127,10 @@ export default {
                             tax: res.data.item.price.tax,
                             finalPrice: res.data.item.price.finalPrice,
                         });
+                        await commit('updateCourseDraft', {
+                            bgImage: res.data.item.images.bgImage,
+                            fullDescription: res.data.item.description.fullDescription,
+                        })
                     }
                 }
                 catch (err) {
@@ -117,7 +161,7 @@ export default {
                     alert("Course Planning Completed!");
                     // console.log(value);
                     await commit('planCourse', { title: value.name, miniDescription: value.miniDesc, category: value.category, id: res.data.id });
-                   await commit('changeCurrentComp', 'LandingPage');
+                    await commit('changeCurrentComp', 'LandingPage');
                     localStorage.setItem('courseDraft', res.data.id);
                 }
                 // console.log(res.status + ': ' + res.statusText);
@@ -162,24 +206,58 @@ export default {
             }
         },
 
-        //for course landing page, background Image
-        async landingPageAction({ commit, state }, { value }) {
-            // console.log(value.fullDescription);
-            // console.log(state.courseDraft.id);
+        //for course landing page description
+        async landingPageAction({ commit, state }, value) {
+            console.log(value);
 
             try {
-                const res = await axios.patch(`http://localhost:3000/courses/landingPage/${state.courseDraft.id}`,
-                    {
-                        fullDescription: value.fullDescription
-                    });
-                if (res.data.message === "Landing Page Created!") {
-                    alert(res.data.message);
-                    commit('landingPage', {fullDescription: value.fullDescription})
+                const res = await axios.patch(
+                    `http://localhost:3000/courses/landingPage/${state.courseDraft.id}`, { desc: value });
+
+                if (res.data.message === "Updated") {
+                    alert('Landing Page Updated');
+                    commit('updateCourseDraft', { fullDescription: value })
                 }
             }
             catch (err) {
                 alert(err);
             }
+        },
+
+        //for course landing page, background Image
+        async bgImageUpload({ commit, state }, value) {
+            try {
+                // console.log(value);
+
+                const formData = new FormData();
+                formData.append('fileInput', value);
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
+
+                const res = await axios.patch(
+                    `http://localhost:3000/courses/landingPageImage/${state.courseDraft.id}`,
+                    formData,
+                    config
+                );
+
+
+                if (res.data.message === "Updated") {
+                    alert("Image Uploaded");
+                    commit('updateCourseDraft', { bgImage: res.data.path })
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        },
+
+        //to create Sections
+        async updateSection({ commit }, value) {
+            console.log(value);
         }
 
     },
@@ -191,9 +269,10 @@ export default {
             return state.currentComp;
         },
         courseDraftGetter(state) {
-            setTimeout(() => {
-                // console.log( state.courseDraft);
-            },1)
+            // setTimeout(() => {
+            // console.log( state.courseDraft);
+            // }, 1)
+
             return state.courseDraft;
         },
 

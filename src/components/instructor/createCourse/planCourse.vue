@@ -48,7 +48,7 @@ export default {
       ) {
 
         this.planData.email = localStorage.getItem('email');
-        console.log(this.planData);
+        // console.log(this.planData);
 
         await this.$store.dispatch("instructor/planCourseAction", {
           value: this.planData,
