@@ -35,6 +35,13 @@ export default {
             duration: '',
             lectures: '',
             status: '',
+            currentSection:
+                {
+                    sectionName: "",
+                    sectionDescription: "",
+                },
+            sectionsArray: []
+
         },
 
     },
@@ -66,6 +73,10 @@ export default {
         updateCourseDraft(state, val) {
             if (val.fullDescription) state.courseDraft.fullDescription = val.fullDescription;
             if (val.bgImage) state.courseDraft.image.bgImage = val.bgImage;
+            //section Updater
+            if(val.sectionsArray) state.courseDraft.sectionsArray = val.sectionsArray
+            //
+
         },
 
         clearCourseDraft(state) {
@@ -93,6 +104,8 @@ export default {
             state.courseDraft.duration = '';
             state.courseDraft.lectures = '';
             state.courseDraft.status = '';
+            state.courseDraft.sectionsArray = [];
+
             console.log('Cleared!');
         }
 
@@ -112,10 +125,10 @@ export default {
                     const res = await axios.get(`http://localhost:3000/courses/${value}`)
 
                     if (res) {
-                        // console.log(res.data);
                         // console.log(res.data.item.title);
                         // console.log(res.data.item.price.basePrice);
                         // console.log(state.courseDraft.pricing);
+                        // console.log(res.data.item.sections);
 
                         await commit('planCourse', { title: res.data.item.title, miniDescription: res.data.item.description.miniDescription, category: res.data.item.category, id: value });
                         await commit('pricing', {
@@ -130,6 +143,8 @@ export default {
                         await commit('updateCourseDraft', {
                             bgImage: res.data.item.images.bgImage,
                             fullDescription: res.data.item.description.fullDescription,
+                            sectionsArray: res.data.item.sections,
+
                         })
                     }
                 }
@@ -256,8 +271,25 @@ export default {
         },
 
         //to create Sections
-        async updateSection({ commit }, value) {
-            console.log(value);
+        async updateSection({ commit, state }, value) {
+            console.log(value.sectionName);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/updateAll/${state.courseDraft.id}`,
+                    {
+                        sectionTitle: value.sectionName,
+                        sectionDescription: value.sectionDescription
+                    });
+
+                if (res) {
+                    alert(res.data.message)
+                    commit('updateCourseDraft', { sectionName: value.sectionName, sectionDescription: value.sectionDescription })
+                }
+            }
+            catch (err) {
+                alert(err)
+            }
+
         }
 
     },
@@ -269,10 +301,6 @@ export default {
             return state.currentComp;
         },
         courseDraftGetter(state) {
-            // setTimeout(() => {
-            // console.log( state.courseDraft);
-            // }, 1)
-
             return state.courseDraft;
         },
 

@@ -60,24 +60,37 @@
       </v-card>
     </v-dialog>
 
-    {{ sectionArray }}
+    <!-- {{ sectionArray }} -->
 
     <!-- section Content -->
     <v-card v-show="showSectionDiv">
-      {{ selectedSection }}
-      <br />
-      <v-label>Section Name: {{ selectedSection.sectionName }}</v-label
-      ><br />
-      <v-label
-        >Section Description: {{ selectedSection.sectionDescription }}</v-label
-      >
+      <v-row >
+        <v-col cols="5" >
+          <h5 >Section Name: </h5>
+          <h6 >Section Description: </h6>
+          <h6>Videos in this Section: </h6>
+        </v-col>
+        <v-col cols="4">
+         <h5>{{ selectedSection.sectionTitle }}</h5>
+         <h6>{{ selectedSection.sectionDesctiption }}</h6>
+         <h6>{{ selectedSectionVideos }}</h6>
+        </v-col>
+      </v-row>
     </v-card>
   </v-card>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapGetters(["instructor/courseDraftGetter"]),
+    
+  },
+
   data: () => ({
+    // frontEnd
     sectionArray: [],
     selectedSection: {},
     selectedSectionIndex: 1,
@@ -89,17 +102,20 @@ export default {
     showModal: false,
     modalTitle: "",
     modalSectionNo: "",
+    nameRules: [
+      (value) => {
+        if (value) return true;
+        return "Please enter a name!";
+      },
+    ],
+    selectedSectionVideos: '',
+    
+    // backEnd
     formData: {
       sectionName: "",
       sectionDescription: "",
     },
-    nameRules: [
-      (value) => {
-        if (value) return true;
-        // console.log("val" + value);
-        return "Please enter a name!";
-      },
-    ],
+    
   }),
 
   watch: {
@@ -118,28 +134,32 @@ export default {
     submitForm() {
       if (this.modalTitle === "Adding") {
         // Add New Section
-        if (this.formData.sectionName) {
-          console.log("Form data submitted: ", this.formData);
-
+        if (this.formData.sectionName && this.formData.sectionDescription) {
+          // console.log("Form data submitted: ", this.formData);
+          //sending data to store
           this.$store.dispatch('instructor/updateSection', this.formData);
 
-          this.sectionArray.push({
-            sectionName: this.formData.sectionName,
-            sectionDescription: this.formData.sectionDescription,
-          });
+          // this.sectionArray.push({
+          //   sectionName: this.formData.sectionName,
+          //   sectionDescription: this.formData.sectionDescription,
+          // });
 
           this.formData.sectionName = "";
           this.formData.sectionDescription = "";
           this.showModal = false;
-        } else alert("Please Enter a Section Name!");
+        } else alert("Please Fill Form Completely!");
       } else {
         // Edit existing Section
-        if (this.formData.sectionName) {
+        if (this.formData.sectionName && this.formData.sectionDescription) {
           console.log("Form data submitted:", this.formData);
-          this.sectionArray[this.selectedSectionIndex - 1] = {
-            sectionName: this.formData.sectionName,
-            sectionDescription: this.formData.sectionDescription,
-          };
+
+          this.$store.dispatch('instructor/updateSection', this.formData);
+
+
+          // this.sectionArray[this.selectedSectionIndex - 1] = {
+          //   sectionName: this.formData.sectionName,
+          //   sectionDescription: this.formData.sectionDescription,
+          // };
 
           this.formData.sectionName = "";
           this.formData.sectionDescription = "";
@@ -156,19 +176,29 @@ export default {
     showSection(val) {
       this.showSectionDiv = true;
       this.selectedSection = this.sectionArray[val];
-      console.log(this.selectedSection.index);
+      // console.log(this.selectedSection.index);
       this.selectedSectionIndex = val + 1;
+      this.selectedSectionVideos = this.selectedSection.videos.length;
     },
 
     editSection() {
       this.modalTitle = "Editing";
       this.modalSectionNo = this.selectedSectionIndex;
       this.showModal = true;
-      this.formData.sectionName = this.selectedSection.sectionName || this.sectionArray[0].sectionName;
+      this.formData.sectionName = this.selectedSection.sectionTitle || this.sectionArray[0].sectionTitle;
       this.formData.sectionDescription =
-        this.selectedSection.sectionDescription || this.sectionArray[0].sectionName;
+        this.selectedSection.sectionDesctiption || this.sectionArray[0].sectionDesctiption;
     },
   },
+
+  mounted() {
+    if (this['instructor/courseDraftGetter'].sectionsArray) {
+      console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
+      this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
+    }
+    this.showSection(0);
+
+  }
 };
 </script>
 
@@ -188,5 +218,9 @@ export default {
 
 .space {
   margin: 120px;
+}
+
+h4, h5{
+  color: (131,0,0);
 }
 </style>
