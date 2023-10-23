@@ -23,10 +23,26 @@
     <!-- Create new Section -->
     <v-btn block class="btn" @click="addSection"> Add New Section </v-btn>
 
-    <!-- Edit section -->
-    <v-btn v-if="sectionArray.length" block class="btn" @click="editSection">
+    <!-- edit/delete section -->
+    <v-row v-if="sectionArray.length">
+      <v-col cols="6" style="padding-right: 0px;">
+         <!-- Edit section -->
+    <v-btn block class="btn" @click="editSection">
       Edit Section {{ selectedSectionIndex }}
     </v-btn>
+      </v-col>
+      <v-col cols="6" style="padding-left: 0px;">
+       <!-- Delete section -->
+    <v-btn block class="btn" @click="deleteSection">
+      Delete Section {{ selectedSectionIndex }}
+    </v-btn>
+      </v-col>
+    </v-row>
+
+    <!-- Edit section
+    <v-btn v-if="sectionArray.length" block class="btn" @click="editSection">
+      Edit Section {{ selectedSectionIndex }}
+    </v-btn> -->
 
     <!-- Modal dialog -->
     <v-dialog v-model="showModal" max-width="400px">
@@ -60,23 +76,35 @@
       </v-card>
     </v-dialog>
 
-    <!-- {{ sectionArray }} -->
-
-    <!-- section Content -->
+    <!-- @section Content -->
     <v-card v-show="showSectionDiv">
-      <v-row >
+      <v-row class="dispRow mt-5" >
         <v-col cols="5" >
           <h5 >Section Name: </h5>
+        </v-col>
+        <v-col cols="7">
+         <h5>{{ selectedSection.sectionTitle }}</h5>
+        </v-col>
+      </v-row>
+      <v-row class="dispRow">
+        <v-col cols="5" >
           <h6 >Section Description: </h6>
+        </v-col>
+        <v-col cols="7">
+         <h6>{{ selectedSection.sectionDesctiption?.substr(0,25) }}</h6>
+        </v-col>
+      </v-row>
+      <v-row class="dispRow mb-0">
+        <v-col cols="5" >
           <h6>Videos in this Section: </h6>
         </v-col>
-        <v-col cols="4">
-         <h5>{{ selectedSection.sectionTitle }}</h5>
-         <h6>{{ selectedSection.sectionDesctiption }}</h6>
-         <h6>{{ selectedSectionVideos }}</h6>
+        <v-col cols="7">
+          <h6>{{ selectedSectionVideos }}</h6>
         </v-col>
       </v-row>
     </v-card>
+
+
   </v-card>
 </template>
 
@@ -108,7 +136,7 @@ export default {
         return "Please enter a name!";
       },
     ],
-    selectedSectionVideos: '',
+    selectedSectionVideos: 0,
     
     // backEnd
     formData: {
@@ -131,13 +159,13 @@ export default {
       this.showModal = true;
     },
 
-    submitForm() {
+    async submitForm() {
       if (this.modalTitle === "Adding") {
         // Add New Section
         if (this.formData.sectionName && this.formData.sectionDescription) {
           // console.log("Form data submitted: ", this.formData);
           //sending data to store
-          this.$store.dispatch('instructor/updateSection', this.formData);
+          await this.$store.dispatch('instructor/CreateSection', this.formData);
 
           // this.sectionArray.push({
           //   sectionName: this.formData.sectionName,
@@ -151,21 +179,17 @@ export default {
       } else {
         // Edit existing Section
         if (this.formData.sectionName && this.formData.sectionDescription) {
-          console.log("Form data submitted:", this.formData);
+          // console.log("Form data submitted:", this.formData);
 
-          this.$store.dispatch('instructor/updateSection', this.formData);
-
-
-          // this.sectionArray[this.selectedSectionIndex - 1] = {
-          //   sectionName: this.formData.sectionName,
-          //   sectionDescription: this.formData.sectionDescription,
-          // };
+          await this.$store.dispatch('instructor/UpdateSection', {form: this.formData, index: this.selectedSectionIndex-1});
+          // console.log(this.selectedSectionIndex-1);
 
           this.formData.sectionName = "";
           this.formData.sectionDescription = "";
           this.showModal = false;
         } else alert("Please Fill Form Completely!");
       }
+      await this.mount(this.selectedSectionIndex - 1);
     },
 
     clear() {
@@ -173,30 +197,61 @@ export default {
       this.formData.sectionDescription = "";
     },
 
+    //displays current section in @section Content
     showSection(val) {
       this.showSectionDiv = true;
       this.selectedSection = this.sectionArray[val];
-      // console.log(this.selectedSection.index);
+      // console.log(this.selectedSection);
       this.selectedSectionIndex = val + 1;
       this.selectedSectionVideos = this.selectedSection.videos.length;
+      // console.log(this.selectedSection.videos.length);
     },
 
     editSection() {
       this.modalTitle = "Editing";
       this.modalSectionNo = this.selectedSectionIndex;
       this.showModal = true;
-      this.formData.sectionName = this.selectedSection.sectionTitle || this.sectionArray[0].sectionTitle;
-      this.formData.sectionDescription =
-        this.selectedSection.sectionDesctiption || this.sectionArray[0].sectionDesctiption;
+      this.formData.sectionName = this.selectedSection.sectionTitle;
+      this.formData.sectionDescription = this.selectedSection.sectionDesctiption;
     },
+
+    async deleteSection() {
+      // console.log(this.selectedSectionIndex - 1);
+      await this.$store.dispatch("instructor/DeleteSection", (this.selectedSectionIndex - 1));
+      if (this.sectionArray.length > this.selectedSectionIndex ) this.selectedSectionIndex++;
+      else this.selectedSectionIndex--;
+      await this.mount(this.selectedSectionIndex - 1);
+    },
+
+
+    async mount(v) {
+      await this.$store.dispatch('instructor/getDraftCourse', localStorage.getItem('courseDraft'));
+        if (this['instructor/courseDraftGetter'].sectionsArray) {
+        // console.log(this['instructor/courseDraftGetter'].sectionsArray);
+        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
+        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0].sectionTitle);
+          this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
+          if (this.sectionArray.length) this.showSection(v);
+          else {
+            this.selectedSection = {};
+            this.selectedSectionIndex = 1;
+            this.showSectionDiv = false;
+          }
+        // console.log(this.sectionArray);
+      }
+    }
   },
 
   mounted() {
-    if (this['instructor/courseDraftGetter'].sectionsArray) {
-      console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
-      this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
-    }
-    this.showSection(0);
+    // if (this['instructor/courseDraftGetter'].sectionsArray) {
+    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray);
+    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
+    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray[0].sectionTitle);
+    //   this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
+    //   // console.log(this.sectionArray);
+    //   this.showSection(0);
+    // }
+    this.mount(0);
 
   }
 };
@@ -222,5 +277,9 @@ export default {
 
 h4, h5{
   color: (131,0,0);
+}
+
+.dispRow{
+  margin: -25px;
 }
 </style>

@@ -36,10 +36,10 @@ export default {
             lectures: '',
             status: '',
             currentSection:
-                {
-                    sectionName: "",
-                    sectionDescription: "",
-                },
+            {
+                sectionName: "",
+                sectionDescription: "",
+            },
             sectionsArray: []
 
         },
@@ -74,7 +74,7 @@ export default {
             if (val.fullDescription) state.courseDraft.fullDescription = val.fullDescription;
             if (val.bgImage) state.courseDraft.image.bgImage = val.bgImage;
             //section Updater
-            if(val.sectionsArray) state.courseDraft.sectionsArray = val.sectionsArray
+            if (val.sectionsArray) state.courseDraft.sectionsArray = val.sectionsArray
             //
 
         },
@@ -270,12 +270,12 @@ export default {
             }
         },
 
-        //to create Sections
-        async updateSection({ commit, state }, value) {
+        //to create Sections, Videos, exercises
+        async CreateSection({ commit, state }, value) {
             console.log(value.sectionName);
 
             try {
-                const res = await axios.patch(`http://localhost:3000/courses/updateAll/${state.courseDraft.id}`,
+                const res = await axios.patch(`http://localhost:3000/courses/CreateSection/${state.courseDraft.id}`,
                     {
                         sectionTitle: value.sectionName,
                         sectionDescription: value.sectionDescription
@@ -289,7 +289,79 @@ export default {
             catch (err) {
                 alert(err)
             }
+        },
 
+        //to update Sections, Videos, exercises
+        async UpdateSection({ commit, state }, value) {
+            //  console.log(value.form.sectionName);
+            //  console.log(value.index);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/UpdateSection/${state.courseDraft.id}`,
+                    {
+                        sectionTitle: value.form.sectionName,
+                        sectionDescription: value.form.sectionDescription,
+                        index: value.index
+                    });
+
+                if (res) {
+                    alert(res.data.message)
+                    commit('updateCourseDraft', { sectionName: value.sectionName, sectionDescription: value.sectionDescription })
+                }
+            }
+            catch (err) {
+                alert(err)
+            }
+        },
+
+        async DeleteSection({ commit, state }, value) {
+            console.log(value);
+
+            try {
+                const res = await axios.delete(`http://localhost:3000/courses/deleteSection/${state.courseDraft.id}`,
+                    { data: { index: value } });
+                if (res) {
+                    alert(res.data.message);
+                }
+            }
+            catch (err) {
+                alert(err)
+            }
+        },
+
+        //to create new video lectures
+        async CreateVideo({ Commit, state }, value) {
+            console.log(value.videoTitle);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/createVideoLecture/${state.courseDraft.id}`, {
+                    videoTitle: value.videoTitle,
+                    sectionIndex: value.sectionIndex
+                });
+
+                if (res) {
+                    alert(res.data.message);
+                }
+            }
+            catch (err) { alert(err) }
+        },
+
+        //to edit new video lectures
+        async EditVideo({ Commit, state }, value) {
+            console.log(value.title);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/updateVideoLecture/${state.courseDraft.id}`, {
+                    videoTitle: value.title,
+                    sectionIndex: value.sectionIndex,
+                    videoIndex: value.videoIndex
+                });
+
+                if (res) {
+                    alert(res.data.message);
+                }
+            }
+            catch (err) { alert(err) }
         }
 
     },
