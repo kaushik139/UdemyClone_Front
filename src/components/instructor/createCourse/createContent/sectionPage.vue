@@ -4,14 +4,17 @@
       v-if="this.sectionArray.length"
       v-model="tab"
       bg-color="red-lighten-3"
+      next-icon="mdi-arrow-right-bold-box-outline"
+      prev-icon="mdi-arrow-left-bold-box-outline"
+      show-arrows
     >
       <v-tab
         v-for="(n, index) in sectionArray"
         :key="n"
-        :value="n"
         style="color: rgb(131, 0, 0)"
         @click="showSection(index)"
-      >
+        >
+        <!-- :value="n" -->
         Section {{ index + 1 }}
       </v-tab>
     </v-tabs>
@@ -25,17 +28,17 @@
 
     <!-- edit/delete section -->
     <v-row v-if="sectionArray.length">
-      <v-col cols="6" style="padding-right: 0px;">
-         <!-- Edit section -->
-    <v-btn block class="btn" @click="editSection">
-      Edit Section {{ selectedSectionIndex }}
-    </v-btn>
+      <v-col cols="6" style="padding-right: 0px">
+        <!-- Edit section -->
+        <v-btn block class="btn" @click="editSection">
+          Edit Section {{ selectedSectionIndex + 1 }}
+        </v-btn>
       </v-col>
-      <v-col cols="6" style="padding-left: 0px;">
-       <!-- Delete section -->
-    <v-btn block class="btn" @click="deleteSection">
-      Delete Section {{ selectedSectionIndex }}
-    </v-btn>
+      <v-col cols="6" style="padding-left: 0px">
+        <!-- Delete section -->
+        <v-btn block class="btn" @click="deleteSection">
+          Delete Section {{ selectedSectionIndex + 1 }}
+        </v-btn>
       </v-col>
     </v-row>
 
@@ -78,53 +81,50 @@
 
     <!-- @section Content -->
     <v-card v-show="showSectionDiv">
-      <v-row class="dispRow mt-5" >
-        <v-col cols="5" >
-          <h5 >Section Name: </h5>
+      <v-row class="dispRow mt-5">
+        <v-col cols="5">
+          <h5>Section Name:</h5>
         </v-col>
         <v-col cols="7">
-         <h5>{{ selectedSection.sectionTitle }}</h5>
+          <h5>{{ selectedSection.sectionTitle }}</h5>
         </v-col>
       </v-row>
       <v-row class="dispRow">
-        <v-col cols="5" >
-          <h6 >Section Description: </h6>
+        <v-col cols="5">
+          <h6>Section Description:</h6>
         </v-col>
         <v-col cols="7">
-         <h6>{{ selectedSection.sectionDesctiption?.substr(0,25) }}</h6>
+          <h6>{{ selectedSection.sectionDesctiption?.substr(0, 25) }}</h6>
         </v-col>
       </v-row>
       <v-row class="dispRow mb-0">
-        <v-col cols="5" >
-          <h6>Videos in this Section: </h6>
+        <v-col cols="5">
+          <h6>Videos in this Section:</h6>
         </v-col>
         <v-col cols="7">
           <h6>{{ selectedSectionVideos }}</h6>
         </v-col>
       </v-row>
     </v-card>
-
-
   </v-card>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   computed: {
     ...mapGetters(["instructor/courseDraftGetter"]),
-    
   },
 
   data: () => ({
     // frontEnd
     sectionArray: [],
     selectedSection: {},
-    selectedSectionIndex: 1,
+    selectedSectionIndex: 0,
     showSectionDiv: false,
-    // loading: false,
-    // timeout: null,
+    loading: false,
+    timeout: null,
     sectionName: "",
     tab: null,
     showModal: false,
@@ -137,20 +137,19 @@ export default {
       },
     ],
     selectedSectionVideos: 0,
-    
-    // backEnd
+
+    // store
     formData: {
       sectionName: "",
       sectionDescription: "",
     },
-    
   }),
 
-  watch: {
-    length(val) {
-      this.tab = val - 1;
-    },
-  },
+  // watch: {
+  //   sectionArray(val) {
+  //     this.tab = val+1;
+  //   },
+  // },
 
   methods: {
     addSection() {
@@ -163,33 +162,30 @@ export default {
       if (this.modalTitle === "Adding") {
         // Add New Section
         if (this.formData.sectionName && this.formData.sectionDescription) {
-          // console.log("Form data submitted: ", this.formData);
           //sending data to store
-          await this.$store.dispatch('instructor/CreateSection', this.formData);
-
-          // this.sectionArray.push({
-          //   sectionName: this.formData.sectionName,
-          //   sectionDescription: this.formData.sectionDescription,
-          // });
+          await this.$store.dispatch("instructor/CreateSection", this.formData);
 
           this.formData.sectionName = "";
           this.formData.sectionDescription = "";
           this.showModal = false;
         } else alert("Please Fill Form Completely!");
+        // console.log(this.sectionArray.length);
+        await this.mount(this.sectionArray.length + 1);
       } else {
         // Edit existing Section
         if (this.formData.sectionName && this.formData.sectionDescription) {
-          // console.log("Form data submitted:", this.formData);
-
-          await this.$store.dispatch('instructor/UpdateSection', {form: this.formData, index: this.selectedSectionIndex-1});
-          // console.log(this.selectedSectionIndex-1);
+          await this.$store.dispatch("instructor/UpdateSection", {
+            form: this.formData,
+            index: this.selectedSectionIndex,
+          });
 
           this.formData.sectionName = "";
           this.formData.sectionDescription = "";
           this.showModal = false;
         } else alert("Please Fill Form Completely!");
+
+        await this.mount(this.selectedSectionIndex);
       }
-      await this.mount(this.selectedSectionIndex - 1);
     },
 
     clear() {
@@ -201,59 +197,56 @@ export default {
     showSection(val) {
       this.showSectionDiv = true;
       this.selectedSection = this.sectionArray[val];
-      // console.log(this.selectedSection);
-      this.selectedSectionIndex = val + 1;
-      this.selectedSectionVideos = this.selectedSection.videos.length;
-      // console.log(this.selectedSection.videos.length);
+      this.selectedSectionIndex = val;
+      // this.tab = val > 0 ? val : 0;
+      // console.log(this.tab);
     },
 
     editSection() {
       this.modalTitle = "Editing";
-      this.modalSectionNo = this.selectedSectionIndex;
+      this.modalSectionNo = this.selectedSectionIndex + 1;
       this.showModal = true;
       this.formData.sectionName = this.selectedSection.sectionTitle;
-      this.formData.sectionDescription = this.selectedSection.sectionDesctiption;
+      this.formData.sectionDescription =
+        this.selectedSection.sectionDesctiption;
     },
 
     async deleteSection() {
-      // console.log(this.selectedSectionIndex - 1);
-      await this.$store.dispatch("instructor/DeleteSection", (this.selectedSectionIndex - 1));
-      if (this.sectionArray.length > this.selectedSectionIndex ) this.selectedSectionIndex++;
-      else this.selectedSectionIndex--;
+      console.log(this.selectedSectionIndex);
+      await this.$store.dispatch(
+        "instructor/DeleteSection",
+        this.selectedSectionIndex
+      );
+      // if (this.sectionArray.length > this.selectedSectionIndex)
+      //   this.selectedSectionIndex++;
+      // else this.selectedSectionIndex--;
       await this.mount(this.selectedSectionIndex - 1);
     },
 
-
     async mount(v) {
-      await this.$store.dispatch('instructor/getDraftCourse', localStorage.getItem('courseDraft'));
-        if (this['instructor/courseDraftGetter'].sectionsArray) {
-        // console.log(this['instructor/courseDraftGetter'].sectionsArray);
-        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
-        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0].sectionTitle);
-          this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
-          if (this.sectionArray.length) this.showSection(v);
-          else {
-            this.selectedSection = {};
-            this.selectedSectionIndex = 1;
-            this.showSectionDiv = false;
-          }
-        // console.log(this.sectionArray);
+      // console.log(v);
+      await this.$store.dispatch(
+        "instructor/getDraftCourse",
+        localStorage.getItem("courseDraft")
+      );
+
+      if (this["instructor/courseDraftGetter"].sectionsArray) {
+        this.sectionArray = this["instructor/courseDraftGetter"].sectionsArray;
+        if (this.sectionArray.length)
+          // await this.showSection(v);
+          v > 0 ? this.showSection(v - 1) : this.showSection(0);
+      } else {
+        this.selectedSection = {};
+        this.selectedSectionIndex = 0;
+        this.showSectionDiv = false;
       }
-    }
+      // console.log(this.sectionArray);
+    },
   },
 
   mounted() {
-    // if (this['instructor/courseDraftGetter'].sectionsArray) {
-    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray);
-    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
-    //   // console.log(this['instructor/courseDraftGetter'].sectionsArray[0].sectionTitle);
-    //   this.sectionArray = this['instructor/courseDraftGetter'].sectionsArray
-    //   // console.log(this.sectionArray);
-    //   this.showSection(0);
-    // }
     this.mount(0);
-
-  }
+  },
 };
 </script>
 
@@ -275,11 +268,14 @@ export default {
   margin: 120px;
 }
 
-h4, h5{
-  color: (131,0,0);
+h4,
+h5 {
+  color: (131, 0, 0);
 }
 
-.dispRow{
+.dispRow {
   margin: -25px;
 }
-</style>
+::v-deep .v-icon.mdi-arrow-right-bold-box-outline, ::v-deep .v-icon.mdi-arrow-left-bold-box-outline {
+  color: rgb(131,0,0);
+}</style>

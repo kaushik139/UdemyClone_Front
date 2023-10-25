@@ -5,6 +5,9 @@
       v-if="this.sectionArray.length"
       v-model="tabS"
       bg-color="red-lighten-3"
+      next-icon="mdi-arrow-right-bold-box-outline"
+      prev-icon="mdi-arrow-left-bold-box-outline"
+      show-arrows
     >
       <v-tab
         v-for="(n, index) in sectionArray"
@@ -22,6 +25,9 @@
       v-if="this.videoArray.length"
       v-model="tabV"
       bg-color="red-lighten-3"
+      next-icon="mdi-arrow-right-bold-box-outline"
+      prev-icon="mdi-arrow-left-bold-box-outline"
+      show-arrows
     >
       <v-tab
         v-for="(n, index) in videoArray"
@@ -50,7 +56,7 @@
       Add New Video
     </v-btn>
 
-    <!-- Edit/delete Section -->
+    <!-- Edit/delete Video -->
     <v-row v-if="videoArray.length">
     <v-col cols="6" style="padding-right: 0px;">
        <!-- Edit video -->
@@ -116,7 +122,7 @@
     <v-card v-show="videoArray.length">
       <br />
       <h6>
-        Video Name: <v-label> {{ selectedVideo.title }}</v-label>
+        Video Name: <v-label v-if="selectedVideo.title"> {{ selectedVideo.title }}</v-label>
       </h6>
       <br />
       <h6>
@@ -176,29 +182,28 @@ export default {
   methods: {
     addVideo() {
       this.modalTitle = "Adding";
-      // this.modalVideoNo = this.videoArray.length + 1;
+      this.modalVideoNo = this.videoArray.length ;
       this.showModal = true;
     },
 
     async submitForm() {
       if (this.modalTitle === "Adding") {
-        // Add New Video
+        // Add New Video //
         if (this.formData.videoTitle) {
-          // && this.formData.videoFile
-          console.log("Form data submitted:", this.selectedSectionIndex);
           this.$store.dispatch("instructor/CreateVideo", {
             videoTitle: this.formData.videoTitle,
             sectionIndex: this.selectedSectionIndex,
           });
-
-          // this.videoArray.push({
-          //   videoTitle: this.formData.videoTitle,
-          //   videoDescription: this.formData.videoDescription,
-          // });
-
+          
           this.formData.videoTitle = "";
           this.formData.videoDescription = "";
           this.showModal = false;
+          
+          await this.mount(this.selectedSectionIndex, this.videoArray.length);
+          this.selectedVideoIndex = this.videoArray.length;
+          this.tabV = this.videoArray.length + 1;
+          this.tabS = this.selectedSectionIndex;
+
         } else alert("Please fill the form Completely!");
       } else {
         // Edit existing Video
@@ -209,18 +214,26 @@ export default {
           //   videoDescription: this.formData.videoDescription,
           // };
             this.$store.dispatch('instructor/EditVideo', {title: this.formData.videoTitle, sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex})
-
+            await this.mount(this.selectedSectionIndex, this.selectedVideoIndex);
 
           this.formData.videoTitle = "";
           this.formData.videoDescription = "";
           this.showModal = false;
         } else alert("Please Fill Form Completely!");
+        await this.mount(this.selectedSectionIndex, this.selectedVideoIndex);
       }
-     await this.mount(this.selectedSectionIndex, this.selectedVideoIndex)
+
+      await this.$store.dispatch(
+        "instructor/getDraftCourse",
+        localStorage.getItem("courseDraft")
+      );
+
     },
 
     uploadFile() {
-      console.log(this.formData.videoFile[0]);
+      // console.log(this.formData.videoFile[0]);
+      this.$store.dispatch('instructor/videoUpload', {sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex, file:this.formData.videoFile[0]})
+
     },
 
     clear() {
@@ -230,10 +243,10 @@ export default {
 
     showSection(val) {
       // this.showSectionDiv = true;
-      console.log(val);
+      // console.log(val);oo
       this.selectedSection = this.sectionArray[val];
-      console.log(this.selectedSection);
-      this.selectedSectionIndex = val + 1;
+      // console.log(this.selectedSection);oo
+      this.selectedSectionIndex = val;
       this.videoArray = this.sectionArray[val].videos;
       this.selectedVideoIndex = 0;
       this.tabV = 0;  
@@ -244,9 +257,9 @@ export default {
 
     showVideo(val) {
       this.showVideoDiv = true;
-      this.selectedVideo = this.videoArray[val];
+        this.selectedVideo = this.videoArray[val];
       this.selectedVideoIndex = val;
-      // console.log(this.selectedVideoIndex);
+      // console.log(this.videoArray[val]);
     },
 
     editVideo() {
@@ -258,31 +271,33 @@ export default {
         this.selectedVideo.title;
     },
 
+      async deleteVideo() {
+      // console.log(this.selectedSectionIndex);
+      // console.log(this.selectedVideoIndex);
+          await this.$store.dispatch('instructor/deleteVideo', { sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex });
+          await this.mount(this.selectedSectionIndex, 0);
+    },
+
     async mount(u, v) {
+      // console.log(u);
+      // console.log(v);
       await this.$store.dispatch(
         "instructor/getDraftCourse",
         localStorage.getItem("courseDraft")
       );
-      if (this["instructor/courseDraftGetter"].sectionsArray) {
-        console.log(this["instructor/courseDraftGetter"].sectionsArray);
-        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0]);
-        // console.log(this['instructor/courseDraftGetter'].sectionsArray[0].sectionTitle);
-        this.sectionArray = this["instructor/courseDraftGetter"].sectionsArray;
-        if (this.sectionArray[this.selectedSectionIndex].videos) {
-          // console.log(this.sectionArray[this.selectedSectionIndex].videos);
-          this.videoArray = this.sectionArray[this.selectedSectionIndex].videos;
-        }
-        // if (this.sectionArray.length) this.showSection(v);
-        // else {
-        //   this.selectedSection = {};
-        //   this.selectedSectionIndex = 1;
-        //   this.showSectionDiv = false;
-        // }
-        // console.log(this.sectionArray);
-          this.selectedVideo = this.videoArray[v]
-          this.showSection(u);
-          this.showVideo(v)
-      }
+        
+        if (this["instructor/courseDraftGetter"].sectionsArray) {
+            this.sectionArray = this["instructor/courseDraftGetter"].sectionsArray;
+            // console.log(this.sectionArray);
+            if (this.sectionArray[this.selectedSectionIndex].videos) {
+                this.videoArray = this.sectionArray[this.selectedSectionIndex].videos;
+                // console.log(this.videoArray);
+              }
+                this.selectedVideo = this.videoArray[v]
+                await this.showSection(u);
+                await this.showVideo(v)
+            }
+          
     },
   },
 
@@ -309,4 +324,9 @@ export default {
 .space {
   margin: 120px;
 }
+
+::v-deep .v-icon.mdi-arrow-right-bold-box-outline, ::v-deep .v-icon.mdi-arrow-left-bold-box-outline {
+  color: rgb(131,0,0);
+}
+  
 </style>
