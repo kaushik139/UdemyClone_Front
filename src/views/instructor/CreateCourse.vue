@@ -33,11 +33,11 @@ import { mapGetters } from "vuex";
 import CreatePage from "../../components/instructor/createCourse/createContent/createPage.vue";
 import SideMenu from "../../components/instructor/createCourse/nav/sideMenu.vue";
 import SideNav from "../../components/instructor/sideNav.vue";
-import NavBar from "../../components/navBar.vue";
-import PlanCourse from "../../components/instructor/createCourse/planCourse.vue";
-import LandingPage from "../../components/instructor/createCourse/landingPage.vue";
-import PricingPage from "../../components/instructor/createCourse/pricingPage.vue";
-import PublishPage from "../../components/instructor/createCourse/publishPage.vue";
+import NavBar from "../../components/common/navBar.vue";
+import PlanCourse from "../../components/instructor/createCourse/others/planCourse.vue";
+import LandingPage from "../../components/instructor/createCourse/others/landingPage.vue";
+import PricingPage from "../../components/instructor/createCourse/others/pricingPage.vue";
+import PublishPage from "../../components/instructor/createCourse/others/publishPage.vue";
 
 
 // Components

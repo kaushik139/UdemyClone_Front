@@ -40,7 +40,9 @@ export default {
                 sectionName: "",
                 sectionDescription: "",
             },
-            sectionsArray: []
+            sectionsArray: [],
+            uploadedVideoPath: "",
+
 
         },
 
@@ -151,10 +153,7 @@ export default {
                             bgImage: res.data.item.images.bgImage,
                             fullDescription: res.data.item.description.fullDescription,
                             sectionsArray: res.data.item.sections,
-                            // videoTitle: value.videoTitle,
-                            // sectionIndex: value.sectionIndex,
-                            
-
+                        
                         })
                     }
                 }
@@ -339,31 +338,38 @@ export default {
             }
         },
 
-        //to create new video lectures
-        async CreateVideo({ commit, state }, value) {
-            console.log(value.videoTitle);
+        //to create new video lectures (name, path)
+        async CreateVideo({ dispatch, state }, value) {
+            // console.log(value.videoTitle);
+            // console.log(state.courseDraft.uploadedVideoPath);
 
-            try {
-                const res = await axios.patch(`http://localhost:3000/courses/createVideoLecture/${state.courseDraft.id}`, {
-                    videoTitle: value.videoTitle,
-                    sectionIndex: value.sectionIndex
-                });
-
-                if (res) {
-                    alert(res.data.message);
-                    await commit('updateCourseDraft', {videoTitle: value.videoTitle, sectionIndex: value.sectionIndex})
+            if (state.courseDraft.uploadedVideoPath) {
+                try {
+                    const res = await axios.patch(`http://localhost:3000/courses/createVideoLecture/${state.courseDraft.id}`, {
+                        videoTitle: value.videoTitle,
+                        videoPath:state.courseDraft.uploadedVideoPath, 
+                        sectionIndex: value.sectionIndex
+                    });
+    
+                    if (res) {
+                        alert(res.data.message);
+                        state.courseDraft.uploadedVideoPath = '';
+                        dispatch('getDraftCourse', state.courseDraft.id);
+                    }
                 }
+                catch (err) { alert(err) }
             }
-            catch (err) { alert(err) }
+            else alert('Please upload the video first!')
         },
 
-        //to edit video lectures
+        //to edit video lectures (name, path)
         async EditVideo({ dispatch, state }, value) {
             // console.log(value.title);
 
             try {
                 const res = await axios.patch(`http://localhost:3000/courses/updateVideoLecture/${state.courseDraft.id}`, {
                     videoTitle: value.title,
+                    videoPath:state.courseDraft.uploadedVideoPath, 
                     sectionIndex: value.sectionIndex,
                     videoIndex: value.videoIndex
                 });
@@ -376,7 +382,7 @@ export default {
             catch (err) { alert(err) }
         },
 
-        //to delete a video lecture:
+        //to delete a video lecture (name, path)
          async deleteVideo({ dispatch, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.videoIndex);
@@ -398,7 +404,7 @@ export default {
             catch (err) { alert(err) }
         },
          
-         //upload Video
+         //upload Video (video File)
          async videoUpload({ commit, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.videoIndex);
@@ -408,8 +414,7 @@ export default {
                 const formData = new FormData();
                  formData.append('fileInput', value.file);
                  formData.append('sectionIndex', value.sectionIndex);
-                 formData.append('videoIndex', value.videoIndex);
-                
+                 formData.append('videoIndex', value.videoIndex);                
 
                 const config = {
                     headers: {
@@ -423,16 +428,68 @@ export default {
                     config,
                 );
 
-
-                // if (res.data.message === "Updated") {
-                //     alert("Video Uploaded");
-                //     commit('updateCourseDraft', { bgImage: res.data.path })
-                // }
+                 if (res.data.path !== undefined) {
+                     state.courseDraft.uploadedVideoPath = res.data.path;
+                    alert("File uploaded: "+res.data.path);
+                }
             }
             catch (err) {
                 alert(err);
             }
         },
+         
+        //edit video file
+        async videoEdit({ commit, state }, value) {
+            //  console.log(value.sectionIndex);
+            //  console.log(value.videoIndex);
+            //  console.log(value.file);
+             
+             try {
+                const formData = new FormData();
+                 formData.append('fileInput', value.file);
+                 formData.append('sectionIndex', value.sectionIndex);
+                 formData.append('videoIndex', value.videoIndex);                
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
+
+                const res = await axios.patch(
+                    `http://localhost:3000/courses/videoEdit/${state.courseDraft.id}`,
+                    formData,
+                    config,
+                );
+
+                 if (res.data.path !== undefined) {
+                     state.courseDraft.uploadedVideoPath = res.data.path;
+                    alert("File uploaded: "+res.data.path);
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        },
+
+        //Create new Exercise
+        async AddExercise({ commit, state }, value) {
+            console.log(value);
+
+            try {
+                if (value.formData.exerciseName && value.formData.exerciseDescription) {
+                    const res = await axios.patch(`http://localhost:3000/courses/createExercise/${state.courseDraft.id}`,
+                        {
+                            title: value.formData.exerciseName,
+                            description: value.formData.exerciseDescription,
+                            index: value.index
+                        })
+                        if (res.data.message) {
+                            alert(res.data.message)
+                        }
+                }
+            }catch(err){alert(err)}
+        }
          
     },
 

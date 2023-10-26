@@ -198,8 +198,7 @@ export default {
       this.showSectionDiv = true;
       this.selectedSection = this.sectionArray[val];
       this.selectedSectionIndex = val;
-      // this.tab = val > 0 ? val : 0;
-      // console.log(this.tab);
+      this.selectedSectionVideos = this.sectionArray[val].videos.length;
     },
 
     editSection() {

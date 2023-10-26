@@ -12,7 +12,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import NavBar from "../../components/navBar.vue";
+import NavBar from "../../components/common/navBar.vue";
 
 // Components
 

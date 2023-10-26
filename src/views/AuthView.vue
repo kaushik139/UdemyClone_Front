@@ -19,10 +19,10 @@
     
     <script>
 import { defineComponent } from "vue";
-import login from "../components/logIn.vue";
-import signup from "../components/signUp.vue";
+import login from "../components/common/logIn.vue";
+import signup from "../components/common/signUp.vue";
 import chalk from 'chalk';
-import NavBar from "../components/navBar.vue";
+import NavBar from "../components/common/navBar.vue";
 
 
 export default defineComponent({

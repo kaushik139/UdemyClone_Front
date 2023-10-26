@@ -19,7 +19,7 @@
 <script>
 import { defineComponent } from 'vue';
 import SideNav from '../../components/instructor/sideNav.vue';
-import NavBar from '../../components/navBar.vue';
+import NavBar from '../../components/common/navBar.vue';
 
 // Components
 

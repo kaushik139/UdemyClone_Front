@@ -14,7 +14,10 @@
         :key="n"
         :value="n"
         style="color: rgb(131, 0, 0)"
-        @click="showSection(index)"
+        @click="
+          showSection(index);
+          showVideo(0);
+        "
       >
         Section {{ index + 1 }}
       </v-tab>
@@ -58,26 +61,26 @@
 
     <!-- Edit/delete Video -->
     <v-row v-if="videoArray.length">
-    <v-col cols="6" style="padding-right: 0px;">
-       <!-- Edit video -->
-    <v-btn block class="btn" @click="editVideo">
-      Edit video {{ selectedVideoIndex + 1 }}
-    </v-btn>
-    </v-col>
-    <v-col cols="6" style="padding-left: 0px;">
-       <!-- Delete video -->
-    <v-btn block class="btn" @click="deleteVideo">
-      Delete video {{ selectedVideoIndex + 1 }}
-    </v-btn>
-    </v-col>
+      <v-col cols="6" style="padding-right: 0px">
+        <!-- Edit video -->
+        <v-btn block class="btn" @click="editVideo">
+          Edit video {{ selectedVideoIndex + 1 }}
+        </v-btn>
+      </v-col>
+      <v-col cols="6" style="padding-left: 0px">
+        <!-- Delete video -->
+        <v-btn block class="btn" @click="deleteVideo">
+          Delete video {{ selectedVideoIndex + 1 }}
+        </v-btn>
+      </v-col>
     </v-row>
-
-   
 
     <!-- Modal dialog -->
     <v-dialog v-model="showModal" max-width="400px">
       <v-card>
-        <v-card-title> {{ modalTitle }} Video {{ modalVideoNo + 1 }} </v-card-title>
+        <v-card-title>
+          {{ modalTitle }} Video {{ modalVideoNo + 1 }}
+        </v-card-title>
 
         <!-- Form inside the modal -->
         <v-card-text>
@@ -96,12 +99,23 @@
                 accept="video/*"
               ></v-file-input>
 
-              <v-btn class="btn" @click="uploadFile">Upload</v-btn>
+              <v-btn
+                v-show="modalTitle === 'Adding'"
+                class="btn"
+                @click="uploadFile"
+                >Upload</v-btn
+              >
+              <v-btn
+                v-show="modalTitle === 'Editing'"
+                class="btn"
+                @click="editFile"
+                >Upload</v-btn
+              >
 
-              <div v-if="isSelectedFile" class="mt-2">
-                <p>Selected File: {{ selectedFile[0].name }}</p>
+              <div v-if="formData.videoFile" class="mt-2">
+                <p>Selected File: {{ formData.videoFile[0].name }}</p>
               </div>
-              <div v-if="!isSelectedFile" class="mt-2">
+              <div v-if="!formData.videoFile" class="mt-2">
                 <p>No File Selected</p>
               </div>
             </div>
@@ -122,11 +136,17 @@
     <v-card v-show="videoArray.length">
       <br />
       <h6>
-        Video Name: <v-label v-if="selectedVideo.title"> {{ selectedVideo.title }}</v-label>
+        Video Name:
+        <v-label v-if="selectedVideo.title !== undefined">
+          {{ selectedVideo.title }}</v-label
+        >
       </h6>
       <br />
       <h6>
-       Video
+        Video link:
+        <v-label v-if="selectedVideo.path !== undefined">
+          {{ selectedVideo.path }}</v-label
+        >
       </h6>
     </v-card>
   </v-card>
@@ -134,10 +154,16 @@
   
   <script>
 import { mapGetters } from "vuex";
+
 export default {
   computed: {
     isSelectedFile() {
       return this.selectedFile.length === 0 ? false : true;
+    },
+    showVideoDiv() {
+      if (this.videoArray.length) {
+        return true;
+      } else return false;
     },
 
     ...mapGetters(["instructor/courseDraftGetter"]),
@@ -161,7 +187,10 @@ export default {
       videoFile: "",
     },
     selectedFile: [],
-    selectedVideo:{},
+    selectedVideo: {
+      title: "",
+      path: "",
+    },
     nameRules: [
       (value) => {
         if (value) return true;
@@ -182,7 +211,7 @@ export default {
   methods: {
     addVideo() {
       this.modalTitle = "Adding";
-      this.modalVideoNo = this.videoArray.length ;
+      this.modalVideoNo = this.videoArray.length;
       this.showModal = true;
     },
 
@@ -190,50 +219,73 @@ export default {
       if (this.modalTitle === "Adding") {
         // Add New Video //
         if (this.formData.videoTitle) {
-          this.$store.dispatch("instructor/CreateVideo", {
-            videoTitle: this.formData.videoTitle,
-            sectionIndex: this.selectedSectionIndex,
-          });
-          
-          this.formData.videoTitle = "";
-          this.formData.videoDescription = "";
-          this.showModal = false;
-          
-          await this.mount(this.selectedSectionIndex, this.videoArray.length);
-          this.selectedVideoIndex = this.videoArray.length;
-          this.tabV = this.videoArray.length + 1;
-          this.tabS = this.selectedSectionIndex;
+          try {
+            await this.$store.dispatch("instructor/CreateVideo", {
+              videoTitle: this.formData.videoTitle,
+              sectionIndex: this.selectedSectionIndex,
+            });
 
+            await this.$store.dispatch(
+              "instructor/getDraftCourse",
+              localStorage.getItem("courseDraft")
+            );
+            await this.mount(this.selectedSectionIndex, this.videoArray.length);
+            this.selectedVideoIndex = this.videoArray.length - 1;
+            this.tabV = this.videoArray.length - 1;
+            this.tabS = this.selectedSectionIndex;
+
+            this.clear();
+            this.showModal = false;
+          } catch (err) {
+            alert(err);
+          }
         } else alert("Please fill the form Completely!");
       } else {
         // Edit existing Video
         if (this.formData.videoTitle) {
-          // console.log("Form data submitted:", this.formData);
-          // this.videoArray[this.selectedVideoIndex - 1] = {
-          //   videoTitle: this.formData.videoTitle,
-          //   videoDescription: this.formData.videoDescription,
-          // };
-            this.$store.dispatch('instructor/EditVideo', {title: this.formData.videoTitle, sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex})
-            await this.mount(this.selectedSectionIndex, this.selectedVideoIndex);
+          try {
+            await this.$store.dispatch("instructor/EditVideo", {
+              title: this.formData.videoTitle,
+              sectionIndex: this.selectedSectionIndex,
+              videoIndex: this.selectedVideoIndex,
+            });
+            await this.mount(
+              this.selectedSectionIndex,
+              this.selectedVideoIndex
+            );
 
-          this.formData.videoTitle = "";
-          this.formData.videoDescription = "";
-          this.showModal = false;
+            this.clear();
+            this.showModal = false;
+          } catch (err) {
+            alert(err);
+          }
         } else alert("Please Fill Form Completely!");
         await this.mount(this.selectedSectionIndex, this.selectedVideoIndex);
       }
-
       await this.$store.dispatch(
         "instructor/getDraftCourse",
         localStorage.getItem("courseDraft")
       );
 
+      this.tabS = this.selectedSectionIndex;
     },
 
-    uploadFile() {
-      // console.log(this.formData.videoFile[0]);
-      this.$store.dispatch('instructor/videoUpload', {sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex, file:this.formData.videoFile[0]})
+    async uploadFile() {
+      if (this.formData.videoFile[0]) {
+        await this.$store.dispatch("instructor/videoUpload", {
+          sectionIndex: this.selectedSectionIndex,
+          videoIndex: this.selectedVideoIndex,
+          file: this.formData.videoFile[0],
+        });
+      }
+    },
 
+    editFile() {
+      this.$store.dispatch("instructor/videoEdit", {
+        sectionIndex: this.selectedSectionIndex,
+        videoIndex: this.selectedVideoIndex,
+        file: this.formData.videoFile[0],
+      });
     },
 
     clear() {
@@ -242,67 +294,73 @@ export default {
     },
 
     showSection(val) {
-      // this.showSectionDiv = true;
-      // console.log(val);oo
-      this.selectedSection = this.sectionArray[val];
-      // console.log(this.selectedSection);oo
-      this.selectedSectionIndex = val;
-      this.videoArray = this.sectionArray[val].videos;
-      this.selectedVideoIndex = 0;
-      this.tabV = 0;  
-      // this.showVideo(0);
-      // this.selectedSectionVideos = this.selectedSection.videos.length;
-      // console.log(this.selectedSection.videos.length);
+      if (this.sectionArray[val]) {
+        this.selectedSection = this.sectionArray[val];
+        this.selectedSectionIndex = val;
+        this.videoArray = this.sectionArray[val].videos;
+        this.selectedVideoIndex = 0;
+        this.tabS = val;
+        this.tabV = 0;
+      }
     },
 
     showVideo(val) {
-      this.showVideoDiv = true;
-        this.selectedVideo = this.videoArray[val];
-      this.selectedVideoIndex = val;
-      // console.log(this.videoArray[val]);
+      if (this.videoArray[val]) {
+        this.selectedVideo.title =
+          this.videoArray[val].title !== undefined
+            ? this.videoArray[val].title
+            : "nil";
+        this.selectedVideo.path =
+          this.videoArray[val].path !== undefined
+            ? this.videoArray[val].path
+            : "nil";
+
+        this.selectedVideoIndex = val;
+      }
     },
 
     editVideo() {
       this.modalTitle = "Editing";
       this.modalVideoNo = this.selectedVideoIndex;
       this.showModal = true;
-      // console.log(this.selectedVideo.title);
-      this.formData.videoTitle =
-        this.selectedVideo.title;
+      this.formData.videoTitle = this.selectedVideo.title;
     },
 
-      async deleteVideo() {
-      // console.log(this.selectedSectionIndex);
-      // console.log(this.selectedVideoIndex);
-          await this.$store.dispatch('instructor/deleteVideo', { sectionIndex: this.selectedSectionIndex, videoIndex: this.selectedVideoIndex });
-          await this.mount(this.selectedSectionIndex, 0);
+    async deleteVideo() {
+      await this.$store.dispatch("instructor/deleteVideo", {
+        sectionIndex: this.selectedSectionIndex,
+        videoIndex: this.selectedVideoIndex,
+      });
+      if (this.videoArray.length) {
+        await this.mount(this.selectedSectionIndex, 0);
+      }
     },
 
     async mount(u, v) {
-      // console.log(u);
-      // console.log(v);
-      await this.$store.dispatch(
-        "instructor/getDraftCourse",
-        localStorage.getItem("courseDraft")
-      );
-        
+      // console.log("u " + u);
+      // console.log("v " + v);
+      try {
+        await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
+
         if (this["instructor/courseDraftGetter"].sectionsArray) {
-            this.sectionArray = this["instructor/courseDraftGetter"].sectionsArray;
-            // console.log(this.sectionArray);
-            if (this.sectionArray[this.selectedSectionIndex].videos) {
-                this.videoArray = this.sectionArray[this.selectedSectionIndex].videos;
-                // console.log(this.videoArray);
-              }
-                this.selectedVideo = this.videoArray[v]
-                await this.showSection(u);
-                await this.showVideo(v)
-            }
-          
+          this.sectionArray =
+            this["instructor/courseDraftGetter"].sectionsArray;
+
+          if (this.sectionArray[this.selectedSectionIndex].videos) {
+            this.videoArray =
+              this.sectionArray[this.selectedSectionIndex].videos;
+          }
+          this.showSection(u);
+          this.showVideo(v);
+        }
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 
   async mounted() {
-    await this.mount(0,0);
+    await this.mount(0, 0);
   },
 };
 </script>
@@ -325,8 +383,8 @@ export default {
   margin: 120px;
 }
 
-::v-deep .v-icon.mdi-arrow-right-bold-box-outline, ::v-deep .v-icon.mdi-arrow-left-bold-box-outline {
-  color: rgb(131,0,0);
+::v-deep .v-icon.mdi-arrow-right-bold-box-outline,
+::v-deep .v-icon.mdi-arrow-left-bold-box-outline {
+  color: rgb(131, 0, 0);
 }
-  
 </style>
