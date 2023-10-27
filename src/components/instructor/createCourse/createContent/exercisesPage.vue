@@ -28,6 +28,9 @@
       v-if="this.exercisesArray.length"
       v-model="tabE"
       bg-color="red-lighten-3"
+      next-icon="mdi-arrow-right-bold-box-outline"
+      prev-icon="mdi-arrow-left-bold-box-outline"
+      show-arrows
     >
       <v-tab
         v-for="(n, index) in exercisesArray"
@@ -54,11 +57,21 @@
     <!-- Create new Exercise -->
     <v-btn block class="btn" @click="addExercise"> Add New Exercise </v-btn>
 
-    <!-- Edit Exercise -->
-    <v-btn v-if="exercisesArray.length" block class="btn" @click="editExercise">
-      Edit Exercise {{ selectedExerciseIndex }}
-    </v-btn>
-
+    <!-- edit/delete  Exercise-->
+    <v-row v-if="exercisesArray.length">
+      <v-col cols="6" style="padding-right: 0px">
+        <!-- Edit Exercise -->
+        <v-btn block class="btn" @click="editExercise">
+          Edit Exercise {{ selectedExerciseIndex + 1 }}
+        </v-btn>
+      </v-col>
+      <v-col cols="6" style="padding-left: 0px">
+        <!-- Delete Exercise -->
+        <v-btn block class="btn" @click="deleteExercise">
+          Delete Exercise {{ selectedExerciseIndex + 1 }}
+        </v-btn>
+      </v-col>
+    </v-row>
 
      <!-- Modal dialog -->
      <v-dialog v-model="showModal" max-width="400px">
@@ -113,22 +126,23 @@
     </v-dialog>
 
  <!-- Exercise Content -->
- <!-- <v-card v-show="exercisesArray.length">
+ <v-card v-show="exercisesArray.length">
       <br />
       <h6>
         Exercise Name:
-        <v-label v-if="selectedExercise.exerciseName">
-          {{ selectedExercise.exerciseName }}</v-label
+        <v-label v-if="selectedExercise.title">
+          {{ selectedExercise.title }}</v-label
         >
       </h6>
       <br />
       <h6>
-        Exercise Description
-        <v-label v-if="selectedExercise.exerciseDescription">{{
-          selectedExercise.exerciseDescription
+        Exercise Description:
+        <br>
+        <v-label v-if="selectedExercise.description">{{
+          selectedExercise.description
         }}</v-label>
       </h6>
-    </v-card> -->
+    </v-card>
 
 
  </v-card>
@@ -139,9 +153,9 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    selectedExercise() {
-      return this.exerciseArray[0] || {};
-    },
+    // selectedExercise() {
+    //   return this.exerciseArray[0] || {};
+    // },
     isSelectedFile() {
       return this.selectedFile.length === 0 ? false : true;
     },
@@ -162,7 +176,7 @@ export default {
     loading: false,
     timeout: null,
     exerciseName: "",
-    tabE: null,
+    tabE: 0,
     tabS: null,
     showModal: false,
     modalTitle: "",
@@ -172,7 +186,10 @@ export default {
       exerciseDescription: "",
     },
     selectedFile: [],
-    selectedExercise: {},
+    selectedExercise: {
+      title: '',
+      description: ''
+    },
 
     nameRules: [
       (value) => {
@@ -194,33 +211,42 @@ export default {
       // this.modalExerciseNo = this.exerciseArray.length + 1;
       this.showModal = true;
     },
+
     async submitForm() {
-      console.log(this.selectedSectionIndex);
+
+      // Add New Exercise
       if (this.modalTitle === "Adding") {
-
-        // Add New Exercise
         if (this.formData.exerciseName && this.formData.exerciseDescription) {
-
           await this.$store.dispatch('instructor/AddExercise', {formData: this.formData, index: this.selectedSectionIndex});
 
-          this.formData.exerciseName = "";
-          this.formData.exerciseDescription = "";
           this.showModal = false;
-        } else alert("Please Fill form Completely!");
-      } else {
-        // Edit existing Exercise
-        if (this.formData.exerciseName) {
-          console.log("Form data submitted:", this.formData);
-          this.exerciseArray[this.selectedExerciseIndex - 1] = {
-            exerciseName: this.formData.exerciseName,
-            exerciseDescription: this.formData.exerciseDescription,
-          };
+          this.clear();
 
-          this.formData.exerciseName = "";
-          this.formData.exerciseDescription = "";
+          await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
+          await this.mount(this.selectedSectionIndex, this.exercisesArray.length);
+          this.tabS = this.selectedSectionIndex;
+          this.tabE = this.exercisesArray.length - 1;
+
+        } else alert("Please Fill form Completely!");
+      }
+
+      // Edit existing Exercise
+      else {
+        if (this.formData.exerciseName && this.formData.exerciseDescription) {
+          this.$store.dispatch('instructor/UpdateExercise', {
+            formData: this.formData, sectionIndex: this.selectedSectionIndex, exerciseIndex: this.selectedExerciseIndex
+          });
+
+          await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
+          await this.mount(this.selectedSectionIndex, this.selectedExerciseIndex);
+          this.tabS = this.selectedSectionIndex;
+          this.tabE = this.selectedExerciseIndex;
+          
           this.showModal = false;
+          this.clear();
         } else alert("Please Fill Form Completely!");
       }
+      
     },
 
     clear() {
@@ -230,24 +256,24 @@ export default {
     
     editExercise() {
       this.modalTitle = "Editing";
-      this.modalExerciseNo = this.selectedExerciseIndex;
+      this.modalExerciseNo = this.selectedExerciseIndex + 1;
       this.showModal = true;
-      this.formData.exerciseName =
-        this.selectedExercise.exerciseName ||
-        this.exerciseArray[0].exerciseName;
-      this.formData.exerciseDescription =
-        this.selectedExercise.exerciseDescription ||
-        this.exerciseArray[0].exerciseName;
+      this.formData.exerciseName = this.selectedExercise.title;
+      this.formData.exerciseDescription = this.selectedExercise.description
     },
-    uploadFile() {
-      console.log(this.selectedFile[0].name);
+
+    async  deleteExercise() {
+          await this.$store.dispatch('instructor/DeleteExercise', { sectionIndex: this.selectedSectionIndex, exerciseIndex: this.selectedExerciseIndex });
+
+          await this.mount(this.selectedSectionIndex, 0);
+          this.tabS = this.selectedSectionIndex
     },
 
     showSection(val) {
       if (this.sectionArray[val]) {
         this.selectedSection = this.sectionArray[val];
         this.selectedSectionIndex = val;
-        this.videoArray = this.sectionArray[val].videos;
+        this.exercisesArray = this.sectionArray[val].exercises;
         this.selectedVideoIndex = 0;
         this.tabS = val;
         this.tabE = 0;
@@ -256,16 +282,16 @@ export default {
 
     showExercise(val) {
       if (this.exercisesArray[val]) {
-        this.selectedExercise.title =this.exercisesArray[val].title !== undefined? this.exercisesArray[val].title: "nil";
-        this.selectedExercise.path =this.exercisesArray[val].path !== undefined? this.exercisesArray[val].path: "nil";
-
+        this.selectedExercise.title = this.exercisesArray[val].title !== undefined? this.exercisesArray[val].title: "nil";
+        this.selectedExercise.description = this.exercisesArray[val].description !== undefined? this.exercisesArray[val].description: "nil";
         this.selectedExerciseIndex = val;
+        this.tabE = val;
       }
     },
 
     async mount(s, e) {
-      console.log("s " + s);
-      console.log("e " + e);
+      // console.log("s " + s);
+      // console.log("e " + e);
 
       try {
         await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
@@ -278,8 +304,8 @@ export default {
             this.exercisesArray =
               this.sectionArray[this.selectedSectionIndex].exercises;
           }
-          this.showSection(s);
-          this.showExercise(e);
+                this.showSection(s);
+                this.showExercise(e);
 
             }
 
@@ -313,4 +339,9 @@ export default {
 .space {
   margin: 120px;
 }
+
+::v-deep .v-icon.mdi-arrow-right-bold-box-outline, ::v-deep .v-icon.mdi-arrow-left-bold-box-outline {
+  color: rgb(131,0,0);
+}
+
 </style>

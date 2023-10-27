@@ -171,7 +171,9 @@ export default {
         } else alert("Please Fill Form Completely!");
         // console.log(this.sectionArray.length);
         await this.mount(this.sectionArray.length + 1);
-      } else {
+      }
+
+      else {
         // Edit existing Section
         if (this.formData.sectionName && this.formData.sectionDescription) {
           await this.$store.dispatch("instructor/UpdateSection", {

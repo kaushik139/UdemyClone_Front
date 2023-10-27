@@ -42,7 +42,7 @@ export default {
             },
             sectionsArray: [],
             uploadedVideoPath: "",
-
+            videoFile: null,
 
         },
 
@@ -472,9 +472,30 @@ export default {
             }
         },
 
+        async GetCurrentVideo({ commit, state }, value) {
+            // console.log(value);
+            if (value) {
+                
+                try {
+                    const res = await axios.get(`http://localhost:3000/courses/getCurrentVideo/${value}`)
+    
+                    if (res.data) {
+                        // console.log(res.data);
+                        return res.data
+                    }
+                }
+                catch (err) {
+                    alert(err)
+                }
+
+            }
+            else console.log('No Video');
+            
+        },
+
         //Create new Exercise
-        async AddExercise({ commit, state }, value) {
-            console.log(value);
+        async AddExercise({ dispatch, state }, value) {
+            // console.log(value.formData);
 
             try {
                 if (value.formData.exerciseName && value.formData.exerciseDescription) {
@@ -486,10 +507,58 @@ export default {
                         })
                         if (res.data.message) {
                             alert(res.data.message)
+                            dispatch('getDraftCourse', state.courseDraft.id)
+
                         }
                 }
             }catch(err){alert(err)}
-        }
+        },
+
+        //to update Exercises
+        async UpdateExercise({ dispatch, state }, value) {
+            //  console.log(value.formData);
+            //  console.log(value.sectionIndex);
+            //  console.log(value.exerciseIndex);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/UpdateExercise/${state.courseDraft.id}`,
+                    {
+                        title: value.formData.exerciseName,
+                        description: value.formData.exerciseDescription,
+                        sectionIndex: value.sectionIndex,
+                        exerciseIndex: value.exerciseIndex
+                    });
+
+                if (res) {
+                    alert(res.data.message)
+                    dispatch('getDraftCourse', state.courseDraft.id)
+                }
+            }
+            catch (err) {
+                alert(err)
+            }
+        },
+
+                //to delete an Exercise
+                async DeleteExercise({ dispatch, state }, value) {
+                    //  console.log(value.sectionIndex);
+                    //  console.log(value.exerciseIndex);
+        
+                    try {
+                        const res = await axios.delete(`http://localhost:3000/courses/deleteExercise/${state.courseDraft.id}`, {
+                            data:{
+                                sectionIndex: value.sectionIndex,
+                                exerciseIndex: value.exerciseIndex
+                            }
+                        });
+        
+                        if (res) {
+                            alert(res.data.message);
+                            dispatch('getDraftCourse', state.courseDraft.id)
+                        }
+                    }
+                    catch (err) { alert(err) }
+                },
          
     },
 

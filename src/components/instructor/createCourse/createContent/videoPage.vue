@@ -143,21 +143,26 @@
       </h6>
       <br />
       <h6>
-        Video link:
-        <v-label v-if="selectedVideo.path !== undefined">
-          {{ selectedVideo.path }}</v-label
-        >
+        Video preview:
       </h6>
+
+      <!-- Video Playing Div -->
+      <div class="m-3" style="display: flex; justify-content: center;">
+        <video-player></video-player>
+      </div>
+
     </v-card>
   </v-card>
 </template>
   
   <script>
+import VideoPlayer from '../../../common/videoPlayer.vue';
 import { mapGetters } from "vuex";
 
 export default {
+  components: { VideoPlayer },
   computed: {
-    isSelectedFile() {
+    isSelectedFile() { 
       return this.selectedFile.length === 0 ? false : true;
     },
     showVideoDiv() {
@@ -200,6 +205,8 @@ export default {
 
     selectedSection: {},
     selectedSectionIndex: 0,
+
+    recievedVideo: null,
   }),
 
   watch: {
@@ -240,7 +247,9 @@ export default {
             alert(err);
           }
         } else alert("Please fill the form Completely!");
-      } else {
+        }
+
+        else {
         // Edit existing Video
         if (this.formData.videoTitle) {
           try {
@@ -314,8 +323,13 @@ export default {
           this.videoArray[val].path !== undefined
             ? this.videoArray[val].path
             : "nil";
-
         this.selectedVideoIndex = val;
+
+        //video play
+        // this.recievedVideo = this.$store.dispatch('instructor/GetCurrentVideo', this.selectedVideo.path)
+
+
+
       }
     },
 
