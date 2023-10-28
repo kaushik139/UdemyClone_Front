@@ -1,6 +1,5 @@
 <template>
   <v-card class="mainCard">
-    aa{{ course }}
     <v-layout>
       <v-navigation-drawer
         style="color: rgb(131, 0, 0)"
@@ -41,7 +40,7 @@
       >
         <v-card class="m-4 p-5">
           <v-btn @click="newCourse">Create New Course</v-btn>
-        <v-btn @click="this.$router.push('/create'); this.dialog = false">Continue editing {{ course }}</v-btn>
+        <v-btn @click="this.$router.push('/create'); this.dialog = false">Continue editing "{{ course }}"</v-btn>
         </v-card>
       </v-dialog>
 
@@ -65,7 +64,7 @@
 export default {
   computed: {
     course() {
-      return this.$store.state.courseDraft.title;
+      return this.$store.state.instructor.courseDraft.title;
     },
   },
   data() {

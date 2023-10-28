@@ -34,7 +34,7 @@
             class="nav-item"
             @click="switchToTeacher"
           >
-            <router-link to="/auth/s" class="nav-link">Teach</router-link>
+            <router-link to="/auth/l" class="nav-link">Teach</router-link>
             <!-- <a class="nav-link" href="#">Sign Up</a> -->
           </li>
           <li class="nav-item dropdown">

@@ -4,7 +4,7 @@
       <v-col cols="12">
       <h4>This is Landing Page</h4>
       
-      <v-btn class="bg-dark text-white mt-5" @click="this.$router.push('/auth/l')">Get Started</v-btn>
+      <v-btn class="bg-dark text-white mt-5" @click="start">Get Started</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -23,6 +23,13 @@ export default defineComponent({
   data() {
     return {
 
+    }
+  },
+
+  methods: {
+    async start() {
+      this.$store.state.User = 'students';
+      this.$router.push('/auth/l');
     }
   }
 });

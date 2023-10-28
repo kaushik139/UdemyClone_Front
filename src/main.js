@@ -10,6 +10,7 @@ import bootstrap from 'bootstrap/dist/css/bootstrap.min.css'
 import 'vuetify/dist/vuetify.min.css'
 
 
+
 loadFonts()
 
 createApp(App)

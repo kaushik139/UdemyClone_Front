@@ -46,6 +46,10 @@ export default {
 
         },
 
+        Courses: [],
+        AllCourses: [],
+
+
     },
 
 
@@ -77,6 +81,7 @@ export default {
             if (val.bgImage) state.courseDraft.image.bgImage = val.bgImage;
             //section Updater
             if (val.sectionsArray) state.courseDraft.sectionsArray = [...val.sectionsArray];
+            if (val.status) state.courseDraft.status = val.status;
             // if (val.videoTitle && val.sectionIndex !== undefined) {
             //     if (state.courseDraft.sectionsArray[val.sectionIndex]) {
             //       state.courseDraft.sectionsArray[val.sectionIndex].videos.push({
@@ -84,7 +89,7 @@ export default {
             //       });
             //     }
             //   }
-            
+
 
         },
 
@@ -147,13 +152,15 @@ export default {
                             discountPercent: res.data.item.price.discountPercent,
                             priceAfterDiscount: res.data.item.price.priceAfterDiscount,
                             tax: res.data.item.price.tax,
-                            finalPrice: res.data.item.price.finalPrice,
+                            finalPrice: res.data.item.price.finalAmount,
                         });
+
                         await commit('updateCourseDraft', {
                             bgImage: res.data.item.images.bgImage,
                             fullDescription: res.data.item.description.fullDescription,
                             sectionsArray: res.data.item.sections,
-                        
+                            status:res.data.item.status,
+                            
                         })
                     }
                 }
@@ -292,7 +299,7 @@ export default {
 
                 if (res) {
                     alert(res.data.message)
-                   await commit('updateCourseDraft', { sectionName: value.sectionName, sectionDescription: value.sectionDescription })
+                    await commit('updateCourseDraft', { sectionName: value.sectionName, sectionDescription: value.sectionDescription })
                 }
             }
             catch (err) {
@@ -347,10 +354,10 @@ export default {
                 try {
                     const res = await axios.patch(`http://localhost:3000/courses/createVideoLecture/${state.courseDraft.id}`, {
                         videoTitle: value.videoTitle,
-                        videoPath:state.courseDraft.uploadedVideoPath, 
+                        videoPath: state.courseDraft.uploadedVideoPath,
                         sectionIndex: value.sectionIndex
                     });
-    
+
                     if (res) {
                         alert(res.data.message);
                         state.courseDraft.uploadedVideoPath = '';
@@ -369,7 +376,7 @@ export default {
             try {
                 const res = await axios.patch(`http://localhost:3000/courses/updateVideoLecture/${state.courseDraft.id}`, {
                     videoTitle: value.title,
-                    videoPath:state.courseDraft.uploadedVideoPath, 
+                    videoPath: state.courseDraft.uploadedVideoPath,
                     sectionIndex: value.sectionIndex,
                     videoIndex: value.videoIndex
                 });
@@ -383,13 +390,13 @@ export default {
         },
 
         //to delete a video lecture (name, path)
-         async deleteVideo({ dispatch, state }, value) {
+        async deleteVideo({ dispatch, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.videoIndex);
 
             try {
                 const res = await axios.delete(`http://localhost:3000/courses/deleteVideoLecture/${state.courseDraft.id}`, {
-                    data:{
+                    data: {
                         videoTitle: value.title,
                         sectionIndex: value.sectionIndex,
                         videoIndex: value.videoIndex
@@ -403,18 +410,18 @@ export default {
             }
             catch (err) { alert(err) }
         },
-         
-         //upload Video (video File)
-         async videoUpload({ commit, state }, value) {
+
+        //upload Video (video File)
+        async videoUpload({ commit, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.videoIndex);
             //  console.log(value.file);
-             
-             try {
+
+            try {
                 const formData = new FormData();
-                 formData.append('fileInput', value.file);
-                 formData.append('sectionIndex', value.sectionIndex);
-                 formData.append('videoIndex', value.videoIndex);                
+                formData.append('fileInput', value.file);
+                formData.append('sectionIndex', value.sectionIndex);
+                formData.append('videoIndex', value.videoIndex);
 
                 const config = {
                     headers: {
@@ -428,27 +435,27 @@ export default {
                     config,
                 );
 
-                 if (res.data.path !== undefined) {
-                     state.courseDraft.uploadedVideoPath = res.data.path;
-                    alert("File uploaded: "+res.data.path);
+                if (res.data.path !== undefined) {
+                    state.courseDraft.uploadedVideoPath = res.data.path;
+                    alert("File uploaded: " + res.data.path);
                 }
             }
             catch (err) {
                 alert(err);
             }
         },
-         
+
         //edit video file
         async videoEdit({ commit, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.videoIndex);
             //  console.log(value.file);
-             
-             try {
+
+            try {
                 const formData = new FormData();
-                 formData.append('fileInput', value.file);
-                 formData.append('sectionIndex', value.sectionIndex);
-                 formData.append('videoIndex', value.videoIndex);                
+                formData.append('fileInput', value.file);
+                formData.append('sectionIndex', value.sectionIndex);
+                formData.append('videoIndex', value.videoIndex);
 
                 const config = {
                     headers: {
@@ -462,9 +469,9 @@ export default {
                     config,
                 );
 
-                 if (res.data.path !== undefined) {
-                     state.courseDraft.uploadedVideoPath = res.data.path;
-                    alert("File uploaded: "+res.data.path);
+                if (res.data.path !== undefined) {
+                    state.courseDraft.uploadedVideoPath = res.data.path;
+                    alert("File uploaded: " + res.data.path);
                 }
             }
             catch (err) {
@@ -475,10 +482,10 @@ export default {
         async GetCurrentVideo({ commit, state }, value) {
             // console.log(value);
             if (value) {
-                
+
                 try {
                     const res = await axios.get(`http://localhost:3000/courses/getCurrentVideo/${value}`)
-    
+
                     if (res.data) {
                         // console.log(res.data);
                         return res.data
@@ -490,7 +497,7 @@ export default {
 
             }
             else console.log('No Video');
-            
+
         },
 
         //Create new Exercise
@@ -505,13 +512,13 @@ export default {
                             description: value.formData.exerciseDescription,
                             index: value.index
                         })
-                        if (res.data.message) {
-                            alert(res.data.message)
-                            dispatch('getDraftCourse', state.courseDraft.id)
+                    if (res.data.message) {
+                        alert(res.data.message)
+                        dispatch('getDraftCourse', state.courseDraft.id)
 
-                        }
+                    }
                 }
-            }catch(err){alert(err)}
+            } catch (err) { alert(err) }
         },
 
         //to update Exercises
@@ -539,27 +546,49 @@ export default {
             }
         },
 
-                //to delete an Exercise
-                async DeleteExercise({ dispatch, state }, value) {
-                    //  console.log(value.sectionIndex);
-                    //  console.log(value.exerciseIndex);
-        
-                    try {
-                        const res = await axios.delete(`http://localhost:3000/courses/deleteExercise/${state.courseDraft.id}`, {
-                            data:{
-                                sectionIndex: value.sectionIndex,
-                                exerciseIndex: value.exerciseIndex
-                            }
-                        });
-        
-                        if (res) {
-                            alert(res.data.message);
-                            dispatch('getDraftCourse', state.courseDraft.id)
-                        }
+        //to delete an Exercise
+        async DeleteExercise({ dispatch, state }, value) {
+            //  console.log(value.sectionIndex);
+            //  console.log(value.exerciseIndex);
+
+            try {
+                const res = await axios.delete(`http://localhost:3000/courses/deleteExercise/${state.courseDraft.id}`, {
+                    data: {
+                        sectionIndex: value.sectionIndex,
+                        exerciseIndex: value.exerciseIndex
                     }
-                    catch (err) { alert(err) }
-                },
-         
+                });
+
+                if (res) {
+                    alert(res.data.message);
+                    dispatch('getDraftCourse', state.courseDraft.id)
+                }
+            }
+            catch (err) { alert(err) }
+        },
+
+        //to Publish current Course
+        async Publish({ dispatch, state }) {
+            // console.log(value);
+            // console.log(state.courseDraft.status);
+
+            try {
+                const res = await axios.patch(`http://localhost:3000/courses/requestPublish/${state.courseDraft.id}`,)
+
+                if (res.data) {
+                    alert(res.data);
+                    dispatch('getDraftCourse', state.courseDraft.id)
+                }
+            }catch(err){alert(err)}
+
+
+        },
+
+        //to fetch all courses for an instructor
+        async AllMyCourses({ dispatch, state }, value) {
+            console.log(value);
+        }
+
     },
 
 
