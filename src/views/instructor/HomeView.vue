@@ -1,138 +1,367 @@
 <template>
-<div class="contain">
-<nav-bar class="navi"></nav-bar>
-  <div class="row">
-    <div class="col-md-12">
-      <side-nav></side-nav>
+  <div class="contain" >
+    <nav-bar class="navi"></nav-bar>
+    <div class="row">
+      <div class="col-md-12">
+        <side-nav></side-nav>
+      </div>
     </div>
-  </div>
 
-  <v-container>
-      <v-row class="text-center">
-        <v-col cols="12">
-          <h5 class="mb-12">Your Draft Courses:</h5>
-          <ul type="none" v-for="(item, index) in Courses" :key="index">
-            <li >
-              <v-row>
-                <v-col cols="3" class="p-0">
-                <img src="#" alt="Course Image" style="min-width: 170px; min-height: 100px; border: 2px solid black;">
-                </v-col>
-                
-                <v-col cols="6" >
-                <div class="mt-4">
-                  {{ index+1 }}. {{ item }}
-                </div>
+     <!-- Published courses -->
+    <v-container  class="mt-6">    
+     <v-card v-if="publishedCoursesArray.length" elevation="4"> 
+       <v-row  class="text-center">
+       <v-col cols="12">
+         <h4 class="mb-12 mt-12">Your Published Courses:</h4>
+         <ul type="none" v-for="(item, index) in publishedCoursesArray" :key="index">
+           <li v-if="item.status === 'published'">
+             <v-row class="m-2">
+               <v-col cols="3" class="">
+                 <img
+                   v-if="item.imgURL !== null"
+                   :src="item.imgURL"
+                   alt="Course Image"
+                   style="max-width: 170px; min-height: 100px"
+                 />
+                 <img
+                   v-else
+                   class="border"
+                   alt="No Image Available"
+                   style="max-width: 170px; min-height: 100px"
+                 />
                </v-col>
 
-                <v-col cols="3" >
-                <v-btn class="btn mt-6" @click="publish(index)">Publish Now</v-btn>     
+               <!-- <v-col cols="1" class="mt-4" style="text-align: right;">
+                  <span class="inline h4">{{ index+1 }}.</span>
+              </v-col> -->
+
+               <v-col cols="5" class="mt-4" style="text-align: left">
+                 <span class="inline h4"
+                   >{{ index + 1 }}. {{ item.title }}</span
+                 >
+               </v-col>
+
+               <v-col cols="1">
+                 <v-btn class="btn mt-6" @click="view(index, 'publishedCoursesArray')">View</v-btn>
+               </v-col>
+
+               <v-col cols="1">
+                 <v-btn class="btn mt-6" @click="edit(index, 'publishedCoursesArray')">Edit</v-btn>
+               </v-col>
+             </v-row>
+           </li>
+         </ul>
+         
+       </v-col>
+     </v-row>
+     </v-card>
+
+      <!-- No Courses -->
+      <v-card v-else style="text-align: center; color: rgb(187, 85, 85);" elevation="4">
+       <h4>No Courses Published !</h4>
+     </v-card>
+
+   </v-container>
+
+    <!-- draft courses -->
+    <v-container  class="mt-4 pt-5 mb-4">
+      <v-card v-if="draftCoursesArray" elevation="4" class="m-6">
+        <v-row  class="text-center">
+        <v-col cols="12">
+          <h3 class="mb-12 mt-12">Your Draft Courses:</h3>
+          <ul type="none" v-for="(item, index) in draftCoursesArray" :key="index">
+            <li v-if="item.status === 'draft' || item.status === 'requested'">
+              <v-row class="m-2" style="gap: 15px;">
+                <v-col cols="3" class="">
+                  <img
+                    v-if="item.imgURL !== null"
+                    :src="item.imgURL"
+                    alt="Course Image"
+                    style="max-width: 170px; min-height: 100px"
+                  />
+                  <img
+                    v-else
+                    class="border"
+                    alt="No Image Available"
+                    style="max-width: 170px; min-height: 100px"
+                  />
                 </v-col>
 
+                <!-- <v-col cols="1" class="mt-4" style="text-align: right;">
+                   <span class="inline h4">{{ index+1 }}.</span>
+               </v-col> -->
+
+                <v-col cols="5" class="mt-4" style="text-align: left">
+                  <span class="inline h4"
+                    >{{ index + 1 }}. {{ item.title }}</span
+                  >
+                </v-col>
+                
+                <v-col cols="1">
+
+                  <v-btn
+                  v-if="item.status === 'draft'"
+                    class="btn mt-6"
+                    style="padding: 5px !important"
+                    
+                    >Publish
+                    
+                     <!-- Modal dialog -->
+          <v-dialog v-model="dialog" width="50%" activator="parent" style="z-index: 999;">
+            <v-card style="text-align: center;">
+              <v-card-title>
+                Publish Course: {{ index + 1 }}.
+                {{ draftCoursesArray[index].title }}
+              </v-card-title>
+
+              <!-- Form inside the modal -->
+              <v-card-text>
+                <v-form>
+                  <div>
+                    <v-btn class="btn" @click="requestPublish(draftCoursesArray[index].id)"
+                      >Request Publishing</v-btn
+                    >
+                  </div>
+                </v-form>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-btn color="rgb(250, 100, 50)" @click="dialog = false"
+                  >Close</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+                    </v-btn>
+
+
+                  <span
+                  v-if="item.status === 'requested'"
+                    disabled
+                    class="btn mt-6"
+                    style="color: rgb(255, 255, 255);margin-left: -40% ; background-color: rgb(244, 167, 147);"
+                    >Requested</span
+                  >
+                </v-col>
+
+                <v-col cols="1">
+                  <v-btn class="btn mt-6" @click="view(index, 'draftCoursesArray')">View</v-btn>
+                </v-col>
+
+                <v-col cols="1">
+                  <v-btn class="btn mt-6" @click="edit(index, 'draftCoursesArray')">Edit</v-btn>
+                </v-col>
               </v-row>
             </li>
           </ul>
 
-          <!-- Modal dialog -->
-      <v-dialog v-model="showModal" max-width="400px">
-        <v-card>
-          <v-card-title> Publish Course: {{ courseToPublishIndex+1 }}. {{ Courses[courseToPublishIndex] }} </v-card-title>
-  
-          <!-- Form inside the modal -->
-          <v-card-text>
-            <v-form @submit.prevent="submitForm">
-             
-              <div>
-  
-                <v-btn class="btn btn-secondary" @click="sub">Request Publishing</v-btn>
-  
-              </div>
-            </v-form>
-          </v-card-text>
-  
-          <v-card-actions>
-            <v-btn color="rgb(250, 100, 50)" @click="showModal = false"
-              >Close</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
         </v-col>
       </v-row>
+      </v-card>
 
-      <v-btn class="btn btn-primary" @click="mount">Test</v-btn>
+       <!-- No Courses -->
+       <v-card v-else style="text-align: center; color: rgb(187, 85, 85);">
+        <h4>No Draft Courses!</h4>
+      </v-card>
+
     </v-container>
 
+    <!-- view Course Modal -->
+    <template >
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog2"
+      fullscreen
+      transition="dialog-bottom-transition"
+      >
+      <!-- :scrim="false" -->
+      <!-- <template v-slot:activator="{ props }">
+        <v-btn
+          color="primary"
+          dark
+          v-bind="props"
+        >
+          Open Dialog
+        </v-btn>
+      </template> -->
+      <v-card>
+        <v-toolbar
+          dark
+          style="background-color:#ffffff;"
+        >
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn
+              variant="text"
+              @click="dialog2 = false"
+              class=""
+              style= "background-color:rgb(131,0,0);color: white; border-radius: 30px;"
+            >
+              Close
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        
+        <!-- content -->
+        <v-row>
+          <!-- img -->
+          <v-col cols="6" class="bg-primary m-4">
+            <img :src = "viewImgURL" alt="Course Image"
+            style="
+            height:40%;
+            width: 100%;
+            border-radius: 20px;
+            "
+            >
+          </v-col>
+          <v-col cols="5" class="bg-secondary">
+            <v-row class="bg-danger mt-12">
+                <v-col cols="3" class="m-3">
+                  <h5>Title: </h5>
+                </v-col>
+                <v-col cols="5" class="m-3">  
+                  {{  }}
+                </v-col>
+            </v-row>
+          </v-col>
 
-  
-</div>
+
+
+        </v-row>
+        
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+<!-- end -->
+  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import SideNav from '../../components/instructor/sideNav.vue';
-import NavBar from '../../components/common/navBar.vue';
-import { mapGetters } from 'vuex';
+import { defineComponent } from "vue";
+import SideNav from "../../components/instructor/sideNav.vue";
+import NavBar from "../../components/common/navBar.vue";
+import { mapGetters } from "vuex";
 
 // Components
 
 export default defineComponent({
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     SideNav,
-    NavBar
-    
+    NavBar,
   },
 
   computed: {
-    
+    ...mapGetters(["instructor/allCoursesGetter"]),
   },
 
   data() {
     return {
-      a: 'data',
-      Courses: [
-          {
-            id: '',
-            title: '',
-            img: '',
-          }
-        ],
-        showModal: false,
-        courseToPublishIndex: null, 
+      a: "data",
+      draftCoursesArray: [],
+      publishedCoursesArray:[],
+      dialog: false,
+      courseToPublishIndex: null,
+      draft: 0,
+      dialog2: false,
+      viewCourse: {},
+      viewImgURL: '',
 
-    }
+    };
   },
 
   methods: {
-        publish(index) {
-        this.showModal = true;
-          this.courseToPublishIndex = index;
-      },
-      sub() { 
-        console.log('qq');
-        alert(`Course: ${this.Courses[this.courseToPublishIndex]} is Published!`)
-        this.showModal = false;
-      },
+    /**
+     * 
+     * @param {*} index 
+     */
+    async view(index, arr) {
+      // console.log(this[arr][index].id);
+      this.dialog2 = true;
+      this.viewCourse = this["instructor/allCoursesGetter"].filter((item) => {
+        if (item._id === this[arr][index].id) return item;
+      })
+      this.viewImgURL = `http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`
+      // console.log(this.viewCourse[0].title);
+      // console.log(this.viewCourse[0].images.bgImage);
+      // console.log(http://localhost:3000/Images/${this.viewCourse[0].images.bgImage});
+      console.log(`http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`);
 
-
-       async mount() {
-           await this.$store.dispatch('instructor/AllMyCourses', localStorage.getItem('email'));
-      }
     },
 
+    async edit(index, arr) {
+      // console.log(index);
+      // console.log(this[arr][index].id);
+      localStorage.setItem('courseDraft', this[arr][index].id);
+      await this.$store.dispatch('instructor/getDraftCourse', this[arr][index].id);
+      await this.$store.commit('instructor/changeCurrentComp', 'PlanCourse');
+      await this.$router.push('/create')
+
+    },
+
+    requestPublish(ID) {
+      console.log(ID);
+      this.$store.dispatch('instructor/Publish', ID);
+      this.showModal = false;
+      this.mount();
+    },
+
+    async mount() {
+      let draftCoursesArray1 = [];
+      let publishedCoursesArray1 = [];
+      await this.$store.dispatch(
+        "instructor/AllMyCourses",
+        localStorage.getItem("email")
+      );
+      for (let i = 0; i < this["instructor/allCoursesGetter"].length; i++) {
+        //temporary Array for unPublished Courses
+        if (this['instructor/allCoursesGetter'][i].status === 'draft' || this['instructor/allCoursesGetter'][i].status === 'requested') {
+          draftCoursesArray1.push({
+          id: this["instructor/allCoursesGetter"][i]._id,
+          title: this["instructor/allCoursesGetter"][i].title,
+           imgURL: this['instructor/allCoursesGetter'][i].images.bgImage !== null ? `http://localhost:3000/Images/${this["instructor/allCoursesGetter"][i].images.bgImage}` : null,
+          status: this['instructor/allCoursesGetter'][i].status,
+         });
+        }
+        // temporary array for published courses
+        if (this["instructor/allCoursesGetter"][i].status === 'published') {
+          publishedCoursesArray1.push({
+          id: this["instructor/allCoursesGetter"][i]._id,
+          title: this["instructor/allCoursesGetter"][i].title,
+           imgURL: this['instructor/allCoursesGetter'][i].images.bgImage !== null ? `http://localhost:3000/Images/${this["instructor/allCoursesGetter"][i].images.bgImage}` : null,
+          status: this['instructor/allCoursesGetter'][i].status,
+         });
+        }
+      }
+      // setting arrays to display using temp arrays; helps while 'requesting publish', to refresh DOM without reloading
+      this.publishedCoursesArray = publishedCoursesArray1;
+      this.draftCoursesArray = draftCoursesArray1;
+      // console.log(this.Courses);
+    },
+  },
+
+  mounted() {
+    this.mount();
+  }
 });
 </script>
 
 <style scoped>
-.contain{
+.contain {
   text-align: center;
   margin-top: -20px;
 }
 
-.navi{
+.navi {
   margin-left: 4%;
   width: 96%;
   margin-top: 20px;
+}
+
+.dialog-bottom-transition-enter-active,
+.dialog-bottom-transition-leave-active {
+  transition: transform .2s ease-in-out;
 }
 </style>

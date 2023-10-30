@@ -3,7 +3,7 @@
     <v-row class="text-center">
       <!-- image -->
       <v-col cols="4" >
-        <img :src="Course.imgURL" alt="" style="max-height: 100%; width: 100%;"/>
+        <img :src="Course.imgURL" alt="Course Image" style="max-height: 100%; width: 100%;"/>
       </v-col>
       <!-- Contents -->
       <v-col cols="8" class="mt-4">
@@ -68,7 +68,7 @@
 
     </v-row>
     <!-- dialog Button -->
-    <v-btn class="btn btn-danger mt-12" @click="mount">
+    <v-btn class="btn btn-danger mt-12">
       Request to Publish
     
       <v-dialog
@@ -119,14 +119,10 @@ export default {
   }),
   methods: {
 
-    publish(index) {
-      this.showModal = true;
-      this.courseToPublishIndex = index;
-    },
     sub() {
       console.log("qq");
-      alert(`Course: ${this.Courses[this.courseToPublishIndex]} is Published!`);
       this.showModal = false;
+      alert(`Course: ${this.Courses[this.courseToPublishIndex]} is Published!`);
     },
 
     toTitleCase(value) {
@@ -137,7 +133,7 @@ export default {
       publish() {
         this.$store.dispatch('instructor/Publish', this["instructor/courseDraftGetter"].id)
           // alert('requested')
-          // this.dialog = false;
+          this.dialog = false;
     },
 
     async mount() {

@@ -248,6 +248,7 @@ export default {
                 if (res.data.message === "Updated") {
                     alert('Landing Page Updated');
                     commit('updateCourseDraft', { fullDescription: value })
+                    commit('changeCurrentComp', 'CreatePage')
                 }
             }
             catch (err) {
@@ -568,12 +569,17 @@ export default {
         },
 
         //to Publish current Course
-        async Publish({ dispatch, state }) {
-            // console.log(value);
+        async Publish({ dispatch, state }, value) {
+            let ID;
+            if (value) {
+                console.log(value);
+                ID = value;
+            }
+            else ID = state.courseDraft.id;
             // console.log(state.courseDraft.status);
 
             try {
-                const res = await axios.patch(`http://localhost:3000/courses/requestPublish/${state.courseDraft.id}`,)
+                const res = await axios.patch(`http://localhost:3000/courses/requestPublish/${ID}`,)
 
                 if (res.data) {
                     alert(res.data);
@@ -587,6 +593,18 @@ export default {
         //to fetch all courses for an instructor
         async AllMyCourses({ dispatch, state }, value) {
             console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.get(`http://localhost:3000/instructors/allMyCourses/${value}`);
+
+                    if (res.data) {
+                        state.AllCourses = res.data;
+                        // console.log(res.data);
+                    }
+
+                }catch(err){alert(err)}
+            }
         }
 
     },
@@ -604,6 +622,10 @@ export default {
             // },2000)
             return state.courseDraft;
         },
+
+         allCoursesGetter(state) {
+             return state.AllCourses
+        }
 
     },
 }
