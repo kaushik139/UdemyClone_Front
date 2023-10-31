@@ -175,38 +175,20 @@
       fullscreen
       transition="dialog-bottom-transition"
       >
-      <!-- :scrim="false" -->
-      <!-- <template v-slot:activator="{ props }">
-        <v-btn
-          color="primary"
-          dark
-          v-bind="props"
-        >
-          Open Dialog
-        </v-btn>
-      </template> -->
       <v-card>
-        <v-toolbar
-          dark
-          style="background-color:#ffffff;"
-        >
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
             <v-btn
               variant="text"
               @click="dialog2 = false"
-              class=""
-              style= "background-color:rgb(131,0,0);color: white; border-radius: 30px;"
+              class="badge"
+              style= "background-color:rgb(131,0,0);color: white; border-radius: 50px; max-width: 5px;margin-left: auto;"
             >
               Close
             </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
         
         <!-- content -->
         <v-row>
           <!-- img -->
-          <v-col cols="6" class="bg-primary m-4">
+          <v-col cols="6" class="m-4 mr-0 ml-12">
             <img :src = "viewImgURL" alt="Course Image"
             style="
             height:40%;
@@ -215,16 +197,123 @@
             "
             >
           </v-col>
-          <v-col cols="5" class="bg-secondary">
-            <v-row class="bg-danger mt-12">
-                <v-col cols="3" class="m-3">
-                  <h5>Title: </h5>
+          <!-- text data -->
+          <v-col cols="5" class="m-4 ml-0 mr-0">
+            <!-- row1 -->
+            <v-row class=" mt-4">
+                <v-col cols="3" class="m-0 mr-0 pr-0 ml-5">
+                  <h4>Title: </h4>
                 </v-col>
-                <v-col cols="5" class="m-3">  
-                  {{  }}
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h4>{{ toTitleCase(viewCourse[0].title) }}</h4>
                 </v-col>
             </v-row>
+
+             <!-- row2 -->
+             <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Description: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h5>{{ viewCourse[0].description.miniDescription }}</h5>
+                </v-col>
+            </v-row>
+
+             <!-- row3 -->
+             <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Category: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h5>{{ viewCourse[0].category }}</h5>
+                </v-col>
+            </v-row>
+
+            <!-- row4 -->
+            <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Sections: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h5>{{ viewCourse[0].sections.length }}</h5>
+                </v-col>
+            </v-row>
+
+            <!-- row5 -->
+            <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Videos: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h5>{{ viewVideos }}</h5>
+                </v-col>
+            </v-row>
+
+              <!-- row6-->
+              <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Exercises: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <h5>{{ viewExercises }}</h5>
+                </v-col>
+            </v-row>
+
+            <!-- row7-->
+            <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Status: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0  ml-0">  
+                  <h5>{{ toTitleCase(viewCourse[0].status) }}</h5>
+                </v-col>
+            </v-row>
+
+             <!-- row7-->
+             <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Price: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0  ml-0">  
+                  <v-icon class="mdi-currency-inr mdi mb-1">{{ mdiCurrencyInr }}</v-icon>
+                  <h5 style="display: inline;"> {{ viewCourse[0].price.finalAmount }}</h5>
+                </v-col>
+            </v-row>
+
+             <!-- row8-->
+             <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Enrolled: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0  ml-0">  
+                  <h5> {{ viewCourse[0].enrollment.length }}</h5>
+                </v-col>
+            </v-row>
+
+            <!-- row9-->
+            <v-row class="m-0">
+                <v-col cols="3" class="m-0 pr-0 ml-5 mr-0">
+                  <h5>Rating: </h5>
+                </v-col>
+                <v-col cols="8" class="m-0 ml-0">  
+                  <!-- <h5> {{ viewCourse[0].rating.netRating }}</h5> -->
+
+                  <div class="text-center">
+    <v-rating
+      v-model="viewCourse[0].rating.netRating"
+      color="yellow-darken-3"
+
+      half-increments
+    ></v-rating>
+    <!-- <pre>{{ viewCourse[0].rating.netRating  }}</pre> -->
+  </div>
+
+                </v-col>
+            </v-row>
+
           </v-col>
+
+          
 
 
 
@@ -268,11 +357,19 @@ export default defineComponent({
       dialog2: false,
       viewCourse: {},
       viewImgURL: '',
+      viewVideos: 0,
+      viewExercises: 0,
+
 
     };
   },
 
   methods: {
+    toTitleCase(value) {
+      if (!value) return '';
+      return value.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    },
+
     /**
      * 
      * @param {*} index 
@@ -283,11 +380,21 @@ export default defineComponent({
       this.viewCourse = this["instructor/allCoursesGetter"].filter((item) => {
         if (item._id === this[arr][index].id) return item;
       })
-      this.viewImgURL = `http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`
+      this.viewImgURL = `http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`;
+      // console.log(this.viewCourse[0].sections);
+      if (this.viewCourse[0].sections.length > 0) {
+        for (let i = 0; i < this.viewCourse[0].sections.length; i++){
+          this.viewVideos += this.viewCourse[0].sections[i].videos.length > 0 ? this.viewCourse[0].sections[i].videos.length : 0;
+          this.viewExercises += this.viewCourse[0].sections[i].exercises.length > 0 ? this.viewCourse[0].sections[i].exercises.length : 0;
+        }
+        console.log(this.viewExercises);
+        console.log(this.viewVideos);
+        
+      }
       // console.log(this.viewCourse[0].title);
       // console.log(this.viewCourse[0].images.bgImage);
       // console.log(http://localhost:3000/Images/${this.viewCourse[0].images.bgImage});
-      console.log(`http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`);
+      // console.log(`http://localhost:3000/Images/${this.viewCourse[0].images.bgImage}`);
 
     },
 

@@ -142,27 +142,24 @@
         >
       </h6>
       <br />
-      <h6>
-        Video preview:
-      </h6>
+      <h6>Video preview: {{ selectedVideo.path }}</h6>
 
       <!-- Video Playing Div -->
-      <div class="m-3" style="display: flex; justify-content: center;">
-        <video-player></video-player>
+      <div class="m-3" style="display: flex; justify-content: center">
+        <video-player :path="selectedVideo.path"></video-player>
       </div>
-
     </v-card>
   </v-card>
 </template>
   
   <script>
-import VideoPlayer from '../../../common/videoPlayer.vue';
+import VideoPlayer from "../../../common/videoPlayer.vue";
 import { mapGetters } from "vuex";
 
 export default {
   components: { VideoPlayer },
   computed: {
-    isSelectedFile() { 
+    isSelectedFile() {
       return this.selectedFile.length === 0 ? false : true;
     },
     showVideoDiv() {
@@ -247,9 +244,7 @@ export default {
             alert(err);
           }
         } else alert("Please fill the form Completely!");
-        }
-
-        else {
+      } else {
         // Edit existing Video
         if (this.formData.videoTitle) {
           try {
@@ -313,7 +308,7 @@ export default {
       }
     },
 
-    showVideo(val) {
+    async showVideo(val) {
       if (this.videoArray[val]) {
         this.selectedVideo.title =
           this.videoArray[val].title !== undefined
@@ -324,12 +319,6 @@ export default {
             ? this.videoArray[val].path
             : "nil";
         this.selectedVideoIndex = val;
-
-        //video play
-        // this.recievedVideo = this.$store.dispatch('instructor/GetCurrentVideo', this.selectedVideo.path)
-
-
-
       }
     },
 
@@ -354,7 +343,10 @@ export default {
       // console.log("u " + u);
       // console.log("v " + v);
       try {
-        await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
+        await this.$store.dispatch(
+          "instructor/getDraftCourse",
+          localStorage.getItem("courseDraft")
+        );
 
         if (this["instructor/courseDraftGetter"].sectionsArray) {
           this.sectionArray =

@@ -42,7 +42,7 @@ export default {
             },
             sectionsArray: [],
             uploadedVideoPath: "",
-            videoFile: null,
+            videoPath: '',
 
         },
 
@@ -82,14 +82,7 @@ export default {
             //section Updater
             if (val.sectionsArray) state.courseDraft.sectionsArray = [...val.sectionsArray];
             if (val.status) state.courseDraft.status = val.status;
-            // if (val.videoTitle && val.sectionIndex !== undefined) {
-            //     if (state.courseDraft.sectionsArray[val.sectionIndex]) {
-            //       state.courseDraft.sectionsArray[val.sectionIndex].videos.push({
-            //         title: val.videoTitle,
-            //       });
-            //     }
-            //   }
-
+            if (val.videoPath) state.courseDraft.videoPath = val.videoPath;
 
         },
 
@@ -159,7 +152,7 @@ export default {
                             bgImage: res.data.item.images.bgImage,
                             fullDescription: res.data.item.description.fullDescription,
                             sectionsArray: res.data.item.sections,
-                            status:res.data.item.status,
+                            status: res.data.item.status,
                             
                         })
                     }
@@ -173,8 +166,9 @@ export default {
         },
 
         // for PlanCourse Component -> used in instructor: create course/ plan course
-        async planCourseAction({ commit }, { value }) {
-            // console.log('value: '+value);
+        async planCourseAction({ commit, state },  value ) {
+            // console.log('value: ' + value.name);
+            // console.log(state.courseDraft.id);
 
             try {
                 const res = await axios.post(
@@ -183,7 +177,8 @@ export default {
                         title: value.name,
                         miniDescription: value.miniDesc,
                         email: value.email,
-                        category: value.category
+                        category: value.category,
+                        courseID: state.courseDraft.id
                     }
                 )
                 if (res.status === 201) {
@@ -198,7 +193,8 @@ export default {
                 // console.log(res.status + ': ' + res.statusText);
             }
             catch (err) {
-                alert('Front: ' + err);
+                console.log(err);
+                alert(err);
             }
         },
 

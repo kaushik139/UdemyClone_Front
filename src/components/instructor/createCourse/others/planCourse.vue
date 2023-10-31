@@ -41,6 +41,7 @@ export default {
 
   methods: {
     async submit() {
+      console.log('//');
       if (
         this.planData.name !== "" &&
         this.planData.miniDesc !== "" &&
@@ -48,11 +49,10 @@ export default {
       ) {
 
         this.planData.email = localStorage.getItem('email');
-        // console.log(this.planData);
+        console.log(this.planData);
+        console.log(';;');
 
-        await this.$store.dispatch("instructor/planCourseAction", {
-          value: this.planData,
-        });
+        await this.$store.dispatch("instructor/planCourseAction", this.planData);
 
         // alert("Course Planning Completed!");
         // this.$emit("changeComp", "LandingPage");
