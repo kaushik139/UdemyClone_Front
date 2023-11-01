@@ -1,10 +1,11 @@
 <template>
   <!-- <div class="container" style="width: 100vw; margin: 0px; padding: 0px;"> -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="[navbar]">
-    <!-- <div class="btn btn-primary" @click="test">Test</div> -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary pt-0" :class="[navbar]">
 
     <div class="container-fluid">
-      <a class="navbar-brand" href="#"><span :class="[logo]">U</span>DEMY</a>
+      <a class="navbar-brand" href="#" @click="$router.push('/')"
+        ><span :class="[logo]">U</span>DEMY</a
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -21,11 +22,11 @@
           <!-- <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li> -->
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isLogged">
             <router-link to="/auth/l" class="nav-link">Login</router-link>
             <!-- <a class="nav-link" href="#">Login</a> -->
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="!isLogged">
             <router-link to="/auth/s" class="nav-link">Sign Up</router-link>
             <!-- <a class="nav-link" href="#">Sign Up</a> -->
           </li>
@@ -37,7 +38,17 @@
             <router-link to="/auth/l" class="nav-link">Teach</router-link>
             <!-- <a class="nav-link" href="#">Sign Up</a> -->
           </li>
-          <li class="nav-item dropdown">
+
+          <li
+            v-if="showStudentBtn === true"
+            class="nav-item"
+            @click="switchToStudent"
+          >
+            <router-link to="/auth/s" class="nav-link">Student</router-link>
+            <!-- <a class="nav-link" href="#">Sign Up</a> -->
+          </li>
+
+          <li class="nav-item dropdown" v-if="isLogged">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -56,6 +67,7 @@
           </li>
         </ul>
         <form
+          v-if="isLogged"
           class="d-flex border border-1 border-dark rounded-pill p-0"
           style="background-color: white !important"
           role="search"
@@ -74,6 +86,7 @@
             ></i>
           </button>
         </form>
+        <!-- <button class="btn" @click="test">test</button> -->
       </div>
     </div>
   </nav>
@@ -111,18 +124,36 @@ export default {
         : false;
       //  return localStorage.getItem('role') === 'students' || localStorage.getItem('role') === null ? (localStorage.getItem('token') === null ? true : false) : false;
     },
+
+    showStudentBtn() {
+      return this.getUser === "instructors"
+        ? this["auth/tokenGetter"] === ""
+          ? true
+          : false
+        : false;
+    },
     ...mapGetters(["getUser", "auth/tokenGetter"]),
   },
-  data: () => ({}),
+  data: () => ({
+    isLogged: false,
+  }),
 
   methods: {
     switchToTeacher() {
       this.$store.commit("changeUser", "instructors");
       localStorage.setItem("role", "instructors");
     },
-    test() {
-      // console.log(this['auth/tokenGetter']);
+    switchToStudent() {
+      this.$store.commit("changeUser", "students");
+      localStorage.setItem("role", "students");
     },
+    test() {
+      console.log(this['auth/tokenGetter']);
+    },
+  },
+
+  mounted() {
+    if (localStorage.getItem("email")) this.isLogged = true;
   },
 };
 </script>

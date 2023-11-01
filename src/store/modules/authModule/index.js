@@ -8,7 +8,7 @@ export default {
         userData: {
             name: '',
             email: '',
-            token: ''
+            token: localStorage.getItem('token') || ''
 
         },
         routeToLogin: false,
@@ -70,25 +70,26 @@ export default {
         async login({ commit, rootState, state }, { value }) {
 
             try {
-            const response = await axios.post(
-                `http://localhost:3000/${rootState.User}/login`,
-                {
-                    email: value.email,
-                    password: value.password,
-                }
-            )
-            if (response.data.token) {
-                // console.log(response.data.token);
-                console.log("name: " + response.data.name);
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('name', response.data.name);
-                localStorage.setItem('email', value.email);
-                localStorage.setItem('role', rootState.User);
-                commit('setUserData', { name: response.data.name, email: value.email, token: response.data.token })
-                commit('setRoutePath', `${rootState.User[0]}Home`);
-                // router.push({ name: `${rootState.User[0]}Home` });
+                const response = await axios.post(
+                    `http://localhost:3000/students/login`,
+                    {
+                        email: value.email,
+                        password: value.password,
+                    }
+                )
+                if (response.data.token) {
+                    // console.log(response.data.token);
+                    console.log("name: " + response.data.name);
+                    localStorage.setItem('token', response.data.token);
+                    localStorage.setItem('name', response.data.name);
+                    localStorage.setItem('email', value.email);
+                    localStorage.setItem('role', response.data.role);
+                    rootState.User = response.data.role;
+                    commit('setUserData', { name: response.data.name, email: value.email, token: response.data.token })
+                    commit('setRoutePath', `${rootState.User[0]}Home`);
+                    // router.push({ name: `${rootState.User[0]}Home` });
 
-            }
+                }
             }
             catch (error) {
                 console.log(chalk.red(error.response.data.message));

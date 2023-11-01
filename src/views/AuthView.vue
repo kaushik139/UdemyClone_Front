@@ -1,7 +1,7 @@
 <template>
   <div class="contain" style="text-align: center">
 
-    <nav-bar class="navi"></nav-bar>
+    <nav-bar class="navi" :key="currentComp" ></nav-bar>
    <!-- user: {{ userInitial }} -->
     <div class="row">
       <div class="col-md-12 mt-16">
@@ -44,7 +44,7 @@ export default defineComponent({
     return {
       loader  : '',
       currentComp: "",
-      getuser: 'jj'
+      getuser: ''
     };
   },
   methods: {

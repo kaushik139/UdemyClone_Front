@@ -64,10 +64,9 @@ export default {
       this.planData.miniDesc = "";
       this.planData.category = "";
     },
-  },
 
-    mounted() {
-        setTimeout(() => {
+    mount(){
+      setTimeout(() => {
           if (this['instructor/courseDraftGetter']) {
           // console.log(this['instructor/courseDraftGetter']);
           // console.log(this['instructor/courseDraftGetter'].title);
@@ -76,7 +75,13 @@ export default {
               this.planData.category = this['instructor/courseDraftGetter'].category;
 
       }
-        },1)
+        },100)
+    }
+
+  },
+
+    mounted() {
+        this.mount()
   }
 
 };

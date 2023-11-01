@@ -142,7 +142,7 @@
         >
       </h6>
       <br />
-      <h6>Video preview: {{ selectedVideo.path }}</h6>
+      <h6>Video preview:</h6>
 
       <!-- Video Playing Div -->
       <div class="m-3" style="display: flex; justify-content: center">

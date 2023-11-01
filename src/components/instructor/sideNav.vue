@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mainCard">
+  <v-card class="mainCard" style="margin-top: 20px !important; background-color: red;">
     <v-layout>
       <v-navigation-drawer
         style="color: rgb(131, 0, 0)"
@@ -40,7 +40,7 @@
       >
         <v-card class="m-4 p-5">
           <v-btn @click="newCourse">Create New Course</v-btn>
-        <v-btn @click="this.$router.push('/create'); this.dialog = false">Continue editing "{{ course }}"</v-btn>
+        <v-btn v-show="course" @click="this.$router.push('/create'); this.dialog = false">Continue editing "{{ course }}"</v-btn>
         </v-card>
       </v-dialog>
 
@@ -73,12 +73,13 @@ export default {
     };
   },
   methods: {
-    newCourse() {
+   async newCourse() {
       localStorage.removeItem('courseDraft');
-      this.$store.commit('instructor/clearCourseDraft');
-      this.$store.commit('instructor/changeCurrentComp', 'PlanCourse')
+      await this.$store.commit('instructor/clearCourseDraft');
+      await this.$store.commit('instructor/changeCurrentComp', 'PricingPage')
+      await this.$store.commit('instructor/changeCurrentComp', 'PlanCourse')
       this.dialog = false;
-      this.$router.push('/create');
+      await this.$router.push('/create');
     },
   },
 };

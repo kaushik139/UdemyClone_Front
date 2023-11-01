@@ -16,8 +16,9 @@
             
             <!-- changing content -->
             <v-col cols="12" md="9" class="form1">
+              {{ currentCompGetter }}
 
-              <component :is="currentCompGetter" @changeComp="recievedComponent"></component>
+              <component :is="currentCompGetter" @changeComp="recievedComponent" :key="currentCompGetter"></component>
                 </v-col
             >
           </v-row>
@@ -71,14 +72,18 @@ export default defineComponent({
       methods: {
     //     recievedComponent(val) {
     //             this.displayComponent = val;
-    // }
-  },
+          // }
 
-    async mounted() {
-      this.draftID = localStorage.getItem('courseDraft');
+         async  mount() {
+            this.draftID = localStorage.getItem('courseDraft');
         if (this.draftID !== null) {
           await this.$store.dispatch('instructor/getDraftCourse', this.draftID);
       }
+          }
+  },
+
+    async mounted() {
+      this.mount()
   }
 });
 </script>
@@ -90,8 +95,8 @@ export default defineComponent({
 }
 
 .navi {
-  margin-left: 4%;
-  width: 96%;
+  margin-left: 3%;
+  width: 97%;
   margin-top: 20px;
 }
 
