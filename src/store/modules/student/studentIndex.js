@@ -4,20 +4,34 @@ import chalk from 'chalk';
 export default {
     namespaced: true,
     state: {
-        Courses: []
+        Courses: [],
+        MyCourses: [],
+        selectedCourse: {},
+        selectedAction: '',
+        
         
 
     },
 
     getters: {
-        getCourses: (state) => state.Courses
+        getCourses: (state) => state.Courses,
+        getMyCourses: (state) => state.MyCourses,
+        getSelectedCourse: (state) => state.selectedCourse,
+        getSelectedAction: (state) => state.selectedAction,
+
     },
 
     mutations: {
-        SetCourses(state, value) {
-            console.log(value);
-            // state.Courses = value;
+        SelectCourse(state, value) {
+            // console.log(value.action);
+            if (value) {
+                
+            state.selectedCourse = value.course;
+            state.selectedAction = value.action;
+            }
+            // else 
         }
+
 
     },
 
@@ -25,15 +39,30 @@ export default {
         async fetchAllCourses({ commit, state }, value) {
             // console.log(value);
             
-                try {
-                    const res = await axios.get(`http://localhost:3000/students/showAllCourses/${value}`);
+            try {
+                const res = await axios.get(`http://localhost:3000/students/showAllCourses/${value}`);
 
-                    if (res.data) {
-                        state.Courses = res.data;
-                    }                    
-                }catch(err){alert(err)}
-          }
-        }
+                if (res.data) {
+                    state.Courses = res.data;
+                    // console.log(res.data);
+                }
+            } catch (err) { alert(err) }
+        },
+    
+    
+        async getMyCourses({ commit, state }, value) {
+            // console.log(value);
+        
+            try {
+                const res = await axios.get(`http://localhost:3000/students/showMyCourses/${value}`);
 
+                if (res.data !== 'No Course Found') {
+                    state.MyCourses = res.data;
+                    // console.log(res.data);
+                }                    
+            }catch(err){alert(err)}
+        },
+    
+    }
     
 }

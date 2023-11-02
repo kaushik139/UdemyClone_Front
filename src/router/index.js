@@ -5,12 +5,12 @@ const routes = [
   {
     path: '',
     name: '',
-    component: () => import('../views/LandingView.vue')
+    component: () => import('../views/common/LandingView.vue')
   },
   {
     path: '/',
     name: 'landingPage',
-    component: () => import('../views/LandingView.vue')
+    component: () => import('../views/common/LandingView.vue')
   },
   {
     path: '/sHome',
@@ -35,7 +35,12 @@ const routes = [
   {
     path: '/auth/:id',
     name: 'authPage',
-    component: () => import('../views/AuthView.vue')
+    component: () => import('../views/common/AuthView.vue')
+  },
+  {
+    path: '/student/courseView',
+    name: 'courseView',
+    component: () => import('../views/student/CourseView.vue')
   },
 ]
 

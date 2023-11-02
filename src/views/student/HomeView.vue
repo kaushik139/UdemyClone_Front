@@ -1,41 +1,184 @@
 <template>
   <div class="contain">
     <nav-bar></nav-bar>
-    
+
     <!-- add -->
-    <v-row class="m-0 bg-danger">
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius commodi voluptates architecto nam ex voluptas cum? Facere dolorem id debitis perspiciatis ipsam, nihil reprehenderit unde, provident ipsa impedit tempore, natus itaque. Rerum, quibusdam. Aliquam expedita pariatur nesciunt, est quia deserunt ex minima quae harum ut perferendis exercitationem ullam unde dolorem voluptatum aliquid repellendus accusamus quas dolore non nobis quod blanditiis veniam architecto! Perferendis praesentium consectetur eaque omnis vero eos, magnam quas dolor consequuntur, quos fuga iste aliquid eum voluptates assumenda qui ipsam saepe officiis in reprehenderit nam provident eveniet corporis! Dolorum laudantium aliquam, tenetur aperiam explicabo quibusdam eaque a aspernatur?z Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere, incidunt quam? Nam quo repellendus mollitia? Delectus, aperiam! Sequi minus, minima illo beatae repellat doloremque laboriosam quas, illum optio earum excepturi nisi quisquam sint porro molestiae. Totam quidem quisquam ex corrupti <h2 style="margin-left: 48% ;">ADD</h2> nostrum cupiditate ducimus, quia dolorem praesentium, nemo esse quaerat iusto officiis numquam laboriosam voluptatum ipsa. Blanditiis laudantium, nihil odit deleniti temporibus libero? Sit soluta officia itaque porro quidem quaerat repellendus architecto fuga laborum et molestiae, eum cum quo minus non tenetur voluptates facere atque? Odio obcaecati omnis maiores quasi ipsa, animi velit architecto dolorem possimus quisquam nulla rerum id beatae! Maxime neque id delectus tenetur accusantium earum harum, dolor ratione sequi veniam repudiandae excepturi! Nihil maxime nisi asperiores consequatur numquam a quod eaque porro, ut aliquam aut itaque in quisquam. Accusantium eum ullam officiis dolorem, eius iste non vel minus voluptas, sit fugiat hic omnis architecto sunt autem blanditiis rerum culpa repellendus molestiae recusandae est consectetur rem? Fugiat dolorem vel provident eius quos cumque assumenda, libero a consequuntur nisi numquam quasi, sequi ratione repudiandae temporibus corporis! Numquam, labore totam animi fugiat porro incidunt, dicta laboriosam cumque veniam temporibus error dolore unde. Quas a facilis placeat perferendis labore incidunt modi ut!
-    </v-row>
+    <v-card class="mx-2 my-4" elevation="6">
+      <span style="font-size: 25px; color: purple">My Courses</span>
 
-    <!-- view courses -->
-    <v-row class="m-0 mt-2 mb-10 bg-success" style="gap: 0px;">
+      <!-- view courses -->
+      <v-row class="m-0 mt-2 mb-10">
+        <!-- List of courses -->
+        <v-col cols="3" v-for="(course, index) in MyCoursesArray" :key="index">
+          <v-card :elevation="isHovering ? 24 : 6" style="height: 110%">
+            <!-- course with images -->
+            <v-row class="" elevation="2" style="margin-left: 5%; width: 90%">
+              <img
+                v-if="course.images.bgImage"
+                :src="'http://localhost:3000/Images/' + course.images.bgImage"
+                alt="NO Image"
+                style="width: 100%; height: 200px"
+              />
+              <!-- without Images -->
+              <img
+                v-else
+                :src="require(`@/assets/logo.svg`)"
+                alt="NO Image"
+                style="width: 100%; height: 200px; margin: 0px"
+              />
+              <!-- title -->
+              <v-row
+                class="mt-2 ml-0 mr-1 text-dark"
+                style="display: flex; flex-direction: column"
+              >
+                <h5>{{ toTitleCase(course.title) }}</h5>
+                <h6>{{ course.description.miniDescription }}</h6>
 
-      <!-- List of courses -->
-      <v-col cols="3" v-for="(course, index) in CoursesArray" :key="index">
+                <!-- view course button -->
+                <v-btn
+                  width="70%"
+                  style="margin: auto"
+                  color="purple"
+                  size="small"
+                  @click="viewCourse(course, 'purchased')"
+                  >Go to Course</v-btn
+                >
+              </v-row>
+            </v-row>
+            <!-- course end -->
+          </v-card>
+        </v-col>
+        <!-- courses diplay end -->
+      </v-row>
+    </v-card>
 
-        <!-- images -->
-        <v-row v-if="course.images.bgImage" class="bg-primary" style="margin-right: -80px; margin-left: 5%; width: 90%;">
-          <img :src="'http://localhost:3000/Images/' + course.images.bgImage" alt="NO Image" style="width: 80%; margin: 0px;">
-          
-          <v-row  style="margin-top: 80%; margin-left: -70%;">
-            {{ course.title }}
-          </v-row>
-        </v-row>
-        <v-row v-if="course.images.bgImage === null" class="bg-danger" style="height: 112%; width: 90%; text-align: center;">
-          <img src="#" alt="No Image Avaliable" style="width: 80%;">
-          
-        </v-row>
-        <v-row style="margin-top: 80%; margin-left: -70%;">
-          {{ course.title }}
-        </v-row>
-        <!-- images -->
+    <v-card class="mx-2 my-8" elevation="6">
+      <span style="font-size: 25px; color: purple">Buy Courses</span>
+      <!-- view courses -->
+      <v-row class="m-0 mt-2 mb-10">
+        <!-- List of courses -->
+        <v-col cols="3" v-for="(course, index) in CoursesArray" :key="index">
+          <v-card :elevation="isHovering ? 24 : 6" style="height: 110%">
+            <!-- course with images -->
+            <v-row class="" elevation="2" style="margin-left: 5%; width: 90%">
+              <img
+                v-if="course.images.bgImage"
+                :src="'http://localhost:3000/Images/' + course.images.bgImage"
+                alt="NO Image"
+                style="width: 100%; height: 200px"
+              />
+              <!-- without Images -->
+              <img
+                v-else
+                :src="require(`@/assets/logo.svg`)"
+                alt="NO Image"
+                style="width: 100%; height: 200px; margin: 0px"
+              />
+              <!-- title -->
+              <v-row
+                class="mt-2 ml-0 mr-1 text-dark"
+                style="display: flex; flex-direction: column"
+              >
+                <h5>{{ toTitleCase(course.title) }}</h5>
+                <h6>{{ course.description.miniDescription }}</h6>
 
-      </v-col>
-    </v-row>
+                <v-card elevation="0">
+                  <!-- pricing -->
+                  <v-row class="mt-1" style="margin-bottom: -45px">
+                    <!-- base -->
+                    <v-col cols="3" class="p-0 pt-3">
+                      <v-icon
+                        class="mdi-currency-inr mdi"
+                        size="small"
+                        color="grey"
+                        style="display: inline"
+                        >{{ mdiCurrencyInr }}</v-icon
+                      >
+                      <h6
+                        style="
+                          text-decoration: line-through;
+                          color: grey;
+                          display: inline;
+                        "
+                      >
+                        {{ course.price.basePrice }}
+                      </h6>
+                    </v-col>
+                    <v-col cols="5" class="pl-0">
+                      <v-icon class="mdi-currency-inr mdi">{{
+                        mdiCurrencyInr
+                      }}</v-icon>
+                      <h5 class="text" style="display: inline">
+                        {{ course.price.finalAmount }}
+                      </h5>
+                    </v-col>
+                    <v-col
+                      cols="4"
+                      style="font-size: 12px; padding-left: 0px; margin-top: 2%"
+                    >
+                      <div>
+                        {{
+                          Math.floor(
+                            ((course.price.basePrice -
+                              course.price.finalAmount) /
+                              course.price.basePrice) *
+                              100
+                          )
+                        }}
+                        % OFF
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-row class="mt-5">
+                    <!-- enroll -->
+                    <v-col cols="5">
+                      <!-- enroll button -->
+                      <v-btn
+                        class="p-6"
+                        color="purple"
+                        size="small"
+                        @click="viewCourse(course, 'view')"
+                        >Enroll</v-btn
+                      >
+                    </v-col>
+                    <!-- rating -->
+                    <v-col cols="6">
+                      <v-rating
+                        half-increments
+                        hover
+                        readonly
+                        :length="5"
+                        :size="20"
+                        :model-value="course.rating.netRating"
+                        color="warning"
+                        active-color="warning"
+                      />
+                    </v-col>
+                    <!-- enroll end -->
+                  </v-row>
+                </v-card>
+              </v-row>
+            </v-row>
+            <!-- course end -->
+          </v-card>
+        </v-col>
+        <!-- courses diplay end -->
+      </v-row>
+    </v-card>
+
+    <!-- <view-course-page></view-course-page> -->
+
+
+    <view-course-page
+        :data="courseData"
+        ></view-course-page>
+        <!-- :key="courseData.dialog" -->
   </div>
 </template>
 
 <script>
+import ViewCoursePage from "@/components/common/viewCoursePage.vue";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import NavBar from "../../components/common/navBar.vue";
@@ -44,32 +187,96 @@ import NavBar from "../../components/common/navBar.vue";
 
 export default defineComponent({
   name: "HomeView",
-  components: { NavBar },
-
-  computed: {
-    ...mapGetters(['student/getCourses'])
+  components: { NavBar, ViewCoursePage },
+  /**
+   *
+   */
+  // comp,
+    ViewCoursePageuted: {
+    ...mapGetters(["student/getCourses", "student/getMyCourses"]),
   },
 
   data() {
     return {
       a: "data",
       page: 0,
-      CoursesArray: [],
       imgURL: null,
+      CoursesArray: [],
+      MyCoursesArray: [],
+      courseData: {
+        dialog: true ,
+      },
+      viewVideos: 0,
+      viewExercises: 0,
+      viewImgURL: "",
+
     };
   },
 
   methods: {
-    async mount(page) {
-      await this.$store.dispatch("student/fetchAllCourses", page);
-      if (this["student/getCourses"]) {
-        this.CoursesArray = this["student/getCourses"]
-        this.imgURL = 'http://localhost:3000/Images/${this["student/getCourses"]}'
-        console.log(this["student/getCourses"]);
+    /**
+     *
+     * @param {*} value
+     */
+    toTitleCase(value) {
+      if (!value) return "";
+      return value
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    },
+
+    async viewCourse(course, action) {
+      if (course && action) {
+        for (let i = 0; i < course.sections.length; i++) {
+          this.viewVideos +=
+            course.sections[i].videos.length > 0
+              ? course.sections[i].videos.length
+              : 0;
+          this.viewExercises +=
+            course.sections[i].exercises.length > 0
+              ? course.sections[i].exercises.length
+              : 0;
+        }
+
+        this.courseData = {
+          Course: course,
+          noOfVideos: this.viewVideos,
+          noOfExercises: this.viewExercises,
+          dialog: true,
+          user: "student",
+          action: action,
+        };
+
+        // console.log(this.courseData);
       }
     },
-  },
 
+    /**
+     *
+     * @param {*} page
+     */
+    async mount(page) {
+      await this.$store.dispatch(
+        "student/getMyCourses",
+        localStorage.getItem("email")
+      );
+      await this.$store.dispatch("student/fetchAllCourses", page);
+
+      if (this["student/getCourses"]) {
+        this.CoursesArray = this["student/getCourses"];
+      }
+      if (this["student/getMyCourses"]) {
+        this.MyCoursesArray = this["student/getMyCourses"];
+      }
+      // console.log(this.CoursesArray);
+      // console.log(this.MyCoursesArray);
+    },
+  },
+  /**
+   *
+   */
   mounted() {
     this.mount(0);
   },

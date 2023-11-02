@@ -45,15 +45,17 @@
         <p>
           Already registered?
           <a href="#"
-            ><router-link to="/auth/l" class="nav-link">Login ></router-link></a
-          >
+            ><router-link to="/auth/l" class="nav-link">Login ></router-link></a> 
         </p>
 
         <!-- <p>theme: {{ getUser }}</p> -->
       </div>
     </v-form>
+    <!-- <button class="btn" @click="test">test</button> -->
+
   </v-sheet>
 </template>
+
 <script>
 import { mapGetters } from "vuex";
 
@@ -143,6 +145,12 @@ export default {
       } else {
         alert("Bad Request! Try again");
       }
+    },
+
+    async test() {
+    // console.log("HERE")
+    //   await this.$router.push("/auth/l");
+
     },
 
     clearForm() {

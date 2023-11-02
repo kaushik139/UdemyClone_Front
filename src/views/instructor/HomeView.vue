@@ -268,7 +268,7 @@ export default defineComponent({
      * @param {*} index
      */
     async view(index, arr) {
-      this.dialog2 = true;
+      // this.dialog2 = true;
       this.viewCourse = this["instructor/allCoursesGetter"].filter((item) => {
         if (item._id === this[arr][index].id) return item;
       });

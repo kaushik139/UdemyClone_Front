@@ -1,10 +1,9 @@
 <template>
   <!-- <div class="container" style="width: 100vw; margin: 0px; padding: 0px;"> -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary pt-0" :class="[navbar]">
-
     <div class="container-fluid">
-      <a class="navbar-brand" href="#" @click="$router.push('/')"
-        ><span :class="[logo]">U</span>DEMY</a
+      <span class="navbar-brand" href="#" @click="logoClick"
+        ><span :class="[logo]">U</span>DEMY</span
       >
       <button
         class="navbar-toggler"
@@ -48,7 +47,7 @@
             <!-- <a class="nav-link" href="#">Sign Up</a> -->
           </li>
 
-          <li class="nav-item dropdown" v-if="isLogged">
+          <!-- <li class="nav-item dropdown" v-if="isLogged">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -62,9 +61,8 @@
               <li><a class="dropdown-item" href="#">Programming</a></li>
               <li><a class="dropdown-item" href="#">Data Science</a></li>
               <li><a class="dropdown-item" href="#">Web Development</a></li>
-              <!-- <li><hr class="dropdown-divider" /></li> -->
             </ul>
-          </li>
+          </li> -->
         </ul>
         <form
           v-if="isLogged"
@@ -147,8 +145,18 @@ export default {
       this.$store.commit("changeUser", "students");
       localStorage.setItem("role", "students");
     },
+    logoClick() {
+      // this.$router.push("/auth/l");
+      console.log(this.isLogged);
+      // console.log(this.getUser);
+      // this.$router.push('/sHome')
+      // this.$router.push("/auth/l");
+
+      this.isLogged === true ? this.getUser === 'students' ? this.$router.push('/sHome') : this.$router.push('/iHome') : this.$router.push('/auth/l');
+    },
+
     test() {
-      console.log(this['auth/tokenGetter']);
+      console.log(this["auth/tokenGetter"]);
     },
   },
 

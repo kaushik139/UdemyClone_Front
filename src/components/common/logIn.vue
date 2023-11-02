@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container1">
     <v-card
       class="mx-auto pa-12 pb-8"
       max-width="448"
@@ -77,7 +77,6 @@
 
 
   <script>
-import axios from "axios";
 import { mapGetters } from "vuex";
 import chalk from "chalk";
 
@@ -195,5 +194,9 @@ export default {
 .errMsg{
     color: red;
     font-size: 15px;
+}
+
+.container1{
+  margin-bottom: 70px;
 }
 </style>
