@@ -22,15 +22,15 @@ export default {
     },
 
     mutations: {
-        SelectCourse(state, value) {
-            // console.log(value.action);
-            if (value) {
+        // SelectCourse(state, value) {
+        //     // console.log(value.action);
+        //     if (value) {
                 
-            state.selectedCourse = value.course;
-            state.selectedAction = value.action;
-            }
-            // else 
-        }
+        //     state.selectedCourse = value.course;
+        //     state.selectedAction = value.action;
+        //     }
+        //     // else 
+        // }
 
 
     },
@@ -44,7 +44,7 @@ export default {
 
                 if (res.data) {
                     state.Courses = res.data;
-                    // console.log(res.data);
+                    // console.log(state.Courses);
                 }
             } catch (err) { alert(err) }
         },
@@ -58,7 +58,7 @@ export default {
 
                 if (res.data !== 'No Course Found') {
                     state.MyCourses = res.data;
-                    // console.log(res.data);
+                    // console.log(state.MyCourses );
                 }                    
             }catch(err){alert(err)}
         },

@@ -130,10 +130,14 @@ export default defineComponent({
   },
 
   methods: {
-    async start() {
-      this.$store.state.User = "students";
-      this.$router.push("/auth/l");
-    },
+    // async start() {
+    //   this.$store.state.User = "students";
+    //   this.$router.push("/auth/l");
+    // },
+  },
+
+  mounted() { 
+    this.$store.state.User = "students";
   },
 });
 </script>

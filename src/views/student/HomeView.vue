@@ -1,8 +1,13 @@
 <template>
   <div class="contain">
     <nav-bar></nav-bar>
+ 
+    <div style="transform: scaleY(0.7); height: 400px; margin-top: -59px; padding: 0px;" class="bg-danger">
 
-    <!-- add -->
+      <carousel-view></carousel-view>
+    </div>
+
+    <!-- purchased Courses -->
     <v-card class="mx-2 my-4" elevation="6">
       <span style="font-size: 25px; color: purple">My Courses</span>
 
@@ -52,6 +57,8 @@
       </v-row>
     </v-card>
 
+
+    <!-- buy Courses -->
     <v-card class="mx-2 my-8" elevation="6">
       <span style="font-size: 25px; color: purple">Buy Courses</span>
       <!-- view courses -->
@@ -167,17 +174,20 @@
       </v-row>
     </v-card>
 
-    <!-- <view-course-page></view-course-page> -->
 
-
+    <!-- view Courses modal -->
     <view-course-page
         :data="courseData"
+        :key="courseData.dialog"
         ></view-course-page>
-        <!-- :key="courseData.dialog" -->
+
+       
+
   </div>
 </template>
 
 <script>
+import CarouselView from "@/components/common/carouselView.vue";
 import ViewCoursePage from "@/components/common/viewCoursePage.vue";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
@@ -187,13 +197,10 @@ import NavBar from "../../components/common/navBar.vue";
 
 export default defineComponent({
   name: "HomeView",
-  components: { NavBar, ViewCoursePage },
-  /**
-   *
-   */
-  // comp,
-    ViewCoursePageuted: {
-    ...mapGetters(["student/getCourses", "student/getMyCourses"]),
+  components: { NavBar, ViewCoursePage, CarouselView},
+
+    computed: {
+      ...mapGetters(["student/getCourses", "student/getMyCourses"]),
   },
 
   data() {
@@ -204,11 +211,14 @@ export default defineComponent({
       CoursesArray: [],
       MyCoursesArray: [],
       courseData: {
-        dialog: true ,
+        dialog: false ,
       },
       viewVideos: 0,
       viewExercises: 0,
       viewImgURL: "",
+
+
+      menu: false,
 
     };
   },
@@ -240,12 +250,17 @@ export default defineComponent({
               : 0;
         }
 
+        // let ImgUrl = course.images.bgImage === null ? "require(`@/assets/logo.svg`)" : `http://localhost:3000/Images/${course.images.bgImage}`;
+        // console.log(ImgUrl);
+
         this.courseData = {
           Course: course,
           noOfVideos: this.viewVideos,
           noOfExercises: this.viewExercises,
           dialog: true,
           user: "student",
+          // ImgUrl: ImgUrl,
+          ImgURL : `http://localhost:3000/Images/${course.images.bgImage}`,
           action: action,
         };
 

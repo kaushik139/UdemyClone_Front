@@ -4,13 +4,9 @@ import chalk from 'chalk';
 export default {
     namespaced: true,
     state: {
-        token: '',
-        userData: {
-            name: '',
-            email: '',
-            token: localStorage.getItem('token') || ''
+        token: localStorage.getItem('token') || '',
+        userData: {},
 
-        },
         routeToLogin: false,
         routeToHome: false,
         loginError: null,
@@ -28,14 +24,13 @@ export default {
             state.loginError = val.value;
         },
         setRoutePath(state, val) {
-            console.log('setRoute::: ' + val);
+            // console.log('setRoute::: ' + val);
             state.routePath = val;
         },
         setUserData(state, val) {
-            state.userData.name = val.name;
-            state.userData.email = val.email;
-            state.userData.token = val.token;
-            console.log('from mutation: ' + val.token);
+            // console.log(val);
+            state.userData = val.userData
+            // console.log('from mutation: ' + val.token);
         },
 
     },
@@ -68,34 +63,89 @@ export default {
 
         // Login
         async login({ commit, rootState, state }, { value }) {
+            console.log(value);
 
             try {
-                const response = await axios.post(
+                const res = await axios.post(
                     `http://localhost:3000/students/login`,
                     {
                         email: value.email,
                         password: value.password,
                     }
                 )
-                if (response.data.token) {
-                    // console.log(response.data.token);
-                    console.log("name: " + response.data.name);
-                    localStorage.setItem('token', response.data.token);
-                    localStorage.setItem('name', response.data.name);
+                if (res.data.token) {
+                    // console.log(res.data.token);
+                    console.log("name: " + res.data.name);
+                    localStorage.setItem('token', res.data.token);
+                    localStorage.setItem('name', res.data.name);
                     localStorage.setItem('email', value.email);
-                    localStorage.setItem('role', response.data.role);
-                    rootState.User = response.data.role;
-                    commit('setUserData', { name: response.data.name, email: value.email, token: response.data.token })
+                    localStorage.setItem('role', res.data.role);
+                    rootState.User = res.data.role;
+                    commit('setUserData', { userData: res.data, token: res.data.token })
                     commit('setRoutePath', `${rootState.User[0]}Home`);
                     // router.push({ name: `${rootState.User[0]}Home` });
 
                 }
             }
             catch (error) {
-                console.log(chalk.red(error.response.data.message));
-                commit('setLoginError', { value: error.response.data.message });
+                console.log(chalk.red(error.res.data.message));
+                commit('setLoginError', { value: error.res.data.message });
                 // if (error) commit('setLoginError', { value: error });
             }
+        },
+
+        async refreshUserAction({ commit, state }, value) {
+            if (value) {
+                // console.log(value.role);
+
+                try {
+                    const res = await axios.post(`http://localhost:3000/${value.role}/${value.email}`,
+                        {
+                            role: value.role,
+                           
+                        },
+                    );
+
+
+                    if (res.data) {
+                        commit('setUserData', {userData: res.data, token: localStorage.getItem('token')})
+                        // console.log(res.data);
+                        // console.log(state.userData);/
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        },
+
+        async editProfileAction({ dispatch, state }, value) {
+            // console.log(value);
+            // console.log(state.userData.user._id);
+            // console.log(state.userData);
+            // console.log(localStorage.getItem('role'));
+
+            if (value) {
+                const model = localStorage.getItem('role');
+                // console.log(value);
+
+                try {
+                    const res = await axios.patch(`http://localhost:3000/${model}/${state.userData.user._id}`, value)
+
+                    if (res.data) {
+                        alert(res.data.message);
+                        dispatch('refreshUserAction', { role: model, email: state.userData.user.email });
+                    }
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async logout({ state }) {
+            console.log('lo');
+            state.userData = {};
+            localStorage.removeItem('name')
+            localStorage.removeItem('email')
+            localStorage.removeItem('role')
+            localStorage.removeItem('token')
         }
     },
 
@@ -118,6 +168,9 @@ export default {
         tokenGetter(state) {
             return state.userData.token;
         },
+        userDataGetter(state) {
+            return state.userData;
+        }
 
     },
 }
