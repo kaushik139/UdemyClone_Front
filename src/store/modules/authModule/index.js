@@ -95,11 +95,12 @@ export default {
         },
 
         async refreshUserAction({ commit, state }, value) {
-            if (value) {
-                // console.log(value.role);
+            
+            if (value.email !== null && value.role !== null) {
+                // console.log(value);
 
                 try {
-                    const res = await axios.post(`http://localhost:3000/${value.role}/${value.email}`,
+                    const res = await axios.post(`http://localhost:3000/students/${value.email}`,
                         {
                             role: value.role,
                            
@@ -146,6 +147,7 @@ export default {
             localStorage.removeItem('email')
             localStorage.removeItem('role')
             localStorage.removeItem('token')
+            localStorage.removeItem('courseDraft')
         }
     },
 
@@ -169,6 +171,7 @@ export default {
             return state.userData.token;
         },
         userDataGetter(state) {
+            // console.log(state.userData);
             return state.userData;
         }
 

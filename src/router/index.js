@@ -37,10 +37,20 @@ const routes = [
     name: 'authPage',
     component: () => import('../views/common/AuthView.vue')
   },
+  // {
+  //   path: '/student/courseView',
+  //   name: 'courseView',
+  //   component: () => import('../views/student/CourseView.vue')
+  // },
   {
-    path: '/student/courseView',
-    name: 'courseView',
-    component: () => import('../views/student/CourseView.vue')
+    path: '/player',
+    name: 'CoursePlay',
+    component: () => import('../views/student/CoursePlayer.vue')
+  },
+  {
+    path: "/:notFound",
+    name: '4o4Page',
+    component: () => import('../views/common/ErrorPage.vue')
   },
 ]
 

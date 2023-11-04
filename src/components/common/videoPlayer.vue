@@ -45,8 +45,8 @@ export default {
     return {
       player: null,
       options: {
-        height: 250,
-        width: 500,
+        height: 450,
+        width: 800,
         autoplay: false,
         controls: true,
         // fluid: true,
@@ -68,11 +68,13 @@ export default {
   },
 
   mounted() {
-    this.options.sources.src = `http://localhost:3000/courses/getCurrentVideo/${this.pathProp}`;
+      if (this.pathProp) {
+        this.options.sources.src = `http://localhost:3000/courses/getCurrentVideo/${this.pathProp}`;
 
-    this.player = videojs(this.$refs.videoPlayer, this.options, () => {
-      this.player.log("onPlayerReady", this);
-    });
+        this.player = videojs(this.$refs.videoPlayer, this.options, () => {
+          this.player.log("onPlayerReady", this);
+        });
+      }
   },
 };
 </script>

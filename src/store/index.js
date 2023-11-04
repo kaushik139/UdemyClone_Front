@@ -2,6 +2,8 @@ import { createStore } from 'vuex';
 import authModule from "./modules/authModule/index"
 import InstructorModule from './modules/InstructorModule/index'
 import Student from './modules/student/studentIndex'
+import PlayCourse from './modules/student/PlayCourseIndex'
+
 
 export default createStore({
   state: () => ({
@@ -12,7 +14,7 @@ export default createStore({
     auth: authModule,
     instructor: InstructorModule,
     student: Student,
-
+    player: PlayCourse,
 
   },
 

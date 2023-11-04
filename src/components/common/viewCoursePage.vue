@@ -190,6 +190,14 @@
             >
               <v-btn color="purple">Purchase Now!</v-btn>
             </v-row>
+
+            <!-- row12-->
+            <v-row
+              v-if="data.action === 'purchased' && data.user === 'student'"
+              class="m-0 mt-4 ml-12"
+            >
+              <v-btn color="purple" @click="learn(data.Course._id)">Learn Now</v-btn>
+            </v-row>
             <!-- end of list -->
           </v-col>
         </v-row>
@@ -229,7 +237,13 @@ export default defineComponent({
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-    },
+        },
+
+        async learn(data) {
+            this.$router.push('/player')
+            localStorage.setItem('CourseID', data);
+            await this.$store.dispatch('player/courseAction', data);
+        }
   },
 
   mounted() {
