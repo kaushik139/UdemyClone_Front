@@ -143,11 +143,7 @@ export default {
         async logout({ state }) {
             console.log('lo');
             state.userData = {};
-            localStorage.removeItem('name')
-            localStorage.removeItem('email')
-            localStorage.removeItem('role')
-            localStorage.removeItem('token')
-            localStorage.removeItem('courseDraft')
+            localStorage.clear();
         }
     },
 

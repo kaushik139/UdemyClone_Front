@@ -142,11 +142,11 @@
         >
       </h6>
       <br />
-      <h6>Video preview:</h6>
+      <h6>Video preview: {{ selectedVideo.path }}</h6>
 
       <!-- Video Playing Div -->
       <div class="m-3" style="display: flex; justify-content: center">
-        <video-player :path="selectedVideo.path"></video-player>
+        <video-player :path="selectedVideo.path" :key="selectedVideo.path"></video-player>
       </div>
     </v-card>
   </v-card>

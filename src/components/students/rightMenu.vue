@@ -1,69 +1,87 @@
-<template>
-    <v-card class="mainCard">
-      <v-card floating permanent>
-        <v-list density="compact" nav style="color: rgb(131, 0, 0)">
-          <v-list-item
-            prepend-icon="mdi-view-dashboard"
-            title="Plan Course"
-            value="planCourse"
-            @click="currentComponent('PlanCourse')"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-page-next"
-            title="Landing Page"
-            value="landingPage"
-            @click="currentComponent('LandingPage')"
-          ></v-list-item>
-          <v-list-item
-            prepend-icon="mdi-folder-plus-outline"
-            title="Create Content"
-            value="CreatePage"
-            @click="currentComponent('CreatePage')"
-          >
+<template class="m-0 p-0">
+  <v-card
+    class="mx-auto">
+    <v-list>
+
+        <v-list-group  v-for="(section, index) in data" :key="index">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              prepend-icon="mdi-text-box-multiple"
+              :title="section.sectionTitle">
           </v-list-item>
+          </template>
+          <!-- Videos -->
           <v-list-item
-            prepend-icon="mdi-currency-inr"
-            title="Pricing"
-            value="pricing"
-            :active = false
-            @click="currentComponent('PricingPage')"
+            v-for="(video, videoIndex) in section.videos"
+            :key="videoIndex"
+            :title="video.title"
+            @click="selectVideo( index, videoIndex )"
+            :class="{ 'active': selectedSection === index && selectedVideo === videoIndex }"
+            prepend-icon="mdi-play"
           ></v-list-item>
-          <!-- <v-list-item
-            prepend-icon="mdi-bullhorn"
-            title="Promotions"
-            value="promotions"
-            @click="currentComponent('OtherPage')"
-          ></v-list-item> -->
-          <v-list-item
-            prepend-icon="mdi-book-education"
-            title="Publish Course"
-            value="publishCourse"
-            @click="currentComponent('PublishPage')"
+          <!-- Exercises -->
+          <v-list-item 
+            v-for="(ex, exIndex) in section.exercises"
+            :key="exIndex"
+            :title="ex.title"
+            @click="selectExercise( index, exIndex )"
+            :class="{ 'active': selectedSection === index && selectedExercise === exIndex }"
+            prepend-icon="mdi-note-edit"
           ></v-list-item>
-        </v-list>
-  
-        <!-- <button class="btn btn-primary" @click="test">Test</button> -->
-      </v-card>
-    </v-card>
-  </template>
-  
-  <script>
-  export default {
-    name: "RightMenu",
+        </v-list-group>
+
+    </v-list>
+  </v-card>
+</template>
+<script>
+import { mapGetters } from 'vuex';
+export default {
+
+  computed: {},
+
+  props: {
+    data: Array,
+  },
+  emits: {
+    playerData: Object,
+  },
+
     data: () => ({
-      activeTab: "publishCourse",
-    }),
-    methods: {
-      currentComponent(val) {
-        this.$store.commit('instructor/changeCurrentComp', val)
-      },
-      test() {
-        this.activeTab = "landingPage";
-        console.log("test");
-      },
+      selectedSection: localStorage.getItem('section') || 0,
+      selectedVideo: localStorage.getItem('viewIndex') || null,
+      selectedExercise: localStorage.getItem('viewIndex') || null,
+      viewType: localStorage.getItem('viewIndex') || 'video',
+      
+  }),
+
+  methods: {
+    selectVideo(index, videoIndex) {
+      this.selectedSection = index;
+      this.selectedVideo = videoIndex; 
+      this.selectedExercise = null;
+      // console.log(this.selectedSection);
+      // console.log(index);
+      this.$emit('playerData', {section: index, viewIndex: videoIndex, viewType: 'video'})
     },
-  };
-  </script>
+    selectExercise(index, exIndex) {
+      this.selectedSection = index;
+      this.selectedExercise = exIndex; 
+      this.selectedVideo = null;
+      this.$emit('playerData', {section: index, viewIndex: exIndex, viewType: 'exercise'})
+    },
+  },
+
+  async mounted() {
+    // console.log(this.data);
+    // console.log(this.selectedSection);
+
+  }
+  }
+</script>
   
-  <style scoped>
-  </style>
+<style scoped>
+.active {
+  background-color: #ccc; /* Change this to your desired highlight color */
+}
+</style>

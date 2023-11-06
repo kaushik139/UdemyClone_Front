@@ -18,27 +18,10 @@ export default {
   components: {
     VideoPlayer,
   },
-  // data() {
-  //   return {
-  //     playerOptions: {
-  //       controls: true,
-  //       preload: "auto",
-  //     },
-  //     // webmSource: "https://vjs.zencdn.net/v/oceans.mp4",
-  //   };
-  // },
   computed: {
     pathProp() {
       return this.path;
     },
-    // ...mapGetters(["instructor/courseDraftGetter"]),
-    //   path() {
-    //     this.player = videojs(this.$refs.videoPlayer, this.options, () => {
-    //   this.player.log("onPlayerReady", this);
-    // });
-    //     this.sources.src = `http://localhost:3000/courses/getCurrentVideo/${this["instructor/courseDraftGetter"].videoPath}`
-    //       return 0;
-    // }
   },
 
   data() {
@@ -75,6 +58,7 @@ export default {
           this.player.log("onPlayerReady", this);
         });
       }
+      console.log(this.path);
   },
 };
 </script>

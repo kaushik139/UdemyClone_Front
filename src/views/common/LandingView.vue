@@ -136,7 +136,7 @@ export default defineComponent({
     // },
   },
 
-  mounted() { 
+  async mounted() { 
     this.$store.state.User = "students";
   },
 });

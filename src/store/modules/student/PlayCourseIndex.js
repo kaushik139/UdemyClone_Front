@@ -10,7 +10,9 @@ export default {
     },
 
     getters: {
-        getCourses: (state) => state.Courses,
+        getCourse: (state) => state.course,
+        getCourseTitle: (state) => state.course.title,
+        
     },
 
     mutations: {
@@ -20,13 +22,14 @@ export default {
         },
         setPlayerCourseMutation(state, value) {
             // console.log(value.item);
+            // console.log(state.course);
             state.course = value.item;
         }
     },
 
     actions: {
-        async courseAction({commit}, value) {
-            // console.log(value);
+        async coursePlayAction({commit, state}) {
+            const value = state.courseID;
 
             if (value) {
                 try {
@@ -34,7 +37,7 @@ export default {
 
                 if (res.data) {
                     // console.log(res.data);
-                    await commit('courseIDMutation', value);
+                    // await commit('courseIDMutation', value);
                     await commit('setPlayerCourseMutation', res.data);
                 }
                 else console.log(res);
