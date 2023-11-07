@@ -239,10 +239,11 @@ export default defineComponent({
         .join(" ");
         },
 
-        async learn(data) {
-            this.$router.push('/player')
-            localStorage.setItem('CourseID', data);
-            await this.$store.dispatch('player/courseAction', data);
+      async learn(data) {
+          // console.log(data);
+          localStorage.setItem('CourseID', data);
+          await this.$store.dispatch("player/coursePlayAction");
+          this.$router.push('/player')
         }
   },
 

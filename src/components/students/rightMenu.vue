@@ -51,7 +51,7 @@ export default {
       selectedSection: localStorage.getItem('section') || 0,
       selectedVideo: localStorage.getItem('viewIndex') || null,
       selectedExercise: localStorage.getItem('viewIndex') || null,
-      viewType: localStorage.getItem('viewIndex') || 'video',
+      viewType: localStorage.getItem('viewIndex') || 'videos',
       
   }),
 
@@ -62,13 +62,13 @@ export default {
       this.selectedExercise = null;
       // console.log(this.selectedSection);
       // console.log(index);
-      this.$emit('playerData', {section: index, viewIndex: videoIndex, viewType: 'video'})
+      this.$emit('playerData', {section: index, viewIndex: videoIndex, viewType: 'videos'})
     },
     selectExercise(index, exIndex) {
       this.selectedSection = index;
       this.selectedExercise = exIndex; 
       this.selectedVideo = null;
-      this.$emit('playerData', {section: index, viewIndex: exIndex, viewType: 'exercise'})
+      this.$emit('playerData', {section: index, viewIndex: exIndex, viewType: 'exercises'})
     },
   },
 

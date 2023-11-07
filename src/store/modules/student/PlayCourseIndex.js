@@ -5,24 +5,27 @@ export default {
     state: {
         courseID: localStorage.getItem('CourseID') || '',
         course: {},
-
+        instructor: {},
 
     },
 
     getters: {
-        getCourse: (state) => state.course,
-        getCourseTitle: (state) => state.course.title,
-        
+        getCourse(state) {
+            // console.log(';;');
+           return state.course;
+        },
+        getInstructor(state) {
+            // console.log(':::');
+            console.log(state.instructor);
+            return state.instructor;
+        },
     },
 
     mutations: {
         courseIDMutation(state, value) {
-            // console.log(value);
             state.courseID = value;
         },
         setPlayerCourseMutation(state, value) {
-            // console.log(value.item);
-            // console.log(state.course);
             state.course = value.item;
         }
     },
@@ -43,7 +46,34 @@ export default {
                 else console.log(res);
                }catch(err){console.error(err);}
             }
+        },
+
+        async instructordetails({ state }, value) {
+            if (value) {
+                const res = await axios.get(`http://localhost:3000/instructors/${value}`)
+
+                if (res.data) {
+                    state.instructor = res.data;
+                    // console.log(state.instructor);
+                }
+                else alert('Not Found!')
+            }
+        },
+
+        async PostQnA({ state }, value) {
+            console.log(value);
+            // console.log(state.courseID);
+            if (value) {
+                const res = await axios.post(`http://localhost:3000/courses/postQnA/${state.courseID}`, value)
+
+
+            if (res.data === 'Querry Posted!') {
+                alert('Querry Posted')
+            }
+                else alert('Not Posted!')
+            }
         }
+
     }
     
 }
