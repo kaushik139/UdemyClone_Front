@@ -6,6 +6,7 @@ export default {
         courseID: localStorage.getItem('CourseID') || '',
         course: {},
         instructor: {},
+        QNA: [],
 
     },
 
@@ -16,9 +17,12 @@ export default {
         },
         getInstructor(state) {
             // console.log(':::');
-            console.log(state.instructor);
+            // console.log(state.instructor);
             return state.instructor;
         },
+        getterQNA(state) {
+            return state.QNA;
+        }
     },
 
     mutations: {
@@ -27,7 +31,11 @@ export default {
         },
         setPlayerCourseMutation(state, value) {
             state.course = value.item;
-        }
+        },
+        setQNA(state, value) {
+            state.QNA = value;
+        },
+
     },
 
     actions: {
@@ -72,8 +80,54 @@ export default {
             }
                 else alert('Not Posted!')
             }
-        }
+        },
 
+        async getQNA({ commit }, value) {
+            // console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post('http://localhost:3000/courses/getQNA', value);
+
+                    if (res.data) {
+
+                        // console.log(res.data);
+                        commit('setQNA', res.data);
+                    }
+                    
+                }catch(err){console.error(err);}
+                
+            }
+        },
+
+        async removeQuerry({ commit,state }, value) {
+            console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.delete(`http://localhost:3000/courses/removeQNA/${state.courseID}`, {data: value})
+
+                    if (res.data) {
+                        // console.log(res.data);
+                        alert(res.data)
+                    }
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async replyQNA({ state }, value) {
+            console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/replyQNA/${state.courseID}`, value);
+
+                    if (res.data) {
+                        alert(res.data)
+                    }
+                }catch(err){alert(err)}
+            }
+        },
     }
     
 }

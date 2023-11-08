@@ -120,17 +120,26 @@ export default {
         },
 
         async editProfileAction({ dispatch, state }, value) {
-            // console.log(value);
             // console.log(state.userData.user._id);
             // console.log(state.userData);
             // console.log(localStorage.getItem('role'));
 
             if (value) {
-                const model = localStorage.getItem('role');
-                // console.log(value);
+                 const model = localStorage.getItem('role');
+                // console.log(value.image);
+
+                const formData = new FormData();
+                formData.append('fileInput', value.image);
+                formData.append('name', value.name);
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
 
                 try {
-                    const res = await axios.patch(`http://localhost:3000/${model}/${state.userData.user._id}`, value)
+                    const res = await axios.patch(`http://localhost:3000/${model}/${state.userData.user._id}`, formData, config);
 
                     if (res.data) {
                         alert(res.data.message);
