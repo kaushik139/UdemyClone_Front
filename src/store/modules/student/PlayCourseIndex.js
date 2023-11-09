@@ -68,7 +68,7 @@ export default {
             }
         },
 
-        async PostQnA({ state }, value) {
+        async PostQnA({ dispatch, state }, value) {
             console.log(value);
             // console.log(state.courseID);
             if (value) {
@@ -76,7 +76,9 @@ export default {
 
 
             if (res.data === 'Querry Posted!') {
-                alert('Querry Posted')
+                alert('Querry Posted');
+                await dispatch('coursePlayAction');
+                await dispatch('getQNA');
             }
                 else alert('Not Posted!')
             }
@@ -91,17 +93,36 @@ export default {
 
                     if (res.data) {
 
-                        // console.log(res.data);
+                        console.log(res.data);
                         commit('setQNA', res.data);
                     }
+                    else commit('setQNA', [])
                     
                 }catch(err){console.error(err);}
                 
             }
         },
 
-        async removeQuerry({ commit,state }, value) {
+        async editQuerry({ dispatch, state }, value) {
             console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/editQNA/${state.courseID}`, value);
+
+                    if (res.data === 'Post Updated') {
+                        // console.log(res.data);
+                      await dispatch('coursePlayAction')
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async removeQuerry({ dispatch,state }, value) {
+            // console.log(value);
+            // console.log(state.QNA);
+            if (state.QNA.length === 1) state.QNA = [];
 
             if (value) {
                 try {
@@ -109,14 +130,15 @@ export default {
 
                     if (res.data) {
                         // console.log(res.data);
-                        alert(res.data)
+                        alert(res.data);
+                        await dispatch('coursePlayAction');
                     }
                 }catch(err){console.error(err);}
             }
         },
 
         async replyQNA({ state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
@@ -124,6 +146,7 @@ export default {
 
                     if (res.data) {
                         alert(res.data)
+                        await dispatch('getQNA');
                     }
                 }catch(err){alert(err)}
             }

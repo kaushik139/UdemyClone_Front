@@ -1,7 +1,7 @@
 <template>
   <div class="contain">
     <h5>{{ toTitleCase(course.title) }}</h5>
-    <v-rating v-model="rating" color="yellow-darken-4"> </v-rating>
+    <v-rating v-model="rating" color="yellow-darken-4" density="compact"> </v-rating>
     <v-row class="my-6">
       {{ desc }}
     </v-row>
