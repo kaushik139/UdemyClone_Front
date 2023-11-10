@@ -2,8 +2,17 @@
 
     <div class="contain">
 
-        
-        <h1>notes</h1>
+        <!-- Create NOte -->
+      <v-card class="mb-4 p-3" elevation="4" style="width: 90%; margin: auto">
+        <v-textarea
+          label="New Note"
+          rows="2"
+          v-model="newNote"
+          color="purple"
+        >
+        </v-textarea>
+        <v-btn append-icon="mdi-send" color="purple" @click="post">Create Note</v-btn>
+      </v-card>
         
     </div>
     
@@ -18,11 +27,15 @@ export default {
     },
 
     data:()=>({
+        newNote: '',
+
         
     }),
 
     methods: {
-        
+        async post() {
+            
+        },
     },
 
     mounted() {

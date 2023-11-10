@@ -64,7 +64,6 @@
                 <span v-if="showDeleteButton(index)" class="mx-2" color="danger"
                   >Delete
                   <!-- delete dialog -->
-
                   <v-dialog
                     v-model="dialog2Array[index]"
                     activator="parent"
@@ -95,7 +94,6 @@
                 <span v-if="showDeleteButton(index)" class="mx-0" color="red"
                   >Edit
                   <!-- delete dialog -->
-
                   <v-dialog
                     v-model="dialog3Array[index]"
                     activator="parent"
@@ -174,14 +172,15 @@
                       icon="mdi-pencil-outline"
                       color="purple"
                       class="mx-2"
-                      @click="editReplyDialog = true; editReply = reply.reply; querryIndex = index; replyIndex = index2"
-                    >
+                      @click="showEditReplyDialog(reply.reply, index, index2)"
+                      >
+                      <!-- @click="editReplyDialog = true; editReply = reply.reply; querryIndex = index; replyIndex = index2" -->
                     </v-icon>
                     <v-icon
                       icon="mdi-delete-outline"
                       color="red"
                       class="mx-2"
-                      @click="removeReply(index, index2)"
+                      @click="showDeleteReplyDialog(index, index2)"
                     ></v-icon>
                   </v-row>
                 </v-col>
@@ -234,7 +233,7 @@
         <v-card-text style="color: purple; font-size: 12px;">
           Edit Reply
         </v-card-text>
-        <v-textarea class="m-2" rows="2" color="purple" v-model="reply.reply"></v-textarea>
+        <v-textarea class="m-2" rows="2" color="purple" v-model="editReply"></v-textarea>
         <v-card-actions>
           <v-btn
             append-icon="mdi-pencil-outline"
@@ -251,6 +250,33 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- delete reply dialog -->
+    <v-dialog
+                    v-model="deleteReplyDialog"
+                    width="400"
+                    height="auto"
+                  >
+                    <v-card>
+                      <v-card-text color="purple"> Are You Sure?</v-card-text>
+                      <v-card-actions>
+                        <v-btn
+                          append-icon="mdi-check-circle"
+                          color="red"
+                          @click="removeReply"
+                          >Yes</v-btn
+                        >
+                        <v-btn
+                          append-icon="mdi-close-circle"
+                          color="purple"
+                          @click="deleteReplyDialog = false"
+                          >No</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+
+
   </div>
 </template>
 
@@ -281,6 +307,7 @@ export default {
     dialog2Array: [],
     dialog3Array: [],
     editReplyDialog: false,
+    deleteReplyDialog: false,
     editReply: '',
     querryIndex: '',
     replyIndex: '',
@@ -370,16 +397,39 @@ export default {
       else return false;
     },
 
-    editReplyMethod() {
-      console.log(this.querryIndex);
-      console.log(this.replyIndex);
-      console.log(this.editReply);
+    showEditReplyDialog(editReply, querryIndex, replyIndex) { 
+      this.editReplyDialog = true; this.editReply = editReply; this.querryIndex = querryIndex; this.replyIndex = replyIndex;
     },
 
-    removeReply() {
-      // console.log(qnaIndex);
-      // console.log(replyIndex);
-      // console.log();
+    showDeleteReplyDialog(querryIndex, replyIndex) { 
+      this.deleteReplyDialog = true; this.querryIndex = querryIndex; this.replyIndex = replyIndex;
+    },
+
+    async editReplyMethod() {
+      await this.$store.dispatch('player/editQnaReply', {
+        sectionIndex: this.sectionIndex,
+        viewIndex: this.viewIndex,
+        viewType: this.viewType,
+        querryIndex: this.querryIndex,
+        replyIndex: this.replyIndex,
+        editReply: this.editReply
+      });
+      await this.mount();
+      this.editReplyDialog = false;
+
+    },
+
+    async removeReply() {
+      await this.$store.dispatch('player/deleteQnaReply', {
+        sectionIndex: this.sectionIndex,
+        viewIndex: this.viewIndex,
+        viewType: this.viewType,
+        querryIndex: this.querryIndex,
+        replyIndex: this.replyIndex
+      });
+      await this.mount();
+      this.deleteReplyDialog = false;
+
     },
 
     async remove(querryIndex) {

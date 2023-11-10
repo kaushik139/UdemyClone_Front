@@ -151,6 +151,39 @@ export default {
                 }catch(err){alert(err)}
             }
         },
+
+        async editQnaReply({ dispatch, state }, value) {
+            // console.log(value);
+            
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/editQnaReply/${state.courseID}`, value);
+
+                    if (res.data === 'Reply Updated') {
+                        alert(res.data)
+                        await dispatch('getQNA');
+                        await dispatch('coursePlayAction');
+                    }
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async deleteQnaReply({ dispatch, state }, value) {
+            console.log(value);
+            
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/deleteQnaReply/${state.courseID}`, value);
+
+                    if (res.data === 'Reply Deleted') {
+                        alert(res.data)
+                        await dispatch('getQNA');
+                        await dispatch('coursePlayAction');
+                    }
+                }catch(err){console.error(err);}
+            }
+        },
+
     }
     
 }
