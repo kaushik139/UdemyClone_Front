@@ -58,7 +58,7 @@ export default {
           this.player.log("onPlayerReady", this);
         });
       }
-      console.log(this.path);
+      // console.log(this.path);
   },
 };
 </script>

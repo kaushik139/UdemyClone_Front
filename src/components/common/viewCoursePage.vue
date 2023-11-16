@@ -150,13 +150,15 @@
               <v-col cols="4" class="mt-2">
                 <h5>Rating:</h5>
               </v-col>
-              <v-col cols="1" class="mt-3 ml-1">
+              <v-col cols="2" class="mt-3 ml-1">
                 <h5>{{ data.Course.rating.netRating }}</h5>
               </v-col>
-              <v-col cols="6" class="m-0 ml-0">
+              <v-col cols="5" class="m-0 mt-1">
                 <div class="text-center">
                   <v-rating
-                    color="yellow-darken-3"
+                    color="purple-darken-3"
+                    disabled
+                    density="comfortable"
                     v-model="data.Course.rating.netRating"
                     half-increments
                   ></v-rating>

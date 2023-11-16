@@ -7,6 +7,8 @@ export default {
         course: {},
         instructor: {},
         QNA: [],
+        Notes: [],
+        Rating:{},
 
     },
 
@@ -22,7 +24,11 @@ export default {
         },
         getterQNA(state) {
             return state.QNA;
+        },
+        NotesGetter(state) {
+            return state.Notes;
         }
+
     },
 
     mutations: {
@@ -35,6 +41,9 @@ export default {
         setQNA(state, value) {
             state.QNA = value;
         },
+        setNotes(state, value) {
+            state.Notes = value;
+        }
 
     },
 
@@ -85,7 +94,7 @@ export default {
         },
 
         async getQNA({ commit }, value) {
-            // console.log(value);
+            console.log(value);
 
             if (value) {
                 try {
@@ -180,6 +189,103 @@ export default {
                         await dispatch('getQNA');
                         await dispatch('coursePlayAction');
                     }
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async CreateNote({ dispatch, state }, value) {
+            // console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/newNote/${state.courseID}`, value);
+
+                    if (res.data) {
+                        alert(res.data);
+                        await dispatch('GetNotes', value);
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async GetNotes({ commit, state }, value) {
+            // console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/getNotes/${state.courseID}`, value);
+
+                    if (res.data) {
+                        // console.log(res.data);
+                        await commit('setNotes', res.data)
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async EditNote({ dispatch, state }, value) {
+            console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/editNotes/${state.courseID}`, value);
+
+                    if (res.data) {
+                        alert(res.data);
+                        await dispatch('GetNotes', value);
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async DeleteNote({ commit, state }, value) {
+            console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/deleteNotes/${state.courseID}`, value);
+
+                    if (res.data) {
+                        console.log(res.data);
+                        await dispatch('GetNotes', value)
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async SubmitRating({ dispatch, state }, value) {
+            console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/submitRating/${state.courseID}`, value);
+
+                    if (res.data) {
+                        alert(res.data);
+                        // await dispatch('GetNotes', value);
+                    }
+
+                }catch(err){console.error(err);}
+            }
+        },
+
+        async getRating({ dispatch, state }, value) {
+            // console.log(state.courseID);
+            // console.log(value);
+
+            if (value) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/courses/showRating/${state.courseID}`, {id: value});
+
+                    if (res.data) {
+                        console.log(res.data);
+                        // await dispatch('GetNotes', value);
+                    }
+
                 }catch(err){console.error(err);}
             }
         },

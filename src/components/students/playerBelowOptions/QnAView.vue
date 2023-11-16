@@ -173,7 +173,7 @@
                       color="purple"
                       class="mx-2"
                       @click="showEditReplyDialog(reply.reply, index, index2)"
-                      >
+                    >
                       <!-- @click="editReplyDialog = true; editReply = reply.reply; querryIndex = index; replyIndex = index2" -->
                     </v-icon>
                     <v-icon
@@ -218,7 +218,7 @@
           color="purple"
         >
         </v-textarea>
-        <v-btn append-icon="mdi-send" color="purple" @click="post">POST</v-btn>
+        <v-btn append-icon="mdi-send" size="small" color="purple" @click="post">POST</v-btn>
       </v-card>
     </v-card>
 
@@ -230,10 +230,15 @@
       height="auto"
     >
       <v-card>
-        <v-card-text style="color: purple; font-size: 12px;">
+        <v-card-text style="color: purple; font-size: 12px">
           Edit Reply
         </v-card-text>
-        <v-textarea class="m-2" rows="2" color="purple" v-model="editReply"></v-textarea>
+        <v-textarea
+          class="m-2"
+          rows="2"
+          color="purple"
+          v-model="editReply"
+        ></v-textarea>
         <v-card-actions>
           <v-btn
             append-icon="mdi-pencil-outline"
@@ -252,31 +257,22 @@
     </v-dialog>
 
     <!-- delete reply dialog -->
-    <v-dialog
-                    v-model="deleteReplyDialog"
-                    width="400"
-                    height="auto"
-                  >
-                    <v-card>
-                      <v-card-text color="purple"> Are You Sure?</v-card-text>
-                      <v-card-actions>
-                        <v-btn
-                          append-icon="mdi-check-circle"
-                          color="red"
-                          @click="removeReply"
-                          >Yes</v-btn
-                        >
-                        <v-btn
-                          append-icon="mdi-close-circle"
-                          color="purple"
-                          @click="deleteReplyDialog = false"
-                          >No</v-btn
-                        >
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-
-
+    <v-dialog v-model="deleteReplyDialog" width="400" height="auto">
+      <v-card>
+        <v-card-text color="purple"> Are You Sure?</v-card-text>
+        <v-card-actions>
+          <v-btn append-icon="mdi-check-circle" color="red" @click="removeReply"
+            >Yes</v-btn
+          >
+          <v-btn
+            append-icon="mdi-close-circle"
+            color="purple"
+            @click="deleteReplyDialog = false"
+            >No</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -308,9 +304,9 @@ export default {
     dialog3Array: [],
     editReplyDialog: false,
     deleteReplyDialog: false,
-    editReply: '',
-    querryIndex: '',
-    replyIndex: '',
+    editReply: "",
+    querryIndex: "",
+    replyIndex: "",
     userName: localStorage.getItem("name"),
     replyText: "",
   }),
@@ -397,39 +393,42 @@ export default {
       else return false;
     },
 
-    showEditReplyDialog(editReply, querryIndex, replyIndex) { 
-      this.editReplyDialog = true; this.editReply = editReply; this.querryIndex = querryIndex; this.replyIndex = replyIndex;
+    showEditReplyDialog(editReply, querryIndex, replyIndex) {
+      this.editReplyDialog = true;
+      this.editReply = editReply;
+      this.querryIndex = querryIndex;
+      this.replyIndex = replyIndex;
     },
 
-    showDeleteReplyDialog(querryIndex, replyIndex) { 
-      this.deleteReplyDialog = true; this.querryIndex = querryIndex; this.replyIndex = replyIndex;
+    showDeleteReplyDialog(querryIndex, replyIndex) {
+      this.deleteReplyDialog = true;
+      this.querryIndex = querryIndex;
+      this.replyIndex = replyIndex;
     },
 
     async editReplyMethod() {
-      await this.$store.dispatch('player/editQnaReply', {
+      await this.$store.dispatch("player/editQnaReply", {
         sectionIndex: this.sectionIndex,
         viewIndex: this.viewIndex,
         viewType: this.viewType,
         querryIndex: this.querryIndex,
         replyIndex: this.replyIndex,
-        editReply: this.editReply
+        editReply: this.editReply,
       });
       await this.mount();
       this.editReplyDialog = false;
-
     },
 
     async removeReply() {
-      await this.$store.dispatch('player/deleteQnaReply', {
+      await this.$store.dispatch("player/deleteQnaReply", {
         sectionIndex: this.sectionIndex,
         viewIndex: this.viewIndex,
         viewType: this.viewType,
         querryIndex: this.querryIndex,
-        replyIndex: this.replyIndex
+        replyIndex: this.replyIndex,
       });
       await this.mount();
       this.deleteReplyDialog = false;
-
     },
 
     async remove(querryIndex) {
@@ -451,27 +450,47 @@ export default {
           this.viewIndex
         ].QnA.length
       ) {
+        console.log(
+          "firing" +
+            this["player/getCourse"].sections[this.sectionIndex][this.viewType][
+              this.viewIndex
+            ].QnA.length
+        );
         await this.$store.dispatch(
           "player/getQNA",
           this["player/getCourse"].sections[this.sectionIndex][this.viewType][
             this.viewIndex
           ].QnA
         );
-      }
-      if (this["player/getterQNA"]) {
-        this.QNA = this["player/getterQNA"];
-        console.log(this.QNA);
-      }
 
-      console.log(this.QNA.length);
-      this.dialogArray = Array.from({ length: this.QNA.length }, () => false);
-      this.dialog2Array = Array.from({ length: this.QNA.length }, () => false);
-      this.dialog3Array = Array.from({ length: this.QNA.length }, () => false);
-      // this.dialog4Array = Array.from({ length: this.QNA.length }, () => false);
+        if (this["player/getterQNA"]) {
+          this.QNA = this["player/getterQNA"];
+          // console.log(this.QNA);
+
+          // console.log(this.QNA.length);
+          this.dialogArray = Array.from(
+            { length: this.QNA.length },
+            () => false
+          );
+          this.dialog2Array = Array.from(
+            { length: this.QNA.length },
+            () => false
+          );
+          this.dialog3Array = Array.from(
+            { length: this.QNA.length },
+            () => false
+          );
+          // this.dialog4Array = Array.from({ length: this.QNA.length }, () => false);
+        }
+      } else {
+        console.log("no data");
+        this.QNA = [];
+      }
     },
   },
 
   async mounted() {
+    console.log("QNA");
     await this.mount();
   },
 };

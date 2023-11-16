@@ -89,7 +89,7 @@ export default {
     },
 
     async playerData(value) {
-      console.log(value.viewIndex);
+      // console.log(value.viewIndex);
       this.viewType = value.viewType;
       this.sectionIndex = value.section;
       if (value.viewType === "videos") this.videoIndex = value.viewIndex;
