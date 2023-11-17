@@ -27,6 +27,9 @@ export default {
         },
         NotesGetter(state) {
             return state.Notes;
+        },
+        RatingsGetter(state) {
+            return state.Rating;
         }
 
     },
@@ -43,17 +46,29 @@ export default {
         },
         setNotes(state, value) {
             state.Notes = value;
-        }
+        },
+        setRatings(state, value) {
+            state.Rating = value;
+        },
 
     },
 
     actions: {
-        async coursePlayAction({commit, state}) {
+        async coursePlayAction({commit, state, rootGetters}) {
             const value = state.courseID;
-
+            const user = await rootGetters['auth/userDataGetter'].user;
+            let studentID = '';
+            if (user) {
+                studentID = user._id;
+                // console.log(user._id);
+            }
             if (value) {
                 try {
-                    const res = await axios.get(`http://localhost:3000/courses/${value}`)
+                    const res = await axios.get(`http://localhost:3000/courses/${value}`, {
+                        params: {
+                            studentID: studentID,
+                        }
+                    })
 
                 if (res.data) {
                     // console.log(res.data);
@@ -241,7 +256,7 @@ export default {
             }
         },
 
-        async DeleteNote({ commit, state }, value) {
+        async DeleteNote({ state }, value) {
             console.log(value);
 
             if (value) {
@@ -258,7 +273,7 @@ export default {
         },
 
         async SubmitRating({ dispatch, state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
@@ -266,14 +281,14 @@ export default {
 
                     if (res.data) {
                         alert(res.data);
-                        // await dispatch('GetNotes', value);
+                        await dispatch('getRating', value);
                     }
 
                 }catch(err){console.error(err);}
             }
         },
 
-        async getRating({ dispatch, state }, value) {
+        async getRating({ commit, state }, value) {
             // console.log(state.courseID);
             // console.log(value);
 
@@ -281,15 +296,31 @@ export default {
                 try {
                     const res = await axios.post(`http://localhost:3000/courses/showRating/${state.courseID}`, {id: value});
 
-                    if (res.data) {
-                        console.log(res.data);
-                        // await dispatch('GetNotes', value);
+                    if (res.data.counts) {
+                        // console.log(res.data);
+                        await commit('setRatings', res.data);
                     }
 
                 }catch(err){console.error(err);}
             }
         },
 
+        async checkItem({ state, rootGetters }, value) {
+            // console.log(value);
+            const user = await rootGetters['auth/userDataGetter'].user;
+            let studentID = '';
+            if (user) {
+                studentID = user._id;
+            }
+
+            if (value&&studentID) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/students/checkItem/${studentID}`, value)
+
+                }catch(err){console.error(err);}
+
+            }
+        }
     }
     
 }
