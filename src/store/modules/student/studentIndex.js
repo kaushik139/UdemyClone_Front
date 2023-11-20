@@ -62,6 +62,21 @@ export default {
                 }                    
             }catch(err){alert(err)}
         },
+
+        async Purchase({ rootGetters }, value) {
+            // console.log(value);
+            const user = await rootGetters['auth/userDataGetter'].user;
+
+            if (value) {
+                try {
+                    const res = await axios.post(` http://localhost:3000/students/purchase/${user._id}`, { courseID: value.courseID });
+
+                if (res.data) {
+                       window.location.href = res.data.url;
+                }
+                }catch(err){console.error(err);}
+            }
+        }
     
     }
     

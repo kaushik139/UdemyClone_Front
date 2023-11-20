@@ -31,14 +31,14 @@
           <!-- image -->
           <v-col cols="6" class="m-4 mr-0 ml-12">
             <v-card elevation="4" height="100%" width="100%" rounded="4">
-              <v-row style="height: 70%; width: 95%; margin: auto;">
+              <v-row style="height: 70%; width: 95%; margin: auto">
                 <img
                   :src="data.ImgURL"
                   alt="Course Image"
                   style="height: 100%; width: 100%; border-radius: 20px"
                 />
               </v-row>
-              <v-row class="mt-12" style="margin: auto; width: 95%;">
+              <v-row class="mt-12" style="margin: auto; width: 95%">
                 {{ data.Course.description.fullDescription }}
               </v-row>
             </v-card>
@@ -190,7 +190,8 @@
               v-if="data.action === 'view' && data.user === 'student'"
               class="m-0 ml-12"
             >
-              <v-btn color="purple">Purchase Now!</v-btn>
+              <v-btn color="purple" @click="purchase(data.Course._id)">Purchase Now!</v-btn>
+              <!-- {{ data.Course.stripePriceID }} -->
             </v-row>
 
             <!-- row12-->
@@ -198,7 +199,9 @@
               v-if="data.action === 'purchased' && data.user === 'student'"
               class="m-0 mt-4 ml-12"
             >
-              <v-btn color="purple" @click="learn(data.Course._id)">Learn Now</v-btn>
+              <v-btn color="purple" @click="learn(data.Course._id)"
+                >Learn Now</v-btn
+              >
             </v-row>
             <!-- end of list -->
           </v-col>
@@ -210,6 +213,7 @@
       
   
   <script>
+import axios from "axios";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 export default defineComponent({
@@ -239,14 +243,21 @@ export default defineComponent({
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
-        },
+    },
 
-      async learn(data) {
-          // console.log(data);
-          localStorage.setItem('CourseID', data);
-          await this.$store.dispatch("player/coursePlayAction");
-          this.$router.push('/player')
-        }
+    async learn(data) {
+      // console.log(data);
+      localStorage.setItem("CourseID", data);
+      await this.$store.dispatch("player/coursePlayAction");
+      this.$router.push("/player");
+    },
+
+    async purchase(courseID) {
+        await this.$store.dispatch('student/Purchase', { courseID: courseID });
+
+      // const res = await axios.post(`http://localhost:3000/students/purchase/${courseID}`);
+      // window.location.href = res.data.url;
+    },
   },
 
   mounted() {

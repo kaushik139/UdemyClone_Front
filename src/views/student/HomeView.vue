@@ -1,18 +1,19 @@
 <template>
   <div class="contain">
     <nav-bar></nav-bar>
- 
-    <div style="transform: scaleY(0.7); height: 400px; margin-top: -59px; padding: 0px;" class="bg-danger">
 
-      <carousel-view></carousel-view>
-    </div>
+    <!-- <div style="transform: scaleY(0.7); height: 400px; margin-top: -5px; padding: 0px;" class="bg-danger"> -->
 
+    <carousel-view
+      style="transform: scaleY(0.7); margin-top: -90px; margin-bottom: 0px"
+    ></carousel-view>
+    <!-- </div> -->
     <!-- purchased Courses -->
-    <v-card class="mx-2 my-4" elevation="6">
+    <v-card class="mx-2" style="margin-top: -70px" elevation="6">
       <span style="font-size: 25px; color: purple">My Courses</span>
 
       <!-- view courses -->
-      <v-row class="m-0 mt-2 mb-10">
+      <v-row v-if="MyCoursesArray.length" class="m-0 mt-2 mb-10">
         <!-- List of courses -->
         <v-col cols="3" v-for="(course, index) in MyCoursesArray" :key="index">
           <v-card :elevation="isHovering ? 24 : 6" style="height: 110%">
@@ -22,7 +23,7 @@
                 v-if="course.images.bgImage"
                 :src="'http://localhost:3000/Images/' + course.images.bgImage"
                 alt="NO Image"
-                style="width: 100%; height: 200px"
+                style="width: 100%; height: 200px; margin-top: 7%"
               />
               <!-- without Images -->
               <img
@@ -42,7 +43,7 @@
                 <!-- view course button -->
                 <v-btn
                   width="70%"
-                  style="margin: auto"
+                  style="margin: auto; margin-bottom: 3%"
                   color="purple"
                   size="small"
                   @click="viewCourse(course, 'purchased')"
@@ -55,8 +56,12 @@
         </v-col>
         <!-- courses diplay end -->
       </v-row>
-    </v-card>
 
+      <!-- not purchased any course Yet! -->
+      <v-row v-else class="m-2 text-grey-darken-2 d-block">
+        Please purchase a course!</v-row
+      >
+    </v-card>
 
     <!-- buy Courses -->
     <v-card class="mx-2 my-8" elevation="6">
@@ -72,7 +77,7 @@
                 v-if="course.images.bgImage"
                 :src="'http://localhost:3000/Images/' + course.images.bgImage"
                 alt="NO Image"
-                style="width: 100%; height: 200px"
+                style="width: 100%; height: 200px; margin-top: 7%"
               />
               <!-- without Images -->
               <img
@@ -88,14 +93,18 @@
               >
                 <h5>{{ toTitleCase(course.title) }}</h5>
                 <h6>{{ course.description.miniDescription }}</h6>
-
-                <v-card elevation="0">
+                <v-card
+                  v-if="
+                    !course.enrollment.filter((x) => x.studentID === id).length
+                  "
+                  elevation="0"
+                >
                   <!-- pricing -->
                   <v-row class="mt-1" style="margin-bottom: -45px">
                     <!-- base -->
                     <v-col cols="3" class="p-0 pt-3">
                       <v-icon
-                        class="mdi-currency-inr mdi"
+                        class="mdi-currency-inr mdi ml-1"
                         size="small"
                         color="grey"
                         style="display: inline"
@@ -142,7 +151,7 @@
                     <v-col cols="5">
                       <!-- enroll button -->
                       <v-btn
-                        class="p-6"
+                        class="p-6 mt-1"
                         color="purple"
                         size="small"
                         @click="viewCourse(course, 'view')"
@@ -165,6 +174,17 @@
                     <!-- enroll end -->
                   </v-row>
                 </v-card>
+                <v-card v-else elevation="0"> 
+                  <h6>Already Purchased!</h6>
+                  <v-btn
+                  width="70%"
+                  style="margin: auto; margin-bottom: 3%"
+                  color="purple"
+                  size="small"
+                  @click="viewCourse(course, 'purchased')"
+                  >Go to Course</v-btn
+                >
+                </v-card>
               </v-row>
             </v-row>
             <!-- course end -->
@@ -174,15 +194,11 @@
       </v-row>
     </v-card>
 
-
     <!-- view Courses modal -->
     <view-course-page
-        :data="courseData"
-        :key="courseData.dialog"
-        ></view-course-page>
-
-       
-
+      :data="courseData"
+      :key="courseData.dialog"
+    ></view-course-page>
   </div>
 </template>
 
@@ -197,29 +213,30 @@ import NavBar from "../../components/common/navBar.vue";
 
 export default defineComponent({
   name: "HomeView",
-  components: { NavBar, ViewCoursePage, CarouselView},
+  components: { NavBar, ViewCoursePage, CarouselView },
 
-    computed: {
-      ...mapGetters(["student/getCourses", "student/getMyCourses"]),
+  computed: {
+    ...mapGetters(["student/getCourses", "student/getMyCourses"]),
+    id() {
+      return this.$store.state.auth.userData.user._id || null;
+    },
   },
 
   data() {
     return {
       a: "data",
       page: 0,
-      imgURL: null,
+      imgURL: null, 
       CoursesArray: [],
       MyCoursesArray: [],
       courseData: {
-        dialog: false ,
+        dialog: false,
       },
       viewVideos: 0,
       viewExercises: 0,
       viewImgURL: "",
-
-
       menu: false,
-
+      aa: false,
     };
   },
 
@@ -249,10 +266,6 @@ export default defineComponent({
               ? course.sections[i].exercises.length
               : 0;
         }
-
-        // let ImgUrl = course.images.bgImage === null ? "require(`@/assets/logo.svg`)" : `http://localhost:3000/Images/${course.images.bgImage}`;
-        // console.log(ImgUrl);
-
         this.courseData = {
           Course: course,
           noOfVideos: this.viewVideos,
@@ -260,12 +273,22 @@ export default defineComponent({
           dialog: true,
           user: "student",
           // ImgUrl: ImgUrl,
-          ImgURL : `http://localhost:3000/Images/${course.images.bgImage}`,
+          ImgURL: `http://localhost:3000/Images/${course.images.bgImage}`,
           action: action,
         };
-
-        // console.log(this.courseData);
       }
+    },
+
+    async isPurchased(enrollment) {
+      for (let i = 0; i < enrollment.length; i++) {
+        console.log(enrollment[i].studentID);
+        console.log(this.id);
+        if (enrollment[i].studentID === this.id) {
+          console.log("F");
+          return false;
+        }
+      }
+      return true;
     },
 
     /**

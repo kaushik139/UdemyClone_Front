@@ -152,6 +152,8 @@ export default {
 
   methods: {
     async editProfile() {
+console.log(this.editImage);
+
       if (this.editName.length > 2) {
         this.$store.dispatch("auth/editProfileAction", {
           name: this.editName,

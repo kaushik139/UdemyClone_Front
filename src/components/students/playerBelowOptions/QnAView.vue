@@ -292,6 +292,7 @@ export default {
       return localStorage.getItem("viewType") || "video";
     },
     id() {
+      console.log(this.$store.state.auth.userData.user._id);
       return this.$store.state.auth.userData.user._id || null;
     },
   },

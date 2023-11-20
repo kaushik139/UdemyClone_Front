@@ -150,8 +150,8 @@ export default {
         },
 
         async logout({ state }) {
-            console.log('lo');
             state.userData = {};
+            state.userData.user._id = null
             localStorage.clear();
         }
     },

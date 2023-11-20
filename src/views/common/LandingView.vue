@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Navbar -->
-    <nav-bar></nav-bar>
+    <nav-bar style="z-index: 9;"></nav-bar>
 
     <!-- Image Carousel -->
     <v-row class="text-center bg-success">

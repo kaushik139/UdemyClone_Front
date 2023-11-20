@@ -123,9 +123,10 @@ export default {
       //     }
       //   }
       // else return false;
-
+//         console.log("getUser: " + this.getUser);
+        // console.log("auth/tokenGetter :"+this["auth/tokenGetter"]);
       return this.getUser === "students"
-        ? this["auth/tokenGetter"] === ""
+        ? localStorage.getItem('email') === null
           ? true
           : false
         : false;
@@ -134,7 +135,7 @@ export default {
 
     showStudentBtn() {
       return this.getUser === "instructors"
-        ? this["auth/tokenGetter"] === ""
+        ? localStorage.getItem('email') === null
           ? true
           : false
         : false;
@@ -159,6 +160,7 @@ export default {
     switchToStudent() {
       this.$store.commit("changeUser", "students");
       localStorage.setItem("role", "students");
+      // this.$router.push('/s')
     },
     logoClick() {
       // this.$router.push("/auth/l");
@@ -171,7 +173,7 @@ export default {
         ? this.getUser === "students"
           ? this.$router.push("/sHome")
           : this.$router.push("/iHome")
-        : this.$router.push("/auth/l");
+        : this.$router.push("/");
     },
 
     async editProfile() {

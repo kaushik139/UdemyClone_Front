@@ -2,34 +2,36 @@
     <div>
   
       <!-- Image Carousel -->
-      <v-row class="text-center bg-success">
+      <v-row class="text-center bg-success m-0">
         <v-carousel
           cycle
           height="600"
           hide-delimiter-background
           show-arrows="hover"
+          class="m-0"
         >
-          <v-carousel-item v-for="(slide, i) in slides" :key="i">
-            <v-sheet height="100%">
+          <v-carousel-item v-for="(slide, i) in slides" :key="i" class="m-0">
+            <v-sheet height="100%" class="m-0">
               <!-- :color="colors[i]" -->
-              <div class="d-flex fill-height justify-center align-center">
-                <div class="w-100 h-70 relative">
+              <div class="d-flex fill-height justify-center align-center m-0 ">
+                <div class="w-100 h-70 relative m-0">
                   <!-- displayed image -->
                   <img
                     :src="require(`@/assets/` + slide.link)"
                     :alt="slide"
-                    style="width: 100%"
+                    style="width: 100%;"
                   />
-  
+                  <div style="  position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(128, 0, 128, 0.1); ">
+                  </div>
   
   
                   <!-- slide Headding -->
                   <div
-                    class=""
+                    class="m-0"
                     style="
                       position: absolute;
                       color: white;
-                      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+                      text-shadow: 1px 1px 1px rgb(0, 0, 0); /* Example shadow */
                       left: 10%;
                       top: 60%;
                     "
@@ -42,7 +44,7 @@
                     class="rounded-pill"
                     style="
                       color: white;
-                      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+                      text-shadow: 1px 1px 1px rgb(0, 0, 0); /* Example shadow */
                       position: absolute;
                       /* box-shadow: 6px 6px 10px -5px white; */
                       top: 70%;
@@ -85,10 +87,7 @@
                   </div>
   
       </v-row>
-      <!-- carousel ending -->
-
-      {{ isLogged }}
-  
+      <!-- carousel ending -->  
     </div>
   </template>
   
