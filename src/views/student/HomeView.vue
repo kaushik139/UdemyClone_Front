@@ -174,16 +174,16 @@
                     <!-- enroll end -->
                   </v-row>
                 </v-card>
-                <v-card v-else elevation="0"> 
-                  <h6>Already Purchased!</h6>
+                <v-card v-else elevation="0">
+                  <h6 class="text-green">Already Purchased!</h6>
                   <v-btn
-                  width="70%"
-                  style="margin: auto; margin-bottom: 3%"
-                  color="purple"
-                  size="small"
-                  @click="viewCourse(course, 'purchased')"
-                  >Go to Course</v-btn
-                >
+                    width="70%"
+                    style="margin: auto; margin-bottom: 3%"
+                    color="purple"
+                    size="small"
+                    @click="viewCourse(course, 'purchased')"
+                    >Go to Course</v-btn
+                  >
                 </v-card>
               </v-row>
             </v-row>
@@ -218,7 +218,12 @@ export default defineComponent({
   computed: {
     ...mapGetters(["student/getCourses", "student/getMyCourses"]),
     id() {
-      return this.$store.state.auth.userData.user._id || null;
+      try {
+        const _id = this.$store.state.auth.userData?.user?._id || null;
+        return _id
+      } catch (error) {
+        return null;
+      }
     },
   },
 
@@ -226,7 +231,7 @@ export default defineComponent({
     return {
       a: "data",
       page: 0,
-      imgURL: null, 
+      imgURL: null,
       CoursesArray: [],
       MyCoursesArray: [],
       courseData: {

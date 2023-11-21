@@ -145,8 +145,8 @@
       <!-- <h6>Video preview: {{ selectedVideo.path }}</h6> -->
 
       <!-- Video Playing Div -->
-      <div class="m-3" style="display: flex; justify-content: center">
-        <video-player :path="selectedVideo.path" :key="selectedVideo.path"></video-player>
+      <div class="m-0">
+        <video-player :path="selectedVideo.path" :key="selectedVideo.path" style="scale: 0.4; margin: -120px; margin-right: -400px;"></video-player>
       </div>
     </v-card>
   </v-card>

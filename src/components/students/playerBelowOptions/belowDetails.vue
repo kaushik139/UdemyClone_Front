@@ -16,16 +16,11 @@
           style="width: 100%; height: 40%; margin: 0px"
         />
       </v-col>
-
+      <!-- instructor's Name -->
       <v-col cols="8">
         <h6>
             By {{ toTitleCase(instructor.name) }},
         </h6>
-        <p>
-            {{ instructor.bio }}
-        </p>
-
-
       </v-col>
     </v-row>
   </div>
@@ -78,6 +73,7 @@ export default {
     //    }
 
     if (this.getCourse) {
+      // console.log(this.getCourse);
       this.course = this.getCourse;
       await this.$store.dispatch(
         "player/instructordetails",

@@ -153,6 +153,7 @@ export default {
         });
       }
       await this.mount();
+      this.newNote = '';
     },
 
     showEditDialog(text, noteID) {

@@ -8,7 +8,7 @@
   </div>
 
   <!-- footer -->
-  <footer class="bg-dark text-white pt-10" style="min-height: 50px; margin-top: 100px;">
+  <footer class="bg-dark text-white pt-10" style="min-height: 50px; margin-top: 100px; flex-shrink: 0 !important;">
     <div class="d-flex justify-center ">
       <v-icon class="mdi-copyright mdi mr-2"></v-icon>
       udemy_clone_

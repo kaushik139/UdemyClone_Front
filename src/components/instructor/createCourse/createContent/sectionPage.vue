@@ -105,6 +105,14 @@
           <h6>{{ selectedSectionVideos }}</h6>
         </v-col>
       </v-row>
+      <v-row class="dispRow mb-0">
+        <v-col cols="5">
+          <h6>Exercises in this Section:</h6>
+        </v-col>
+        <v-col cols="7">
+          <h6>{{ selectedSectionExercises }}</h6>
+        </v-col>
+      </v-row>
     </v-card>
   </v-card>
 </template>
@@ -137,6 +145,7 @@ export default {
       },
     ],
     selectedSectionVideos: 0,
+    selectedSectionExercises: 0,
 
     // store
     formData: {
@@ -201,6 +210,7 @@ export default {
       this.selectedSection = this.sectionArray[val];
       this.selectedSectionIndex = val;
       this.selectedSectionVideos = this.sectionArray[val].videos.length;
+      this.selectedSectionExercises = this.sectionArray[val].exercises.length;
     },
 
     editSection() {

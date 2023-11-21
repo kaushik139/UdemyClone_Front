@@ -3,6 +3,7 @@ import authModule from "./modules/authModule/index"
 import InstructorModule from './modules/InstructorModule/index'
 import Student from './modules/student/studentIndex'
 import PlayCourse from './modules/student/PlayCourseIndex'
+import Search from './modules/search/searchIndex'
 
 
 export default createStore({
@@ -15,6 +16,7 @@ export default createStore({
     instructor: InstructorModule,
     student: Student,
     player: PlayCourse,
+    search: Search,
 
   },
 

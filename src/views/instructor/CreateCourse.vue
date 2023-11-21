@@ -16,7 +16,6 @@
             
             <!-- changing content -->
             <v-col cols="12" md="9" class="form1">
-              {{ currentCompGetter }}
 
               <component :is="currentCompGetter" @changeComp="recievedComponent" :key="currentCompGetter"></component>
                 </v-col
@@ -95,8 +94,8 @@ export default defineComponent({
 }
 
 .navi {
-  margin-left: 3%;
-  width: 97%;
+  margin-left: 4%;
+  width: 96%;
   margin-top: 20px;
 }
 

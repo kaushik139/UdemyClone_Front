@@ -57,17 +57,17 @@
             width="60%"
             height="80%"
           >
-            <v-card style="width: 90%; margin: 10%">
+          <v-card>
+            <v-card style="width: 90%; margin: 4%; display: inline;" elevation="0">
               <v-btn
-                :color="dialogColor"
-                style="margin-left: auto"
+                style="margin-left: 90%"
                 elevation="0"
                 @click="editDialog = false"
               >
-                <v-icon>mdi-close-circle</v-icon>
+                <v-icon color="red" size="large">mdi-close-circle</v-icon>
               </v-btn>
 
-              <v-card style="width: 95%; height: 95%; margin: auto">
+              <!-- <v-card style="width: 95%; height: 95%; margin: auto"> -->
                 <h4>Edit Profile</h4>
 
                 <!-- FORM -->
@@ -89,8 +89,9 @@
                   <v-btn @click="clear"> clear </v-btn>
                 </form>
                 <v-card-actions> </v-card-actions>
-              </v-card>
+              <!-- </v-card> -->
             </v-card>
+          </v-card>
           </v-dialog>
         </v-list-item>
 
@@ -104,20 +105,22 @@
             persistent
             style="text-align: center; width: 40%"
           >
-            <v-card>
-              <h5>Are you sure you want to Louout?</h5>
+            <v-card class="p-4 rounded-2">
+              <h5>Are you sure you want to <span class="text-red">Logout?</span></h5>
               <!-- dialog butons -->
               <v-card-actions>
                 <v-col cols="6">
-                  <v-btn color="red-darken-1" variant="text" @click="logout">
+                  <v-btn elevation="2" color="red-darken-2" variant="text" @click="logout" append-icon="mdi-logout">
                     Yes
                   </v-btn>
                 </v-col>
                 <v-col cols="6">
                   <v-btn
-                    color="green-darken-1"
+                  elevation="2"
+                    color="green-darken-2"
                     variant="text"
                     @click="logoutDialog = false"
+                    append-icon="mdi-alpha-x-circle-outline"
                   >
                     No
                   </v-btn>
@@ -152,17 +155,17 @@ export default {
 
   methods: {
     async editProfile() {
-console.log(this.editImage);
+// console.log(this.editImage[0]);
 
       if (this.editName.length > 2) {
-        this.$store.dispatch("auth/editProfileAction", {
+       await this.$store.dispatch("auth/editProfileAction", {
           name: this.editName,
           image: this.editImage !== null ? this.editImage[0] : "",
         });
       }
       this.editDialog = false;
       this.editImage = null;
-      await this.mount();
+      // await this.mount();
       await this.mount();
 
     },

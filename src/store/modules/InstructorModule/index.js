@@ -137,8 +137,8 @@ export default {
                         // console.log(state.courseDraft.pricing);
                         // console.log(res.data.item.sections);
 
-                        await commit('planCourse', { title: res.data.item.title, miniDescription: res.data.item.description.miniDescription, category: res.data.item.category, id: value });
-                        await commit('pricing', {
+                         commit('planCourse', { title: res.data.item.title, miniDescription: res.data.item.description.miniDescription, category: res.data.item.category, id: value });
+                         commit('pricing', {
                             basePrice: res.data.item.price.basePrice,
                             discountType: res.data.item.price.discountType,
                             discountAmount: res.data.item.price.discountAmount,
@@ -148,7 +148,7 @@ export default {
                             finalPrice: res.data.item.price.finalAmount,
                         });
 
-                        await commit('updateCourseDraft', {
+                         commit('updateCourseDraft', {
                             bgImage: res.data.item.images.bgImage,
                             fullDescription: res.data.item.description.fullDescription,
                             sectionsArray: res.data.item.sections,
@@ -185,7 +185,6 @@ export default {
                     // console.log('message: '+res.data.message);
                     // console.log('res->id: '+ res.data.id);
                     alert("Course Planning Completed!");
-                    // console.log(value);
                     await commit('planCourse', { title: value.name, miniDescription: value.miniDesc, category: value.category, id: res.data.id });
                     await commit('changeCurrentComp', 'LandingPage');
                     localStorage.setItem('courseDraft', res.data.id);
@@ -236,6 +235,7 @@ export default {
         //for course landing page description
         async landingPageAction({ commit, state }, value) {
             console.log(value);
+            console.log(state.courseDraft.id);
 
             try {
                 const res = await axios.patch(
@@ -588,7 +588,7 @@ export default {
 
         //to fetch all courses for an instructor
         async AllMyCourses({ dispatch, state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {

@@ -218,7 +218,9 @@
           color="purple"
         >
         </v-textarea>
-        <v-btn append-icon="mdi-send" size="small" color="purple" @click="post">POST</v-btn>
+        <v-btn append-icon="mdi-send" size="small" color="purple" @click="post"
+          >POST</v-btn
+        >
       </v-card>
     </v-card>
 
@@ -289,10 +291,10 @@ export default {
       return localStorage.getItem("viewIndex") || 0;
     },
     viewType() {
-      return localStorage.getItem("viewType") || "video";
+      return localStorage.getItem("viewType") || "videos";
     },
     id() {
-      console.log(this.$store.state.auth.userData.user._id);
+      // console.log(this.$store.state.auth.userData.user._id);
       return this.$store.state.auth.userData.user._id || null;
     },
   },
@@ -310,6 +312,8 @@ export default {
     replyIndex: "",
     userName: localStorage.getItem("name"),
     replyText: "",
+    time: 0,
+
   }),
 
   methods: {
@@ -337,6 +341,7 @@ export default {
         });
         await this.mount();
       } else alert("Empty Field!");
+      this.querry = '';
     },
 
     async editPost(querryIndex, text) {
@@ -369,13 +374,15 @@ export default {
         });
       } else alert("Reply Empty!");
 
+      this.replyText = '';
       this.dialogArray[querryIndex] = false;
+      await this.mount();
     },
 
     openDialog() {
-      console.log(this.dialog);
+      // console.log(this.dialog);
       if (this.dialog === false) this.dialog = true;
-      console.log(this.dialog);
+      // console.log(this.dialog);
     },
 
     /**
@@ -389,7 +396,7 @@ export default {
     },
 
     showReplyBtn(replyID) {
-      console.log(replyID);
+      // console.log(replyID);
       if (replyID === this.id) return true;
       else return false;
     },
@@ -446,26 +453,14 @@ export default {
     },
 
     async mount() {
+      console.log(this.time++);
+      // console.log([this.viewType]);
+      // console.log(this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA);
       if (
-        this["player/getCourse"].sections[this.sectionIndex][this.viewType][
-          this.viewIndex
-        ].QnA.length
-      ) {
-        console.log(
-          "firing" +
-            this["player/getCourse"].sections[this.sectionIndex][this.viewType][
-              this.viewIndex
-            ].QnA.length
-        );
-        await this.$store.dispatch(
-          "player/getQNA",
-          this["player/getCourse"].sections[this.sectionIndex][this.viewType][
-            this.viewIndex
-          ].QnA
-        );
+        this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA.length) {
+        await this.$store.dispatch("player/getQNA",this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA);
 
-        if (this["player/getterQNA"]) {
-          this.QNA = this["player/getterQNA"];
+        if (this["player/getterQNA"]) {this.QNA = this["player/getterQNA"];
           // console.log(this.QNA);
 
           // console.log(this.QNA.length);
@@ -484,14 +479,14 @@ export default {
           // this.dialog4Array = Array.from({ length: this.QNA.length }, () => false);
         }
       } else {
-        console.log("no data");
+        // console.log("no data");
         this.QNA = [];
       }
     },
   },
 
   async mounted() {
-    console.log("QNA");
+    // console.log("QNA");
     await this.mount();
   },
 };

@@ -384,8 +384,8 @@ export default defineComponent({
 }
 
 .navi {
-  margin-left: 3%;
-  width: 97%;
+  margin-left: 4%;
+  width: 96%;
   margin-top: 20px;
 }
 

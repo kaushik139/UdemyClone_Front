@@ -12,15 +12,15 @@
     <v-card-text class="mainCard">
       <v-window v-model="tab" >
         <v-window-item value="section" >
-          <section-page ></section-page>
+          <section-page :key="tab"></section-page>
         </v-window-item>
 
         <v-window-item value="video">
-          <video-page></video-page>
+          <video-page :key="tab"></video-page>
         </v-window-item>
 
         <v-window-item value="exercise">
-          <exercises-page></exercises-page>
+          <exercises-page :key="tab"></exercises-page>
         </v-window-item>
       </v-window>
     </v-card-text>

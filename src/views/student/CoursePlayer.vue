@@ -102,6 +102,8 @@ export default {
     },
 
     async mount() {
+      await this.$store.dispatch('player/coursePlayAction');
+      // console.log(this['player/getCourse']);
       this.title = this["player/getCourse"].title;
       this.rmData = this["player/getCourse"].sections;
       if (this.viewType === "exercises") {

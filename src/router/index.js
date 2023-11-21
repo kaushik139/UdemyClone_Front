@@ -52,6 +52,11 @@ const routes = [
     name: '4o4Page',
     component: () => import('../views/common/ErrorPage.vue')
   },
+  {
+    path: "/searchResults",
+    name: 'search',
+    component: () => import('../views/common/searchView.vue')
+  },
 ]
 
 const router = createRouter({

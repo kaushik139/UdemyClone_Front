@@ -8,14 +8,14 @@ export default {
         instructor: {},
         QNA: [],
         Notes: [],
-        Rating:{},
+        Rating: {},
 
     },
 
     getters: {
         getCourse(state) {
             // console.log(';;');
-           return state.course;
+            return state.course;
         },
         getInstructor(state) {
             // console.log(':::');
@@ -54,8 +54,8 @@ export default {
     },
 
     actions: {
-        async coursePlayAction({commit, state, rootGetters}) {
-            const value = state.courseID;
+        async coursePlayAction({ commit, state, rootGetters }) {
+            const value = localStorage.getItem('CourseID');
             const user = await rootGetters['auth/userDataGetter'].user;
             let studentID = '';
             if (user) {
@@ -70,17 +70,18 @@ export default {
                         }
                     })
 
-                if (res.data) {
-                    // console.log(res.data);
-                    // await commit('courseIDMutation', value);
-                    await commit('setPlayerCourseMutation', res.data);
-                }
-                else console.log(res);
-               }catch(err){console.error(err);}
+                    if (res.data) {
+                        // console.log(res.data);
+                        // await commit('courseIDMutation', value);
+                        commit('setPlayerCourseMutation', res.data);
+                    }
+                    else console.log(res);
+                } catch (err) { console.error(err); }
             }
         },
 
         async instructordetails({ state }, value) {
+            // console.error('qqq');
             if (value) {
                 const res = await axios.get(`http://localhost:3000/instructors/${value}`)
 
@@ -93,23 +94,24 @@ export default {
         },
 
         async PostQnA({ dispatch, state }, value) {
-            console.log(value);
+            // console.log(value);
             // console.log(state.courseID);
             if (value) {
                 const res = await axios.post(`http://localhost:3000/courses/postQnA/${state.courseID}`, value)
 
 
-            if (res.data === 'Querry Posted!') {
-                alert('Querry Posted');
-                await dispatch('coursePlayAction');
-                await dispatch('getQNA');
-            }
+                if (res.data === 'Querry Posted!') {
+                    alert('Querry Posted');
+                    await dispatch('coursePlayAction');
+                    await dispatch('getQNA');
+                }
                 else alert('Not Posted!')
             }
         },
 
         async getQNA({ commit }, value) {
-            console.log(value);
+            // console.log(value);
+            // console.log('qqqqqqqqq');
 
             if (value) {
                 try {
@@ -117,18 +119,18 @@ export default {
 
                     if (res.data) {
 
-                        console.log(res.data);
+                        // console.log(res.data);
                         commit('setQNA', res.data);
                     }
                     else commit('setQNA', [])
-                    
-                }catch(err){console.error(err);}
-                
+
+                } catch (err) { console.error(err); }
+
             }
         },
 
         async editQuerry({ dispatch, state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
@@ -136,32 +138,32 @@ export default {
 
                     if (res.data === 'Post Updated') {
                         // console.log(res.data);
-                      await dispatch('coursePlayAction')
+                        await dispatch('coursePlayAction')
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
-        async removeQuerry({ dispatch,state }, value) {
+        async removeQuerry({ dispatch, state }, value) {
             // console.log(value);
             // console.log(state.QNA);
             if (state.QNA.length === 1) state.QNA = [];
 
             if (value) {
                 try {
-                    const res = await axios.delete(`http://localhost:3000/courses/removeQNA/${state.courseID}`, {data: value})
+                    const res = await axios.delete(`http://localhost:3000/courses/removeQNA/${state.courseID}`, { data: value })
 
                     if (res.data) {
                         // console.log(res.data);
                         alert(res.data);
                         await dispatch('coursePlayAction');
                     }
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
-        async replyQNA({ state }, value) {
+        async replyQNA({ state, dispatch }, value) {
             // console.log(value);
 
             if (value) {
@@ -170,15 +172,16 @@ export default {
 
                     if (res.data) {
                         alert(res.data)
-                        await dispatch('getQNA');
+                        // dispatch('getQNA');
+                        await dispatch('coursePlayAction');
                     }
-                }catch(err){alert(err)}
+                } catch (err) { alert(err) }
             }
         },
 
         async editQnaReply({ dispatch, state }, value) {
             // console.log(value);
-            
+
             if (value) {
                 try {
                     const res = await axios.post(`http://localhost:3000/courses/editQnaReply/${state.courseID}`, value);
@@ -188,23 +191,23 @@ export default {
                         await dispatch('getQNA');
                         await dispatch('coursePlayAction');
                     }
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
         async deleteQnaReply({ dispatch, state }, value) {
-            console.log(value);
-            
+            // console.log(value);
+
             if (value) {
                 try {
                     const res = await axios.post(`http://localhost:3000/courses/deleteQnaReply/${state.courseID}`, value);
 
                     if (res.data === 'Reply Deleted') {
                         alert(res.data)
-                        await dispatch('getQNA');
+                        // await dispatch('getQNA');
                         await dispatch('coursePlayAction');
                     }
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
@@ -220,7 +223,7 @@ export default {
                         await dispatch('GetNotes', value);
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
@@ -236,12 +239,12 @@ export default {
                         await commit('setNotes', res.data)
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
         async EditNote({ dispatch, state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
@@ -252,23 +255,23 @@ export default {
                         await dispatch('GetNotes', value);
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
         async DeleteNote({ state }, value) {
-            console.log(value);
+            // console.log(value);
 
             if (value) {
                 try {
                     const res = await axios.post(`http://localhost:3000/courses/deleteNotes/${state.courseID}`, value);
 
                     if (res.data) {
-                        console.log(res.data);
-                        await dispatch('GetNotes', value)
+                        // console.log(res.data);
+                        // await dispatch('GetNotes', value)
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
@@ -284,7 +287,7 @@ export default {
                         await dispatch('getRating', value);
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
@@ -294,14 +297,13 @@ export default {
 
             if (value) {
                 try {
-                    const res = await axios.post(`http://localhost:3000/courses/showRating/${state.courseID}`, {id: value});
+                    const res = await axios.post(`http://localhost:3000/courses/showRating/${state.courseID}`, { id: value });
 
                     if (res.data.counts) {
-                        // console.log(res.data);
-                        await commit('setRatings', res.data);
+                        commit('setRatings', res.data);
                     }
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
             }
         },
 
@@ -313,14 +315,14 @@ export default {
                 studentID = user._id;
             }
 
-            if (value&&studentID) {
+            if (value && studentID) {
                 try {
                     const res = await axios.post(`http://localhost:3000/students/checkItem/${studentID}`, value)
 
-                }catch(err){console.error(err);}
+                } catch (err) { console.error(err); }
 
             }
         }
     }
-    
+
 }

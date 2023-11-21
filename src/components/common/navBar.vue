@@ -65,27 +65,11 @@
             </ul>
           </li> -->
         </ul>
-        <form
-          v-if="isLogged"
-          class="d-flex border border-1 border-dark rounded-pill p-0"
-          style="background-color: white !important"
-          role="search"
-        >
-          <input
-            class="form-control me-2 rounded-pill search"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-            style="border: none"
-          />
-          <button class="btn p-0 m-0" type="submit">
-            <i
-              class="fa-solid fa-magnifying-glass"
-              style="color: #000000; margin-right: 8px"
-            ></i>
-          </button>
-        </form>
 
+        <!-- Search Bar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+        <div class="bg-white search" style="border: none">
+          <search-bar></search-bar>
+        </div>
         <!-- CHIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
       <profile-chip v-if="getUser === 'students'"></profile-chip>
         <!-- <button class="btn" @click="test">test</button> -->
@@ -98,9 +82,10 @@
   <script>
 import { mapGetters } from "vuex";
 import profileChip from './profileChip.vue';
+import SearchBar from './searchBar.vue';
 
 export default {
-  components: { profileChip },
+  components: { profileChip, SearchBar },
   name: "NavBar",
   computed: {
     navbar() {

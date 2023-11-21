@@ -30,7 +30,6 @@ export default {
         setUserData(state, val) {
             // console.log(val);
             state.userData = val.userData
-            // console.log('from mutation: ' + val.token);
         },
 
     },
@@ -100,17 +99,13 @@ export default {
                 // console.log(value);
 
                 try {
-                    const res = await axios.post(`http://localhost:3000/students/${value.email}`,
-                        {
-                            role: value.role,
-                           
-                        },
+                    const res = await axios.post(`http://localhost:3000/students/${value.email}`, { role: value.role },
                     );
 
 
                     if (res.data) {
-                        commit('setUserData', {userData: res.data, token: localStorage.getItem('token')})
                         // console.log(res.data);
+                        await commit('setUserData', {userData: res.data, token: localStorage.getItem('token')})
                         // console.log(state.userData);/
                     }
                 } catch (err) {
@@ -151,8 +146,8 @@ export default {
 
         async logout({ state }) {
             state.userData = {};
-            state.userData.user._id = null
             localStorage.clear();
+            // state.userData.user._id = '';
         }
     },
 
