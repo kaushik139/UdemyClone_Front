@@ -48,7 +48,8 @@ export default {
             state.Notes = value;
         },
         setRatings(state, value) {
-            state.Rating = value;
+            console.log("V", value)
+            state.Rating = { ...value };
         },
 
     },
@@ -300,6 +301,7 @@ export default {
                     const res = await axios.post(`http://localhost:3000/courses/showRating/${state.courseID}`, { id: value });
 
                     if (res.data.counts) {
+                        console.log(res.data);
                         commit('setRatings', res.data);
                     }
 

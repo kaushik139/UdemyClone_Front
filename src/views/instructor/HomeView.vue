@@ -394,7 +394,4 @@ export default defineComponent({
   transition: transform 0.2s ease-in-out;
 }
 
-v-col {
-  /* margin-top: -30px !important;  */
-}
 </style>

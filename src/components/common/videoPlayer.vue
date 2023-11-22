@@ -32,7 +32,7 @@ export default {
         width: 800,
         autoplay: false,
         controls: true,
-        // fluid: true, 
+        fluid: true, 
         responsive: true,
         sources: {
           src: ``,

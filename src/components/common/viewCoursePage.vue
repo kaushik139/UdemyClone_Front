@@ -51,107 +51,106 @@
                 <h4>Title:</h4>
               </v-col>
               <v-col cols="8" class="m-0 ml-0">
-                <h4>{{ data.Course.title }}</h4>
+                <h4>{{ toTitleCase(data.Course.title) }}</h4>
               </v-col>
             </v-row>
 
             <!-- row2 -->
             <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Description:</h5>
+                <h6 class="m-0 p-0">Description:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.Course.description.miniDescription }}</h5>
+                <h6 class="m-0 p-0">{{ data.Course.description.miniDescription }}</h6>
               </v-col>
             </v-row>
 
             <!-- row3 -->
             <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Category:</h5>
+                <h6 class="m-0 p-0">Category:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.Course.category }}</h5>
+                <h6 class="m-0 p-0">{{ data.Course.category }}</h6>
               </v-col>
             </v-row>
 
             <!-- row4 -->
             <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Sections:</h5>
+                <h6 class="m-0 p-0">Sections:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.Course.sections.length }}</h5>
+                <h6 class="m-0 p-0">{{ data.Course.sections.length }}</h6>
               </v-col>
             </v-row>
 
             <!-- row5 -->
             <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Videos:</h5>
+                <h6 class="m-0 p-0">Videos:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.noOfVideos }}</h5>
+                <h6 class="m-0 p-0">{{ data.noOfVideos }}</h6>
               </v-col>
             </v-row>
 
             <!-- row6-->
             <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Exercises:</h5>
+                <h6 class="m-0 p-0">Exercises:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.noOfExercises }}</h5>
+                <h6 class="m-0 p-0">{{ data.noOfExercises }}</h6>
               </v-col>
             </v-row>
 
             <!-- row7-->
-            <v-row class="m-0" v-if="data.user === 'instructor'">
+            <v-row class="m-0" v-if="showStatus">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Status:</h5>
+                <h6 class="m-0 p-0">Status:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ toTitleCase(data.Course.status) }}</h5>
+                <h6 class="m-0 p-0">{{ toTitleCase(data.Course.status) }}</h6>
               </v-col>
             </v-row>
 
-            <!-- row7-->
+            <!-- row7.02-->
             <v-row v-if="data.action === 'view'" class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Price:</h5>
+                <h6 class="m-0 p-0">Price:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
                 <v-icon class="mdi-currency-inr mdi mb-1">{{
                   mdiCurrencyInr
                 }}</v-icon>
-                <h5 style="display: inline">
+                <h6 style="display: inline">
                   {{ data.Course.price.finalAmount }}
-                </h5>
+                </h6>
               </v-col>
             </v-row>
 
             <!-- row8-->
-            <v-row
-              class="m-0"
-              v-if="
+            <v-row class="m-0">
+              <!-- v-if="
                 data.user === 'instructor' && data.Course.status === 'published'
-              "
-            >
+              " -->
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Enrolled:</h5>
+                <h6 class="m-0 p-0">Enrolled:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h5>{{ data.Course.enrollment.length }}</h5>
+                <h6 class="m-0 p-0">{{ data.Course.enrollment.length }}</h6>
               </v-col>
             </v-row>
 
+            {{ data.Course.rating }}
             <!-- row9-->
             <v-row class="ml-5 mt-0">
               <v-col cols="4" class="mt-2">
-                <h5>Rating:</h5>
+                <h6 class="m-0 p-0">Rating:</h6>
               </v-col>
               <v-col cols="2" class="mt-3 ml-1">
-                <h5>{{ data.Course.rating.netRating }}</h5>
+                <h6 class="m-0 p-0">{{ data.Course.rating.netRating }}</h6>
               </v-col>
               <v-col cols="5" class="m-0 mt-1">
                 <div class="text-center">
@@ -168,37 +167,28 @@
             </v-row>
 
             <!-- row10-->
-            <v-row
-              class="m-0"
-              v-if="
-                data.user === 'instructor' && data.Course.status === 'published'
-              "
-            >
+            <v-row class="m-0" v-if="showRevenue">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
-                <h5>Revenue:</h5>
+                <h6 class="m-0 p-0">Revenue:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
                 <v-icon class="mdi-currency-inr mdi mb-1">{{
                   mdiCurrencyInr
                 }}</v-icon>
-                <h5 style="display: inline">{{ data.Revenue }}</h5>
+                <h6 style="display: inline">{{ data.Revenue }}</h6>
               </v-col>
             </v-row>
 
             <!-- row11-->
-            <v-row
-              v-if="data.action === 'view' && data.user === 'student'"
-              class="m-0 ml-12"
-            >
-              <v-btn color="purple" @click="purchase(data.Course._id)">Purchase Now!</v-btn>
+            <v-row v-if="showPurchaseBtn" class="m-0 ml-12">
+              <v-btn color="purple" @click="purchase(data.Course._id)"
+                >Purchase Now!</v-btn
+              >
               <!-- {{ data.Course.stripePriceID }} -->
             </v-row>
 
             <!-- row12-->
-            <v-row
-              v-if="data.action === 'purchased' && data.user === 'student'"
-              class="m-0 mt-4 ml-12"
-            >
+            <v-row v-if="showLearnBtn" class="m-0 mt-4 ml-12">
               <v-btn color="purple" @click="learn(data.Course._id)"
                 >Learn Now</v-btn
               >
@@ -225,10 +215,50 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapGetters("auth", ["userIDgetter"]),
+
     bgColor() {
-      return this.data.user === "student" ? "purple" : "rgb(131,0,0)";
+      return localStorage.getItem("role") === "student"
+        ? "purple"
+        : "rgb(131,0,0)";
     },
-    // ...mapGetters(['student/getSelectedCourse', 'getSelectedAction'])
+    showStatus() {
+      if (this.data.action === "search") {
+        if (
+          localStorage.getItem("role") === "instructors" &&
+          this.data.instructor === this.userIDgetter
+        ) {
+          return true;
+        } else return false;
+      } else {
+        return this.data.user === "instructor" ? true : false;
+      }
+    },
+    showRevenue() {
+      if (
+        localStorage.getItem("role") === "instructors" &&
+        this.data.instructor === this.userIDgetter
+      )
+        return true;
+      else return false;
+    },
+    showPurchaseBtn() {
+      if (this.data.action === "view" && this.data.user === "student")
+        return true;
+      else if (this.data.action === "search") {
+        const res = localStorage.getItem('role') === "students" ? this.data.purchased ? false : true : false;
+        return res;
+      }
+    },
+    showLearnBtn() {
+      // if (this.data.action === "purchased" && this.data.user === "student")
+      //   return true;
+      // else if (this.data.action === "search") {
+      //   // console.log((this.data.purchased === undefined));
+      //   return !(this.data.purchased === undefined);
+      // }
+      return localStorage.getItem('role') === "students" ? !this.showPurchaseBtn : false;
+    },
   },
 
   data() {
@@ -253,7 +283,7 @@ export default defineComponent({
     },
 
     async purchase(courseID) {
-        await this.$store.dispatch('student/Purchase', { courseID: courseID });
+      await this.$store.dispatch("student/Purchase", { courseID: courseID });
 
       // const res = await axios.post(`http://localhost:3000/students/purchase/${courseID}`);
       // window.location.href = res.data.url;
@@ -263,11 +293,14 @@ export default defineComponent({
   mounted() {
     // this.data.dialog = true;
     // console.log(this.data);
-    if (localStorage.getItem("roles") === "students") {
-      this["student/getSelectedCourse"];
+    if (this.data.action === "search") {
     } else {
-      if (this.data) this.componentData = this.data;
-      else console.log(this["student/getSelectedCourse"]);
+      if (localStorage.getItem("roles") === "students") {
+        this["student/getSelectedCourse"];
+      } else {
+        if (this.data) this.componentData = this.data;
+        else console.log(this["student/getSelectedCourse"]);
+      }
     }
   },
 });
@@ -288,10 +321,6 @@ export default defineComponent({
 .dialog-bottom-transition-enter-active,
 .dialog-bottom-transition-leave-active {
   transition: transform 0.2s ease-in-out;
-}
-
-v-col {
-  /* margin-top: -30px !important;  */
 }
 </style>
   

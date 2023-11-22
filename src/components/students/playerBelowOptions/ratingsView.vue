@@ -12,17 +12,17 @@
 
       <div class="d-flex align-center flex-column my-auto">
         <div class="text-h2 mt-5">
-          {{ Ratings.netRated }}
+          {{ $store.state.player.Rating.netRated }}
           <span class="text-h6 ml-n3">/5</span>
         </div>
 
         <v-rating
-          :model-value="Ratings.netRated"
+          :model-value="$store.state.player.Rating.netRated"
           color="purple-darken-3"
           readonly
           half-increments
         ></v-rating>
-        <div class="px-3">Rated by {{ Ratings.totalRatings }} users</div>
+        <div class="px-3">Rated by {{ RatingsGetter.totalRatings }} users</div>
       </div>
 
       <v-list
@@ -30,7 +30,10 @@
         class="d-flex flex-column-reverse"
         density="compact"
       >
-        <v-list-item v-for="(rating, index) in Ratings.counts" :key="index">
+        <v-list-item
+          v-for="(rating, index) in RatingsGetter.counts"
+          :key="index"
+        >
           <v-progress-linear
             :model-value="rating * 15"
             class="mx-n5"
@@ -63,10 +66,13 @@
       <h6>Your Rating</h6>
       <v-rating
         v-model="userRating"
+        :length="5"
+        :key="userRating"
         color="purple-darken-3"
         density="comfortable"
       >
       </v-rating>
+      
       <v-textarea
         v-model="userRatingText"
         placeholder="Feedback"
@@ -87,7 +93,7 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["player/RatingsGetter"]),
+    ...mapGetters("player", ["RatingsGetter"]),
     id() {
       return this.$store.state.auth.userData.user._id || null;
     },
@@ -95,9 +101,9 @@ export default {
 
   data: () => ({
     NetRating: 3,
-    userRating: "",
+    userRating: 0,
     userRatingText: "",
-    Ratings: {
+    RatingsGetter: {
       UserRating: {
         rated: 0,
         text: "",
@@ -131,13 +137,10 @@ export default {
 
     async mount() {
       await this.$store.dispatch("player/getRating", this.id);
-      if (this["player/RatingsGetter"]) {
-        this.Ratings = this["player/RatingsGetter"];
-      }
-      // console.log(this.Ratings);
-      this.userRating = this.Ratings.UserRating.rated;
-      this.userRatingText = this.Ratings.UserRating.text;
-      // console.log(this.Ratings);
+      this.userRating = parseInt(this.$store.state.player.Rating.netRated);
+      
+      console.log(this.userRating);
+      this.userRatingText = this.RatingsGetter.UserRating.text;
     },
   },
 

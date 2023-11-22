@@ -87,7 +87,7 @@ export default {
                 }
             }
             catch (error) {
-                console.log(chalk.red(error.res.data.message));
+                console.log(chalk.red(error));
                 commit('setLoginError', { value: error.res.data.message });
                 // if (error) commit('setLoginError', { value: error });
             }
@@ -144,10 +144,12 @@ export default {
             }
         },
 
-        async logout({ state }) {
+        async logout({ state, rootState }) {
             state.userData = {};
             localStorage.clear();
-            // state.userData.user._id = '';
+            // state.token = null;
+            rootState.student.MyCourses = [];
+
         }
     },
 
@@ -173,6 +175,9 @@ export default {
         userDataGetter(state) {
             // console.log(state.userData);
             return state.userData;
+        },
+        userIDgetter(state) {
+            return state.userData.user._id;
         }
 
     },

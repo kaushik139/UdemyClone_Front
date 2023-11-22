@@ -314,7 +314,7 @@ export default defineComponent({
         this.MyCoursesArray = this["student/getMyCourses"];
       }
       // console.log(this.CoursesArray);
-      // console.log(this.MyCoursesArray);
+      console.log(this.MyCoursesArray);
     },
   },
   /**

@@ -67,7 +67,7 @@
         </ul>
 
         <!-- Search Bar !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-        <div class="bg-white search" style="border: none">
+        <div v-if="showSearch" class="bg-white search" style="border: none; margin-top: -20px; margin-right: 5px;">
           <search-bar></search-bar>
         </div>
         <!-- CHIP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
@@ -88,16 +88,18 @@ export default {
   components: { profileChip, SearchBar },
   name: "NavBar",
   computed: {
+    ...mapGetters(["getUser", "auth/tokenGetter", "auth/userDataGetter"]),
+
     navbar() {
-      return this.getUser === "instructors" ? "navbarIns" : "navbarStu";
+      return localStorage.getItem('role') === 'admin' ? 'navbarAd' : this.getUser === "instructors" ? "navbarIns" : "navbarStu";
       // return localStorage.getItem('role') === 'instructors' ? 'navbarIns' : 'navbarStu';
     },
     logo() {
-      return this.getUser === "instructors" ? "logoIns" : "logoStu";
+      return localStorage.getItem('role') === 'admin' ? 'logoAd' : this.getUser === "instructors" ? "logoIns" : "logoStu";
       // return localStorage.getItem('role') === 'instructors' ? 'logoIns' : 'logoStu';
     },
     dialogColor() {
-      this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+      return localStorage.getItem('role') === 'admin' ? 'rgb(230, 230, 0)' : this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
     },
     showTeachBtn() {
       //   if (this.getUser === 'student') {
@@ -125,7 +127,10 @@ export default {
           : false
         : false;
     },
-    ...mapGetters(["getUser", "auth/tokenGetter", "auth/userDataGetter"]),
+      showSearch() {
+          const role = localStorage.getItem('role');
+          return role === "students" ? true : role === 'instructors' ? true : false; 
+    },
   },
   data: () => ({
     isLogged: false,
@@ -208,16 +213,27 @@ export default {
 .navbarStu {
   box-shadow: 0.5px 0.5px 5px 0.5px purple;
 }
+
+.navbarIns {
+  box-shadow: 0.5px 0.5px 5px 0.5px rgb(131, 0, 0);
+}
+
+.navbarAd {
+  box-shadow: 0.5px 0.5px 15px 1px rgb(230, 230, 0);
+}
+
 .logoStu {
   color: purple;
   font-size: 30px;
 }
 
-.navbarIns {
-  box-shadow: 0.5px 0.5px 5px 0.5px rgb(131, 0, 0);
-}
 .logoIns {
   color: rgb(131, 0, 0);
+  font-size: 30px;
+}
+
+.logoAd {
+  color: rgb(230, 230, 0);
   font-size: 30px;
 }
 

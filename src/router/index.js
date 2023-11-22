@@ -57,6 +57,11 @@ const routes = [
     name: 'search',
     component: () => import('../views/common/searchView.vue')
   },
+  {
+    path: "/adminHome",
+    name: 'adminHome',
+    component: () => import('../views/admin/adminHome.vue')
+  },
 ]
 
 const router = createRouter({

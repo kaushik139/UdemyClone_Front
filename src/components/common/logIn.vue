@@ -104,14 +104,23 @@ export default {
         email: '',
         password: '',
         errMessage: '',
-        errMessageVisible : false,
+      errMessageVisible: false,
+      adminData: {
+          email: 'admin@a.com',
+          password: 'qqqqq111'
+        }
   }),
 
   methods: {
     async login() {
-            console.log(chalk.red("login triggered:->"));
+            // console.log(chalk.red("login triggered:->"));
         if (this.email && this.password) {
-          const info = {
+            if (this.email === this.adminData.email && this.password === this.adminData.password) {
+              localStorage.setItem('role', 'admin');
+              this.$router.push('adminHome');
+          }
+              else {
+                const info = {
             email: this.email,
             password: this.password
           }
@@ -144,6 +153,7 @@ export default {
                 //     console.log(chalk.red(error.response.data.message));
             // }
       
+            }
             }
             else this.showError('All fields required!');
         },

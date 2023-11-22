@@ -221,7 +221,7 @@ export default {
 
     mounted() {
         setTimeout(() => {
-          console.log(this['instructor/courseDraftGetter'].pricing.basePrice);
+          // console.log(this['instructor/courseDraftGetter'].pricing.basePrice);
             this.basePrice = this['instructor/courseDraftGetter'].pricing.basePrice;
             this.discountType = this['instructor/courseDraftGetter'].pricing.discountType;
           this.baseSavedValue = true;

@@ -95,10 +95,11 @@
           </v-dialog>
         </v-list-item>
 
-        <!-- Logout Dialog -->
+       
+        <!-- Logout -->
         <v-list-item link prepend-icon="mdi-logout">
           <v-list-item-subtitle>Logout</v-list-item-subtitle>
-
+          <!-- Logout Dialog -->
           <v-dialog
             v-model="logoutDialog"
             activator="parent"
