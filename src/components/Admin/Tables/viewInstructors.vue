@@ -1,0 +1,91 @@
+<template>
+    <div>
+        <admin-nav></admin-nav>
+        <v-table fixed-header height="300px" class="ml-2">
+      <thead>
+        <tr>
+          <th class="text-left">Index</th>
+          <th class="text-left">Name</th>
+          <th v-if="publishedCourses" class="text-left">Published Courses</th>
+          <th class="text-left">Unpublished Courses</th>
+          <th v-if="publishedCourses" class="text-left">All Courses</th>
+          <!-- <th class="text-left">
+          Videos
+        </th>
+        <th class="text-left">
+          Exercises
+        </th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(item, index) in InstructorListGetter"
+          :key="index"
+          class="hover"
+        >
+          <td class="text-left">{{ index + 1 }}.</td>
+          <td class="text-left">{{ toTitleCase(item.name) }}</td>
+          <td v-if="publishedCourses" class="text-left">{{ item.publishedCourses }}</td>
+          <td class="text-left">{{ item.unpublishedCourses }}</td>
+          <td v-if="publishedCourses"> {{ item.courses.length }}</td>
+
+          <v-tooltip activator="parent" location="top"
+            >View Instructor: {{ toTitleCase(item.name) }}</v-tooltip
+          >
+        </tr>
+      </tbody>
+    </v-table>
+      <!-- container ending -->  
+    </div>
+  </template>
+  
+  <script>
+  import NavBar from "@/components/common/navBar.vue";
+  import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
+import AdminNav from "../adminNav.vue";
+  
+  // Components
+  
+  export default defineComponent({
+        components: { NavBar, AdminNav },
+
+        computed: {
+              ...mapGetters('admin', ['InstructorListGetter', 'navTitleGetter']),
+
+              publishedCourses() {
+                    return this.navTitleGetter !== 'View Instructors with no Published Courses' ? true : false;
+              }
+        },
+        
+    data() {
+          return {
+
+          }
+    },
+  
+        methods: {
+            toTitleCase(value) {
+      if (!value) return "";
+      return value
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    },
+
+
+        },
+
+        mounted() {
+            // console.log(this.InstructorListGetter);
+
+        }
+  });
+  </script>
+  
+  <style scoped>
+  .hover:hover {
+    cursor: pointer;
+  }
+  </style>

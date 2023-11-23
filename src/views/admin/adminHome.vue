@@ -1,9 +1,23 @@
 <template>
-  <div class="contain mt-0">
+  <div v-if="show" class="contain mt-0">
     <div class="text-left m-0 pl-2 d-flex" style="background:grey">
-       <h2>Udemy@dmin</h2>
+       <h2 class="ml-4">Udemy@dmin</h2>
        <v-spacer></v-spacer>
-       <v-btn class="mr-2 mt-1" append-icon="mdi-logout"  style="background-color:rgb(170, 169, 169)">Logout</v-btn>
+       <div class="search m-1"><search-bar></search-bar></div>
+       <v-btn class="mr-2 mt-1" append-icon="mdi-logout"  style="background-color:rgb(170, 169, 169)">Logout
+        <v-dialog activator="parent" v-model="dialog" width="25%">
+            <v-card>
+                <v-card-title class="text-center">
+                    Are you sure ?
+                </v-card-title>
+                <v-card-actions >
+                    <v-col cols="5" class="text-right"><v-btn append-icon="mdi-check" color="red" elevation="2" @click="logout">Yes</v-btn></v-col>
+                    <v-col cols="5" class="text-right"><v-btn append-icon="mdi-alpha-x-circle-outline" color="green" elevation="2" @click="dialog = false">No</v-btn></v-col>
+                    
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </v-btn>
        </div>
     <div style="position: relative">
       <!-- <side-nav></side-nav> -->
@@ -168,9 +182,10 @@
 import { defineComponent } from "vue";
 import NavBar from "../../components/common/navBar.vue";
 import { mapGetters } from "vuex";
-import ViewCourses from "@/components/Admin/viewCourses.vue";
-import ViewInstructors from "@/components/Admin/viewInstructors.vue";
-import ViewStudents from "@/components/Admin/viewStudents.vue";
+import ViewCourses from "@/components/Admin/Tables/viewCourses.vue";
+import ViewInstructors from "@/components/Admin/Tables/viewInstructors.vue";
+import ViewStudents from "@/components/Admin/Tables/viewStudents.vue";
+import CourseDialog from "@/components/Admin/Dialogs/courseDialog.vue";
 
 // Components
 
@@ -180,6 +195,7 @@ export default defineComponent({
     ViewCourses,
     ViewInstructors,
     ViewStudents,
+    CourseDialog,
   },
 
   computed: {
@@ -188,7 +204,12 @@ export default defineComponent({
 
   data() {
     return {
-      selectedComponent: "",
+          selectedComponent: "",
+          dialog: false,
+          show: false,
+          dialogComponent: '',
+          dialog: false,
+
     };
   },
 
@@ -201,42 +222,65 @@ export default defineComponent({
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
     },
-
-    publishedCourses() {
+/////////////////////////////////COURSES///////////////////////////////////////////////////////////////
+        async publishedCourses() {
+              await this.$store.dispatch('admin/publishedCoursesAction');
+              await this.$store.commit('admin/navTitleMutation', 'View Published Courses')
       this.selectedComponent = "ViewCourses";
     },
-    unPublishedCourses() {
+    async unPublishedCourses() {
+          await this.$store.dispatch('admin/unPublishedCoursesAction');
+          await this.$store.commit('admin/navTitleMutation', 'View Unpublished Courses')
       this.selectedComponent = "ViewCourses";
     },
-    allCourses() {
+    async allCourses() {
+          await this.$store.dispatch('admin/allCoursesAction');
+          await this.$store.commit('admin/navTitleMutation', 'View All Courses')
       this.selectedComponent = "ViewCourses";
     },
-
-    publishedCoursesInstructors() {
+//////////////////////////////////////////INSTRUCTORS/////////////////////////////////////////////////////
+        async publishedCoursesInstructors() {
+            await this.$store.dispatch('admin/pcInstructorsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View Instructors with Published Courses')
       this.selectedComponent = "ViewInstructors";
     },
-    unPublishedCoursesInstructors() {
+        async unPublishedCoursesInstructors() {
+            await this.$store.dispatch('admin/upcInstructorsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View Instructors with no Published Courses')
       this.selectedComponent = "ViewInstructors";
     },
-    allInstructors() {
+        async allInstructors() {
+            await this.$store.dispatch('admin/allInstructorsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View All Instructors')
       this.selectedComponent = "ViewInstructors";
     },
+//////////////////////////////////////////STUDENTS//////////////////////////////////////////////////////////
+        async PurchasedCoursesStudents() {
+            await this.$store.dispatch('admin/pcStudentsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View Students with Purchased Course')
+      this.selectedComponent = "ViewStudents";
+    },
+        async UnpurchasedCoursesStudents() {
+            await this.$store.dispatch('admin/upcStudentsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View Students with no Purchased Course')
+      this.selectedComponent = "ViewStudents";
+    },
+        async allStudents() {
+            await this.$store.dispatch('admin/allStudentsAction');
+          await this.$store.commit('admin/navTitleMutation', 'View All Students')
+      this.selectedComponent = "ViewStudents";
+        },
 
-    PurchasedCoursesStudents() {
-      this.selectedComponent = "ViewStudents";
-    },
-    UnpurchasedCoursesStudents() {
-      this.selectedComponent = "ViewStudents";
-    },
-    allStudents() {
-      this.selectedComponent = "ViewStudents";
-    },
+        async logout() {
+            await this.$store.dispatch('admin/logout');
+            this.$router.push('/')
 
-    async mount() {},
+        }
+
   },
 
-  mounted() {
-    this.mount();
+      mounted() {
+    this.show = localStorage.getItem('role') === 'admin'
   },
 });
 </script>

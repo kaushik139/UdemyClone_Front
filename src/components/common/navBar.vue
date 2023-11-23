@@ -91,15 +91,15 @@ export default {
     ...mapGetters(["getUser", "auth/tokenGetter", "auth/userDataGetter"]),
 
     navbar() {
-      return localStorage.getItem('role') === 'admin' ? 'navbarAd' : this.getUser === "instructors" ? "navbarIns" : "navbarStu";
+      return this.getUser === "instructors" ? "navbarIns" : "navbarStu";
       // return localStorage.getItem('role') === 'instructors' ? 'navbarIns' : 'navbarStu';
     },
     logo() {
-      return localStorage.getItem('role') === 'admin' ? 'logoAd' : this.getUser === "instructors" ? "logoIns" : "logoStu";
+      return this.getUser === "instructors" ? "logoIns" : "logoStu";
       // return localStorage.getItem('role') === 'instructors' ? 'logoIns' : 'logoStu';
     },
     dialogColor() {
-      return localStorage.getItem('role') === 'admin' ? 'rgb(230, 230, 0)' : this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
+      return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
     },
     showTeachBtn() {
       //   if (this.getUser === 'student') {
@@ -217,10 +217,10 @@ export default {
 .navbarIns {
   box-shadow: 0.5px 0.5px 5px 0.5px rgb(131, 0, 0);
 }
-
+/* 
 .navbarAd {
   box-shadow: 0.5px 0.5px 15px 1px rgb(230, 230, 0);
-}
+} */
 
 .logoStu {
   color: purple;
@@ -231,11 +231,11 @@ export default {
   color: rgb(131, 0, 0);
   font-size: 30px;
 }
-
+/* 
 .logoAd {
   color: rgb(230, 230, 0);
   font-size: 30px;
-}
+} */
 
 .search:focus {
   box-shadow: none;
