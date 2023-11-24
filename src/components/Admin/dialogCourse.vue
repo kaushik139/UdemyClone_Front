@@ -12,16 +12,15 @@
         <v-btn
           variant="text"
           @click="data.dialog = false"
-          class="badge"
           style="
             color: white;
             border-radius: 50px;
             margin-left: auto;
+            margin-top: 1%;
+            margin-right: 1%;
+            backgroundcolor: grey;
           "
-          :style="{
-            backgroundColor: bgColor,
-          }"
-                    append-icon="mdi-close-circle-outline"
+          append-icon="mdi-close-circle-outline"
         >
           Close
         </v-btn>
@@ -33,13 +32,13 @@
             <v-card elevation="4" height="100%" width="100%" rounded="4">
               <v-row style="height: 70%; width: 95%; margin: auto">
                 <img
-                  :src="data.ImgURL"
+                  :src="imgURl"
                   alt="Course Image"
                   style="height: 100%; width: 100%; border-radius: 20px"
                 />
               </v-row>
               <v-row class="mt-12" style="margin: auto; width: 95%">
-                {{ data.Course.description.fullDescription }}
+                <!-- {{ data.Course.description.fullDescription }} -->
               </v-row>
             </v-card>
           </v-col>
@@ -51,7 +50,7 @@
                 <h4>Title:</h4>
               </v-col>
               <v-col cols="8" class="m-0 ml-0">
-                <h4>{{ toTitleCase(data.Course.title) }}</h4>
+                <h4>{{ toTitleCase(CourseGetter.title) }}</h4>
               </v-col>
             </v-row>
 
@@ -61,7 +60,9 @@
                 <h6 class="m-0 p-0">Description:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.Course.description.miniDescription }}</h6>
+                <h6 class="m-0 p-0">
+                  {{ description }}
+                </h6>
               </v-col>
             </v-row>
 
@@ -71,7 +72,7 @@
                 <h6 class="m-0 p-0">Category:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.Course.category }}</h6>
+                <h6 class="m-0 p-0">{{ category }}</h6>
               </v-col>
             </v-row>
 
@@ -81,7 +82,7 @@
                 <h6 class="m-0 p-0">Sections:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.Course.sections.length }}</h6>
+                <h6 class="m-0 p-0">{{ numOSections }}</h6>
               </v-col>
             </v-row>
 
@@ -91,7 +92,7 @@
                 <h6 class="m-0 p-0">Videos:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.noOfVideos }}</h6>
+                <h6 class="m-0 p-0">{{ numOVideos }}</h6>
               </v-col>
             </v-row>
 
@@ -101,22 +102,22 @@
                 <h6 class="m-0 p-0">Exercises:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.noOfExercises }}</h6>
+                <h6 class="m-0 p-0">{{ numOfExercises }}</h6>
               </v-col>
             </v-row>
 
             <!-- row7-->
-            <v-row class="m-0" v-if="showStatus">
+            <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
                 <h6 class="m-0 p-0">Status:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ toTitleCase(data.Course.status) }}</h6>
+                <h6 class="m-0 p-0">{{ toTitleCase(CourseGetter.status) }}</h6>
               </v-col>
             </v-row>
 
             <!-- row7.02-->
-            <v-row v-if="data.action === 'view'" class="m-0">
+            <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
                 <h6 class="m-0 p-0">Price:</h6>
               </v-col>
@@ -125,7 +126,7 @@
                   mdiCurrencyInr
                 }}</v-icon>
                 <h6 style="display: inline">
-                  {{ data.Course.price.finalAmount }}
+                  {{finalAmount}}
                 </h6>
               </v-col>
             </v-row>
@@ -133,24 +134,24 @@
             <!-- row8-->
             <v-row class="m-0">
               <!-- v-if="
-                data.user === 'instructor' && data.Course.status === 'published'
-              " -->
+                      data.user === 'instructor' && data.Course.status === 'published'
+                    " -->
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
                 <h6 class="m-0 p-0">Enrolled:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ data.Course.enrollment.length }}</h6>
+                <h6 class="m-0 p-0">{{ enrolled }}</h6>
               </v-col>
             </v-row>
 
-            {{ data.Course.rating }}
+            <!-- {{ data.Course.rating }} -->
             <!-- row9-->
             <v-row class="ml-5 mt-0">
               <v-col cols="4" class="mt-2">
                 <h6 class="m-0 p-0">Rating:</h6>
               </v-col>
               <v-col cols="2" class="mt-3 ml-1">
-                <h6 class="m-0 p-0">{{ data.Course.rating.netRating }}</h6>
+                <h6 class="m-0 p-0">{{ rating }}</h6>
               </v-col>
               <v-col cols="5" class="m-0 mt-1">
                 <div class="text-center">
@@ -158,8 +159,8 @@
                     color="purple-darken-3"
                     disabled
                     density="comfortable"
-                    v-model="data.Course.rating.netRating"
                     half-increments
+                    v-model="rating"
                   ></v-rating>
                   <!-- <pre>{{ data.Course.rating.netRating  }}</pre> -->
                 </div>
@@ -167,7 +168,7 @@
             </v-row>
 
             <!-- row10-->
-            <v-row class="m-0" v-if="showRevenue">
+            <v-row class="m-0">
               <v-col cols="4" class="m-0 pr-0 ml-5 mr-0">
                 <h6 class="m-0 p-0">Revenue:</h6>
               </v-col>
@@ -175,24 +176,18 @@
                 <v-icon class="mdi-currency-inr mdi mb-1">{{
                   mdiCurrencyInr
                 }}</v-icon>
-                <h6 style="display: inline">{{ data.Revenue }}</h6>
+                <h6 style="display: inline">{{ Revenue }}</h6>
               </v-col>
             </v-row>
 
-            <!-- row11-->
-            <v-row v-if="showPurchaseBtn" class="m-0 ml-12">
-              <v-btn color="purple" @click="purchase(data.Course._id)"
-                >Purchase Now!</v-btn
+            <!-- row12-->
+            <v-row class="m-0 mt-4 ml-12">
+              <v-btn color="purple" @click="review"
+                >Review Course</v-btn
               >
-              <!-- {{ data.Course.stripePriceID }} -->
             </v-row>
 
-            <!-- row12-->
-            <v-row v-if="showLearnBtn" class="m-0 mt-4 ml-12">
-              <v-btn color="purple" @click="learn(data.Course._id)"
-                >Learn Now</v-btn
-              >
-            </v-row>
+
             <!-- end of list -->
           </v-col>
         </v-row>
@@ -200,9 +195,9 @@
     </v-dialog>
   </v-row>
 </template>
-      
-  
-  <script>
+            
+        
+        <script>
 import axios from "axios";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
@@ -215,54 +210,51 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("auth", ["userIDgetter"]),
+    ...mapGetters("admin", ["CourseGetter", "getInstructor"]),
 
-    bgColor() {
-      return localStorage.getItem("role") === "student"
-        ? "purple"
-        : "rgb(131,0,0)";
+    imgURl() {
+      if (this.CourseGetter.images)
+        return `http://localhost:3000/Images/${this.CourseGetter.images.bgImage}`;
     },
-    showStatus() {
-      if (this.data.action === "search") {
-        if (
-          localStorage.getItem("role") === "instructors" &&
-          this.data.instructor === this.userIDgetter
-        ) {
-          return true;
-        } else return false;
-      } else {
-        return this.data.user === "instructor" ? true : false;
-      }
+    description() {
+      if (this.CourseGetter.description)
+        return this.CourseGetter.description.miniDescription;
+      else return "";
     },
-    showRevenue() {
-      if (
-        localStorage.getItem("role") === "instructors" &&
-        this.data.instructor === this.userIDgetter
-      )
-        return true;
-      else return false;
+    category() {
+      if (this.CourseGetter.category) return this.CourseGetter.category;
+      else return "";
     },
-    showPurchaseBtn() {
-      if (this.data.action === "view" && this.data.user === "student")
-        return true;
-      else if (this.data.action === "search") {
-        const res = localStorage.getItem('role') === "students" ? this.data.purchased ? false : true : false;
-        return res;
-      }
+    numSections() {
+      if (this.CourseGetter.Sections) {
+        console.log(this.CourseGetter.sections.length);
+        return this.CourseGetter.sections.length;
+      } else return 0;
     },
-    showLearnBtn() {
-      // if (this.data.action === "purchased" && this.data.user === "student")
-      //   return true;
-      // else if (this.data.action === "search") {
-      //   // console.log((this.data.purchased === undefined));
-      //   return !(this.data.purchased === undefined);
-      // }
-      return localStorage.getItem('role') === "students" ? !this.showPurchaseBtn : false;
+    numVideos() {
+      const videos = 0;
+      if (this.CourseGetter.Sections) {
+        for (let i = 0; i < this.CourseGetter.Sections.length; i++) {
+          videos += this.CourseGetter.Sections[i].videos.length;
+        }
+        return videos;
+      } else return 0;
     },
   },
 
   data() {
-    return {};
+    return {
+      course: {},
+      numOSections: 0,
+      numOVideos: 0,
+      numOfExercises: 0,
+      finalAmount: 0,
+              enrolled: 0,
+              rating: 0,
+              Revenue: 0,
+      
+
+    };
   },
 
   methods: {
@@ -275,9 +267,9 @@ export default defineComponent({
         .join(" ");
     },
 
-    async learn(data) {
-      // console.log(data);
-      localStorage.setItem("CourseID", data);
+    async review() {
+      console.log('data');
+      localStorage.setItem("CourseID", this.CourseGetter._id);
       await this.$store.dispatch("player/coursePlayAction");
       this.$router.push("/player");
     },
@@ -290,23 +282,44 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  async mounted() {
     // this.data.dialog = true;
     // console.log(this.data);
-    if (this.data.action === "search") {
-    } else {
-      if (localStorage.getItem("roles") === "students") {
-        this["student/getSelectedCourse"];
-      } else {
-        if (this.data) this.componentData = this.data;
-        else console.log(this["student/getSelectedCourse"]);
+    //   if (this.data.action === "search") {
+    //   } else {
+    //     if (localStorage.getItem("roles") === "students") {
+    //       this["student/getSelectedCourse"];
+    //     } else {
+    //       if (this.data) this.componentData = this.data;
+    //       else console.log(this["student/getSelectedCourse"]);
+    //     }
+    //   }
+
+    // console.log(this.data.id);
+    if (this.data.id) {
+      await this.$store.dispatch("admin/getCourseAction", this.data.id);
+      await this.$store.dispatch(
+        "admin/instructordetails",
+        this.CourseGetter.instructor
+      );
+      console.log(this.CourseGetter);
+      this.numOSections = this.CourseGetter.sections.length;
+      for (let i = 0; i < this.numOSections; i++) {
+        this.numOVideos += this.CourseGetter.sections[i].videos.length;
+        this.numOfExercises += this.CourseGetter.sections[i].exercises.length;
       }
+              this.finalAmount = this.CourseGetter.price.finalAmount;
+              this.enrolled = this.CourseGetter.enrollment.length;
+              this.rating = this.CourseGetter.rating.netRating;
+              this.Revenue = this.finalAmount * this.enrolled;
+              // console.log(this.CourseGetter.enrollment);
+      // console.log(this.getInstructor);
     }
   },
 });
 </script>
-  
-  <style scoped>
+        
+<style scoped>
 .contain {
   text-align: center;
   margin-top: -20px;
@@ -323,4 +336,4 @@ export default defineComponent({
   transition: transform 0.2s ease-in-out;
 }
 </style>
-  
+        

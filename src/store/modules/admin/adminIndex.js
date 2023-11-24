@@ -4,11 +4,13 @@ import chalk from 'chalk';
 export default {
     namespaced: true,
     state: {
+        overview: {},
         navTitle:'',
         //////////////////////////////////////////////
         searchText: '',
         searchResults: [],
-        showCourse: {},
+        Course: {},
+        instructor: '',
 ////////////////////////////////////
         publishedCourses: [],
         unPublishedCourses: [],
@@ -22,6 +24,10 @@ export default {
 
 
     mutations: {
+        overviewMutation(state, val) {
+            state.overview = val
+        },
+
         navTitleMutation(state, val) {
             state.navTitle = val;
         },
@@ -29,8 +35,8 @@ export default {
         searchResultsMutation(state, val) {
             state.searchResults = val;
         },
-        showCourseMutation(state, val) {
-            state.showCourse = val;
+        getCourseMutation(state, val) {
+            state.Course = val;
         },
 ///////////////////////////////////////////////////
         publishedCoursesMutation(state, val) {
@@ -61,6 +67,17 @@ export default {
 
 
     actions: {
+        // /////////////////////////////////////OVERVIEW/////////////////////////////////////
+        async overviewAction({ commit }) {
+            try {
+                const res = await axios.get('http://localhost:3000/admin/overview');
+
+                if (res.data) {
+                    // console.log(res.data);
+                    commit('overviewMutation', res.data);
+                }
+            }catch(err){console.error(err);}
+        },
 
         // search
         async searchAction({ commit }, value ) {
@@ -83,7 +100,7 @@ export default {
 
         },
 
-        async showCourseAction({ commit }, value) {
+        async getCourseAction({ commit }, value) {
             // console.log(value);
 
             if (value) {
@@ -92,9 +109,22 @@ export default {
                     
                     if (res.data.item) {
                         // console.log(res.data.item);
-                        commit('showCourseMutation', res.data.item)
+                        commit('getCourseMutation', res.data.item)
                     }
                 }catch(err){console.error(err);}
+            }
+        },
+
+        async instructordetails({ state }, value) {
+            // console.error('qqq');
+            if (value) {
+                const res = await axios.get(`http://localhost:3000/instructors/${value}`)
+
+                if (res.data) {
+                    state.instructor = res.data;
+                    // console.log(state.instructor);
+                }
+                else alert('Not Found!')
             }
         },
         ///////////////////////////Courses//////////////////////////////////////
@@ -211,6 +241,10 @@ export default {
 
 
     getters: {
+        overviewGetter(state) {
+            return state.overview;
+        },
+
         navTitleGetter(state) {
             return state.navTitle;
         },
@@ -218,8 +252,11 @@ export default {
         searchResultsGetter(state) {
             return state.searchResults;
         },
-        showCourseGetter(state) {
-            return state.showCourse;
+        CourseGetter(state) {
+            return state.Course;
+        },
+        getInstructor(state) {
+            return state.instructor;
         },
         //////////////////////////////////////////////////////
         publishedCoursesGetter(state) {

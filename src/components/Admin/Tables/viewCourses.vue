@@ -1,7 +1,16 @@
 <template>
   <div>
     <admin-nav></admin-nav>
-    <v-table fixed-header height="300px" class="ml-2">
+    <div class="d-flex">
+    <pie class="m-4" :data="dataG" :options="options"></pie>
+    <linea class="m-4"></linea>
+    </div>
+    <v-table
+      v-if="typeof publishedCoursesGetter !== 'string'"
+      fixed-header
+      height="300px"
+      class="ml-2"
+    >
       <thead>
         <tr>
           <th class="text-left">Index</th>
@@ -21,7 +30,7 @@
         <tr
           v-for="(item, index) in publishedCoursesGetter"
           :key="index"
-          class="hover"
+          :class="item.status === 'requested' ? 'hover' : ''"
           @click="showCourse(item._id)"
         >
           <td class="text-left">{{ index + 1 }}.</td>
@@ -36,14 +45,21 @@
             {{ toTitleCase(item.status) }}
           </td>
 
-          <v-tooltip activator="parent" location="top"
-            >View Course: {{ toTitleCase(item.title) }}</v-tooltip
+          <v-tooltip
+            v-if="item.status === 'requested'"
+            activator="parent"
+            location="top"
+            >Review Course: {{ toTitleCase(item.title) }}</v-tooltip
           >
         </tr>
       </tbody>
     </v-table>
+    <div v-if="typeof publishedCoursesGetter === 'string'">
+      <h4>No Data!</h4>
+    </div>
 
-    <course-dialog :data="dialog" :key="dialog"></course-dialog>
+    {{ requestedCourses }}
+    {{ unpublishedCourses }}
 
     <!-- container ending -->
   </div>
@@ -53,25 +69,69 @@
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import AdminNav from "../adminNav.vue";
-import CourseDialog from "../Dialogs/courseDialog.vue";
+import Linea from "../Graphs/Linea.vue";
+import Pie from "../Graphs/Pie.vue";
 
 // Components
 
 export default defineComponent({
-  components: { AdminNav, CourseDialog },
+  components: { AdminNav, Pie, Linea},
 
   computed: {
-    ...mapGetters("admin", ["publishedCoursesGetter", "navTitleGetter"]),
+    ...mapGetters("admin", [
+      "publishedCoursesGetter",
+      "navTitleGetter",
+      "overviewGetter",
+    ]),
 
     showStatus() {
-      return this.navTitleGetter === "View Unpublished Courses" ? true : this.navTitleGetter === 'View All Courses' ? true : false;
+      return this.navTitleGetter === "View Unpublished Courses"
+        ? true
+        : this.navTitleGetter === "View All Courses"
+        ? true
+        : false;
+    },
+
+    unpublishedCourses() {
+      const counter =
+        this.overviewGetter.unpublishedCourses -
+        this.overviewGetter.requests.length;
+      return counter;
+    },
+
+    requestedCourses() {
+      return this.overviewGetter.requests.length;
+    },
+
+    dataG() {
+      return {
+        labels: [
+          "Published Courses",
+          "Unpublished Courses",
+          "Requested Courses",
+        ],
+        datasets: [
+          {
+            backgroundColor: ["green", "blue", "orange"],
+            data: [
+              this.overviewGetter.publishedCourses,
+              this.unpublishedCourses,
+              this.requestedCourses,
+            ],
+          },
+        ],
+      };
     },
   },
 
   data() {
     return {
-        dialog: false,
-      
+      dialog: false,
+
+      options: {
+        responsive: true,
+        // maintainAspectRatio: false,
+      },
     };
   },
 
@@ -87,20 +147,22 @@ export default defineComponent({
 
     statusStyle(status) {
       let color =
-        status === "published" ? "green" : status === "requested" ? "blue" : "orange";
+        status === "published"
+          ? "green"
+          : status === "requested"
+          ? "blue"
+          : "orange";
       return {
         color: color,
       };
     },
 
-      showCourse(id) {
-          this.dialog = true;
-    }
-
-
+    showCourse(id) {
+      this.dialog = true;
+    },
   },
-
-      mounted() {
+  mounted() {
+    console.log(this.overviewGetter);
   },
 });
 </script>

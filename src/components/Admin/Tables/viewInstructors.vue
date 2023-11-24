@@ -1,6 +1,9 @@
 <template>
     <div>
         <admin-nav></admin-nav>
+
+        <pie class="mb-4" :data="dataG" :options="options"></pie>
+
         <v-table fixed-header height="300px" class="ml-2">
       <thead>
         <tr>
@@ -21,7 +24,6 @@
         <tr
           v-for="(item, index) in InstructorListGetter"
           :key="index"
-          class="hover"
         >
           <td class="text-left">{{ index + 1 }}.</td>
           <td class="text-left">{{ toTitleCase(item.name) }}</td>
@@ -29,9 +31,9 @@
           <td class="text-left">{{ item.unpublishedCourses }}</td>
           <td v-if="publishedCourses"> {{ item.courses.length }}</td>
 
-          <v-tooltip activator="parent" location="top"
+          <!-- <v-tooltip activator="parent" location="top"
             >View Instructor: {{ toTitleCase(item.name) }}</v-tooltip
-          >
+          > -->
         </tr>
       </tbody>
     </v-table>
@@ -44,23 +46,44 @@
   import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import AdminNav from "../adminNav.vue";
+import Pie from "../Graphs/Pie.vue";
   
   // Components
   
   export default defineComponent({
-        components: { NavBar, AdminNav },
+        components: { NavBar, AdminNav, Pie },
 
         computed: {
-              ...mapGetters('admin', ['InstructorListGetter', 'navTitleGetter']),
+              ...mapGetters('admin', ['InstructorListGetter', 'navTitleGetter', 'overviewGetter']),
 
               publishedCourses() {
                     return this.navTitleGetter !== 'View Instructors with no Published Courses' ? true : false;
-              }
+            },
+
+    dataG() {
+      return {
+        labels: ["Instructors with Published Courses", "Instructors with no Published Courses", "All Instructors"],
+        datasets: [
+          {
+            backgroundColor: ["orange", "blue", "green"],
+            data: [
+              this.overviewGetter.pcInstructors,
+              this.overviewGetter.upcInstructors,
+              this.overviewGetter.totalInstructors,
+
+            ],
+          },
+        ],
+      };
+    },
         },
         
     data() {
           return {
-
+            options: {
+        responsive: true,
+        // maintainAspectRatio: false,
+      },
           }
     },
   
@@ -78,8 +101,6 @@ import AdminNav from "../adminNav.vue";
         },
 
         mounted() {
-            // console.log(this.InstructorListGetter);
-
         }
   });
   </script>

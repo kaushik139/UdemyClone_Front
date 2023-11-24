@@ -1,6 +1,9 @@
 <template>
     <div>
       <admin-nav></admin-nav>
+
+      <pie class="mb-4" :data="dataG" :options="options"></pie>
+
       <v-table fixed-header height="300px" class="ml-2">
         <thead>
           <tr>
@@ -21,7 +24,6 @@
           <tr
             v-for="(item, index) in list"
             :key="index"
-            class="hover"
           >
             <td class="text-left">{{ index + 1 }}.</td>
             <td class="text-left">{{ toTitleCase(item.name) }}</td>
@@ -35,9 +37,9 @@
               {{ toTitleCase(item.status) }}
             </td> -->
   
-            <v-tooltip activator="parent" location="top"
+            <!-- <v-tooltip activator="parent" location="top"
               >View Course: {{ item.title }}</v-tooltip
-            >
+            > -->
           </tr>
         </tbody>
       </v-table>
@@ -49,19 +51,37 @@
   import studentIndex from "@/store/modules/student/studentIndex";
 import { defineComponent } from "vue";
   import { mapGetters } from "vuex";
-  import AdminNav from "../adminNav.vue";
+    import AdminNav from "../adminNav.vue";
+    import Pie from "../Graphs/Pie.vue";
+
   
   // Components
   
   export default defineComponent({
-    components: { AdminNav },
+    components: { AdminNav, Pie },
   
     computed: {
-        ...mapGetters('admin', ['StudentsListGetter', 'navTitleGetter']),
+        ...mapGetters('admin', ['StudentsListGetter', 'navTitleGetter', 'overviewGetter']),
 
             list() {
                     return this.$store.state.admin.StudentList;
-        }
+          },
+
+          dataG() {
+      return {
+        labels: ["Published Courses", "Unpublished Courses", "Requested Courses"],
+        datasets: [
+          {
+            backgroundColor: ["green", "blue", "orange"],
+            data: [
+            this.overviewGetter.pcStudents,
+              this.overviewGetter.upcStudents,
+              this.overviewGetter.totalStudents,
+            ],
+          },
+        ],
+      };
+    },
         
     //   showStatus() {
     //     return this.navTitleGetter === "View Unpublished Courses" ? true : this.navTitleGetter === 'View All Courses' ? true : false;
@@ -69,7 +89,12 @@ import { defineComponent } from "vue";
     },
   
     data() {
-      return {};
+      return {
+        options: {
+        responsive: true,
+        // maintainAspectRatio: false,
+      },
+      };
     },
   
     methods: {

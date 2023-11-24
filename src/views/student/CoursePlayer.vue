@@ -1,6 +1,11 @@
 <template>
   <div class="contain">
-    <nav-bar></nav-bar>
+    <nav-bar v-if="role !== 'admin'"></nav-bar>
+
+  <div style="height: 100px; background-color: gray;" class="d-flex align-center mb-4">
+    <h3 class="ml-4">Udemy@dmin</h3>
+    <v-btn icon="mdi-home" class="ml-auto mr-4" @click="$router.push('/adminHome')"></v-btn>
+</div>
 
     <!-- <h4>{{ toTitleCase(title) }}</h4> -->
     <v-row class="m-0">
@@ -23,13 +28,8 @@
             :key="currentVideoPath"
           ></video-player>
         </v-card>
-        <v-row class="m-2">
+        <v-row v-if="role !=='admin'" class="m-2">
           <below-options :bData="bData" :key="bData"></below-options>
-          
-          <!-- <h6>
-              {{ minDesc }}
-            </h6>
-            {{ desc }} -->
         </v-row>
       </v-col>
       <v-col cols="4" class="mt-3 p-0">
@@ -67,6 +67,7 @@ export default {
     sectionIndex: localStorage.getItem("section") || 0,
     videoIndex: localStorage.getItem("viewIndex") || 0,
     exIndex: localStorage.getItem("viewIndex") || 0,
+    role: localStorage.getItem('role'),
     currentVideoPath: "",
     minDesc: "",
     desc: "",
