@@ -79,6 +79,19 @@ export default {
             }catch(err){console.error(err);}
         },
 
+        async publishCourse({ dispatch }) {
+            const id = localStorage.getItem('CourseID');
+            if (id) {
+                try {
+                    const res = await axios.post(`http://localhost:3000/admin/publishCourse/${id}`);
+
+                    if (res.data) {
+                        console.log(res.data);
+                    }
+                }catch(err){console.error(err);}
+            }
+        },
+
         // search
         async searchAction({ commit }, value ) {
             // console.log(value);
@@ -163,12 +176,12 @@ export default {
         },
         ////////////////////////////Instructors/////////////////////////////////
         async pcInstructorsAction({ commit }) {
-            console.log('pc');
+            // console.log('pc');
             try {
                 const res = await axios.get('http://localhost:3000/admin/getPcInstructors');
 
             if (res.data) {
-                console.log(res.data);
+                // console.log(res.data);
                 commit('InstructorListMutation', res.data)
             }
            }catch(err){console.error(err);}
@@ -185,19 +198,19 @@ export default {
            }catch(err){console.error(err);}
         },
         async allInstructorsAction({ commit }) {
-            console.log('All');
+            // console.log('All');
             try {
                 const res = await axios.get('http://localhost:3000/admin/getAllInstructors');
 
             if (res.data) {
-                console.log(res.data);
+                // console.log(res.data);
                 commit('InstructorListMutation', res.data)
             }
            }catch(err){console.error(err);}
         },
         //////////////////////////Students////////////////////////////////////
         async pcStudentsAction({ commit }) {
-            console.log('pc');
+            // console.log('pc');
             try {
                 const res = await axios.get('http://localhost:3000/admin/getPcStudents');
 
@@ -208,7 +221,7 @@ export default {
            }catch(err){console.error(err);}
         },
         async upcStudentsAction({ commit }) {
-            console.log('UPC');
+            // console.log('UPC');
             try {
                 const res = await axios.get('http://localhost:3000/admin/getUpcStudents');
 
@@ -219,7 +232,7 @@ export default {
            }catch(err){console.error(err);}
         },
         async allStudentsAction({ commit }) {
-            console.log('All');
+            // console.log('All');
             try {
                 const res = await axios.get('http://localhost:3000/admin/getAllStudents');
 
@@ -265,9 +278,7 @@ export default {
         InstructorListGetter(state) {
             return state.InstructorList;
         },
-        StudentsListGetterqq(state) {
-            console.log(';;');
-            console.log(state.StudentsList);
+        StudentsListGetter(state) {
             return state.StudentsList;
         },
        

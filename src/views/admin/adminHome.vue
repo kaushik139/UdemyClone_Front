@@ -389,43 +389,6 @@ export default defineComponent({
     },
 
     async view(id) {
-      // this.dialog2 = true;
-    //   this.viewCourse = this["instructor/allCoursesGetter"].filter((item) => {
-    //     if (item._id === this[arr][index].id) return item;
-          //   });
-    //       const viewCourse = arr[index];
-    //       const viewImgURL = `http://localhost:3000/Images/${viewCourse.images.bgImage}`;
-    //       let viewVideos = 0;
-    //       let viewExercises = 0;
-    //       console.log(viewCourse);
-    // //   if (viewCourse.sections.length > 0) {
-    //     for (let i = 0; i < viewCourse.sections.length; i++) {
-    //       viewVideos +=
-    //         viewCourse.sections[i].videos.length > 0
-    //           ? viewCourse.sections[i].videos.length
-    //           : 0;
-    //       viewExercises +=
-    //         viewCourse.sections[i].exercises.length > 0
-    //           ? viewCourse.sections[i].exercises.length
-    //           : 0;
-    //     }
-    //     const viewRevenue =
-    //       (viewCourse.price.finalAmount -
-    //         viewCourse.price.tax) *
-    //           viewCourse.enrollment.length;
-    //           this.courseData = {
-    //     Course: viewCourse,
-    //     ImgURL: viewImgURL,
-    //     noOfVideos: viewVideos,
-    //     noOfExercises: viewExercises,
-    //     Revenue: viewRevenue,
-    //     dialog: true,
-    //     user: "instructor",
-    //   };
-    // //   }
-          //   console.log(this.courseData);
-
-
         // console.log(id);
         this.courseData = {
             id: id,

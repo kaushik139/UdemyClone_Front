@@ -18,7 +18,7 @@
             margin-left: auto;
             margin-top: 1%;
             margin-right: 1%;
-            backgroundcolor: grey;
+            background-color: grey;
           "
           append-icon="mdi-close-circle-outline"
         >
@@ -30,16 +30,17 @@
           <!-- image -->
           <v-col cols="6" class="m-4 mr-0 ml-12">
             <v-card elevation="4" height="100%" width="100%" rounded="4">
-              <v-row style="height: 70%; width: 95%; margin: auto">
+              <v-row style="height: 70%; width: 95%; margin: auto;">
                 <img
                   :src="imgURl"
                   alt="Course Image"
-                  style="height: 100%; width: 100%; border-radius: 20px"
+                  style="height: 100%; width: 100%; border-radius: 20px;"
                 />
               </v-row>
-              <v-row class="mt-12" style="margin: auto; width: 95%">
-                <!-- {{ data.Course.description.fullDescription }} -->
+              <v-row v-if="description.fullDescription" class="mt-12" style="margin: auto; width: 95%;">
+                {{ description.fullDescription }}
               </v-row>
+              <v-row v-else class="mt-12" style="margin: auto; padding-left: 35%; width: 95%;">No Description!</v-row>
             </v-card>
           </v-col>
           <!-- text data -->
@@ -144,14 +145,15 @@
               </v-col>
             </v-row>
 
-            <!-- {{ data.Course.rating }} -->
+            {{ rating }}
             <!-- row9-->
             <v-row class="ml-5 mt-0">
               <v-col cols="4" class="mt-2">
                 <h6 class="m-0 p-0">Rating:</h6>
               </v-col>
               <v-col cols="2" class="mt-3 ml-1">
-                <h6 class="m-0 p-0">{{ rating }}</h6>
+                <h6 v-if="rating" class="m-0 p-0"> {{ rating }}</h6>
+                <h6 v-else class="m-0 p-0"> 0 </h6>
               </v-col>
               <v-col cols="5" class="m-0 mt-1">
                 <div class="text-center">
@@ -182,7 +184,7 @@
 
             <!-- row12-->
             <v-row class="m-0 mt-4 ml-12">
-              <v-btn color="purple" @click="review"
+              <v-btn color="grey-darken-2" @click="review"
                 >Review Course</v-btn
               >
             </v-row>

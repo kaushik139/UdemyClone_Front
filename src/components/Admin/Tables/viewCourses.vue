@@ -2,9 +2,10 @@
   <div>
     <admin-nav></admin-nav>
     <div class="d-flex">
-    <pie class="m-4" :data="dataG" :options="options"></pie>
-    <linea class="m-4"></linea>
+      <pie class="m-4" :data="dataG" :options="options"></pie>
+      <linea class="m-4" :data="dataL"></linea>
     </div>
+    <v-divider></v-divider>
     <v-table
       v-if="typeof publishedCoursesGetter !== 'string'"
       fixed-header
@@ -58,9 +59,6 @@
       <h4>No Data!</h4>
     </div>
 
-    {{ requestedCourses }}
-    {{ unpublishedCourses }}
-
     <!-- container ending -->
   </div>
 </template>
@@ -75,7 +73,7 @@ import Pie from "../Graphs/Pie.vue";
 // Components
 
 export default defineComponent({
-  components: { AdminNav, Pie, Linea},
+  components: { AdminNav, Pie, Linea },
 
   computed: {
     ...mapGetters("admin", [
@@ -122,6 +120,38 @@ export default defineComponent({
         ],
       };
     },
+
+    dataL() {
+      return {
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December"
+        ],
+        datasets: [
+          {
+            label: "Courses Published",
+            backgroundColor: "blue",
+            data: this.overviewGetter.cMonth,
+          },
+          // {
+          //   label: "Data OnTWO",
+          //   backgroundColor: "green",
+          //   data: [140, 139, 110, 140, 139, 80, 140],
+          // },
+        ],
+      };
+    },
+
   },
 
   data() {
@@ -162,7 +192,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    console.log(this.overviewGetter);
+    // console.log(this.overviewGetter);
   },
 });
 </script>

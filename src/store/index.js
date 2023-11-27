@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
-import authModule from "./modules/authModule/index"
-import InstructorModule from './modules/InstructorModule/index'
+import authModule from "./modules/authModule/authIndex"
+import InstructorModule from './modules/InstructorModule/instructorIndex'
 import Student from './modules/student/studentIndex'
 import PlayCourse from './modules/student/PlayCourseIndex'
 import Search from './modules/search/searchIndex'

@@ -14,6 +14,7 @@ export default {
   name: "VideoPlayer",
   props: {
     path: String,
+    fluidOptions: Boolean,
   },
   components: {
     VideoPlayer,
@@ -32,7 +33,7 @@ export default {
         width: 800,
         autoplay: false,
         controls: true,
-        fluid: true, 
+        fluid: false, 
         responsive: true,
         sources: {
           src: ``,
@@ -51,6 +52,7 @@ export default {
   },
 
   mounted() {
+      if (this.fluidOptions === true) this.options.fluid = true;
       if (this.pathProp) {
         this.options.sources.src = `http://localhost:3000/courses/getCurrentVideo/${this.pathProp}`;
 

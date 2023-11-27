@@ -8,7 +8,7 @@
             ERROR: Page Not Found!
         </div>
         <button class="btn btn-outline-danger px-1 py-0" @click="home">HOME</button>
-
+        <h6>Redirecting in 5 Secs...</h6>
     </div>
   </template>
   
@@ -40,6 +40,10 @@ import { mapGetters } from 'vuex';
         }
     },
     async mounted() {
+        setTimeout(() => {
+          localStorage.getItem('token') ? localStorage.getItem('role') === 'students' ? this.$router.push('/sHome') : this.$router.push('/iHome') : '';
+          }, 5000)
+
           if (this.email && this.role) {
             // console.log(this.email, this.role);
             await this.$store.dispatch('auth/refreshUserAction', {email: this.email, role: this.role})

@@ -14,6 +14,7 @@
                 type="number"
                 step="10"
                 style="max-width: 50%"
+                :max="1000"
               ></v-text-field>
             </div>
           </v-col>
@@ -115,29 +116,37 @@
         <!-- final amount part -->
         <v-row class="mt-2">
           <v-col cols="4 p-3">
-            <h6>Basic Amount:</h6><br>
-            <h6>Discount:</h6><br>
-            <h6>Price after discount:</h6><br>
-            <h6>Taxes:</h6><br>
-            <h5 style="margin-top: -2px;">Final Price:</h5>
-        </v-col>
+            <h6>Basic Amount:</h6>
+            <br />
+            <h6>Discount:</h6>
+            <br />
+            <h6>Price after discount:</h6>
+            <br />
+            <h6>Taxes:</h6>
+            <br />
+            <h5 style="margin-top: -2px">Final Price:</h5>
+          </v-col>
           <v-col cols="2" class="">
-            <p class=" p-1" > 
+            <p class="p-1">
               <v-icon>{{ mdiCurrencyInr }}</v-icon> {{ basePrice }}
             </p>
-            <p class=" p-1">
-              <v-icon>{{ mdiCurrencyInr }}</v-icon>  {{ discountAmount || Math.round(basePrice*(discountPercent/100)) }}
+            <p class="p-1">
+              <v-icon>{{ mdiCurrencyInr }}</v-icon>
+              {{
+                discountAmount ||
+                Math.round(basePrice * (discountPercent / 100))
+              }}
             </p>
-            <p class=" p-1">
+            <p class="p-1">
               <v-icon>{{ mdiCurrencyInr }}</v-icon> {{ priceAfterDiscount }}
             </p>
-            <p class=" p-1">
-              <v-icon>{{ mdiCurrencyInr }}</v-icon>  {{ tax }}
+            <p class="p-1">
+              <v-icon>{{ mdiCurrencyInr }}</v-icon> {{ tax }}
             </p>
-            <div class=" p-1">
-              <v-icon>{{ mdiCurrencyInr }}</v-icon> 
-              <h5 style="display: inline;">{{ finalPrice }}</h5>
-          </div>
+            <div class="p-1">
+              <v-icon>{{ mdiCurrencyInr }}</v-icon>
+              <h5 style="display: inline">{{ finalPrice }}</h5>
+            </div>
           </v-col>
         </v-row>
         <!-- Submit Buttons -->
@@ -150,85 +159,91 @@
 </template>
   
   <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "PricingPage",
-      computed: {
-            priceAfterDiscount() {
-                if (this.discountType === 'amount') {
-                    return this.basePrice - this.discountAmount;
-                }
-                else {
-                    return this.basePrice - Math.round(this.basePrice * (this.discountPercent / 100));
-                  }
-            },
-            tax() {
-                  if (this.basePrice === 0) return 0;
-                  if (this.basePrice <= 200) return 15;
-                  else return Math.round(this.basePrice * 0.1);
-            },
-            finalPrice() {
-                  return this.priceAfterDiscount + this.tax;
-              },
-        ...mapGetters(['instructor/courseDraftGetter'])
-        
+  computed: {
+    priceAfterDiscount() {
+      if (this.discountType === "amount") {
+        return this.basePrice - this.discountAmount;
+      } else {
+        return (
+          this.basePrice -
+          Math.round(this.basePrice * (this.discountPercent / 100))
+        );
+      }
     },
+    tax() {
+      if (this.basePrice === 0) return 0;
+      if (this.basePrice <= 200) return 15;
+      else return Math.round(this.basePrice * 0.1);
+    },
+    finalPrice() {
+      return this.priceAfterDiscount + this.tax;
+    },
+    ...mapGetters(["instructor/courseDraftGetter"]),
+  },
   data: () => ({
     basePrice: 0,
-    baseSavedValue : false,
+    baseSavedValue: false,
     discountType: "amount",
     discountAmount: 0,
     discountPercent: 0,
-    mdiCurrencyInr: 'mdi-currency-inr',
+    mdiCurrencyInr: "mdi-currency-inr",
   }),
 
-    watch: {
-        basePrice(newValue, oldValue) {
-          if (this.baseSavedValue === true) {
-            this.discountAmount = this['instructor/courseDraftGetter'].pricing.discountAmount;
-            this.baseSavedValue = false;
-          }
-          else this.discountAmount = 0;
+  watch: {
+    basePrice(newValue, oldValue) {
+      if (this.basePrice < 0) {
+        this.basePrice = 0;
       }
+      if (this.basePrice > 1000) {
+        this.basePrice = 1000;
+      }
+      if (this.baseSavedValue === true) {
+        this.discountAmount =
+          this["instructor/courseDraftGetter"].pricing.discountAmount;
+        this.baseSavedValue = false;
+      } else this.discountAmount = 0;
     },
-
-    methods: {
-      //method to submit form
-        submit() {
-        const pricing = {
-          basePrice: this.basePrice,
-          discountType: this.discountType,
-          discountAmount: this.discountAmount,
-          discountPercent: this.discountPercent,
-          priceAfterDiscount: this.priceAfterDiscount,
-          tax: this.tax,
-          finalPrice: this.finalPrice,
-        }
-
-        this.$store.dispatch('instructor/pricingAction', {value: pricing});
-
-
-      },
-
-      //method to clear form
-        reset() {
-          this.basePrice = 0;
-          this.discountType = 'amount';
-          this.discountAmount = 0;
-          this.discountPercent = 0;
-    }
   },
 
-    mounted() {
-        setTimeout(() => {
-          // console.log(this['instructor/courseDraftGetter'].pricing.basePrice);
-            this.basePrice = this['instructor/courseDraftGetter'].pricing.basePrice;
-            this.discountType = this['instructor/courseDraftGetter'].pricing.discountType;
-          this.baseSavedValue = true;
-          this.discountPercent = this['instructor/courseDraftGetter'].pricing.discountPercent;
-    },1)
-  }
+  methods: {
+    //method to submit form
+    submit() {
+      const pricing = {
+        basePrice: this.basePrice,
+        discountType: this.discountType,
+        discountAmount: this.discountAmount,
+        discountPercent: this.discountPercent,
+        priceAfterDiscount: this.priceAfterDiscount,
+        tax: this.tax,
+        finalPrice: this.finalPrice,
+      };
 
+      this.$store.dispatch("instructor/pricingAction", { value: pricing });
+    },
+
+    //method to clear form
+    reset() {
+      this.basePrice = 0;
+      this.discountType = "amount";
+      this.discountAmount = 0;
+      this.discountPercent = 0;
+    },
+  },
+
+  mounted() {
+    setTimeout(() => {
+      // console.log(this['instructor/courseDraftGetter'].pricing.basePrice);
+      this.basePrice = this["instructor/courseDraftGetter"].pricing.basePrice;
+      this.discountType =
+        this["instructor/courseDraftGetter"].pricing.discountType;
+      this.baseSavedValue = true;
+      this.discountPercent =
+        this["instructor/courseDraftGetter"].pricing.discountPercent;
+    }, 1);
+  },
 };
 </script>
   

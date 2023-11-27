@@ -45,12 +45,12 @@
       </v-dialog>
 
         </v-list-item>
-          <v-list-item
+          <!-- <v-list-item
             prepend-icon="mdi-message"
             title="Messages"
             value="messages"
             @click="this.$router.push('/iMessage')"
-          ></v-list-item>
+          ></v-list-item> -->
           <!-- <v-list-item prepend-icon="mdi-star" title="Starred" value="starred"></v-list-item> -->
         </v-list>
       </v-navigation-drawer>

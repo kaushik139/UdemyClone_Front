@@ -42,6 +42,7 @@ export default {
             },
             sectionsArray: [],
             uploadedVideoPath: "",
+            uploadedExercisePath: "",
             videoPath: '',
 
         },
@@ -442,6 +443,41 @@ export default {
             }
         },
 
+         //upload Video (video File)
+         async exerciseFileUpload({ commit, state }, value) {
+            //  console.log(value.sectionIndex);
+            //  console.log(value.exerciseIndex);
+            //  console.log(value.file);
+
+            try {
+                const formData = new FormData();
+                formData.append('fileInput', value.file);
+                formData.append('sectionIndex', value.sectionIndex);
+                formData.append('exerciseIndex', value.exerciseIndex);
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                };
+
+                const res = await axios.patch(
+                    `http://localhost:3000/courses/exerciseUpload/${state.courseDraft.id}`,
+                    formData,
+                    config,
+                );
+
+                if (res.data.path !== undefined) {
+                    // console.log(res.data.path);
+                    state.courseDraft.uploadedVideoPath = res.data.path;
+                    alert("File uploaded: " + res.data.path);
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        },
+
         //edit video file
         async videoEdit({ commit, state }, value) {
             //  console.log(value.sectionIndex);
@@ -500,6 +536,7 @@ export default {
         //Create new Exercise
         async AddExercise({ dispatch, state }, value) {
             // console.log(value.formData);
+            console.log(state.courseDraft.uploadedExercisePath);
 
             try {
                 if (value.formData.exerciseName && value.formData.exerciseDescription) {
@@ -507,7 +544,8 @@ export default {
                         {
                             title: value.formData.exerciseName,
                             description: value.formData.exerciseDescription,
-                            index: value.index
+                            index: value.index,
+                            filePath: state.courseDraft.uploadedExercisePath
                         })
                     if (res.data.message) {
                         alert(res.data.message)

@@ -2,13 +2,14 @@
   <div class="contain">
     <!-- Overview -->
     <v-card
-      class="d-flex flex-column mx-auto py-8 my-4"
-      elevation="10"
-      height="500"
-      width="500"
-      style="width: 80%"
+    class="d-flex flex-column mx-auto py-8 my-4"
+    elevation="10"
+    height="500"
+    width="500"
+    style="width: 80%"
     >
-      <div class="d-flex justify-center mt-auto text-h5">Rating overview</div>
+    
+      <div class="d-flex justify-center mt-auto text-h5">Rating overview {{ counts }}</div>
 
       <div class="d-flex align-center flex-column my-auto">
         <div class="text-h2 mt-5">
@@ -137,6 +138,7 @@ export default {
 
     async mount() {
       await this.$store.dispatch("player/getRating", this.id);
+      console.log(this.RatingsGetter);
       this.userRating = parseInt(this.$store.state.player.Rating.netRated);
       
       console.log(this.userRating);

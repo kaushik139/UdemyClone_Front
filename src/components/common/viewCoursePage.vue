@@ -143,7 +143,6 @@
               </v-col>
             </v-row>
 
-            {{ data.Course.rating }}
             <!-- row9-->
             <v-row class="ml-5 mt-0">
               <v-col cols="4" class="mt-2">
@@ -218,7 +217,7 @@ export default defineComponent({
     ...mapGetters("auth", ["userIDgetter"]),
 
     bgColor() {
-      return localStorage.getItem("role") === "student"
+      return localStorage.getItem("role") === "students"
         ? "purple"
         : "rgb(131,0,0)";
     },

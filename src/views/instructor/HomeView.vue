@@ -6,7 +6,7 @@
 
       <!-- Published courses -->
       <v-container class="mt-6">
-        <v-card v-if="publishedCoursesArray.length" elevation="4">
+        <v-card v-if="publishedCoursesArray.length" class="p-0" elevation="4">
           <v-row class="text-center">
             <v-col cols="12">
               <h3 class="mb-12 mt-12">Your Published Courses:</h3>

@@ -92,26 +92,27 @@
 
             <v-textarea
               v-model="formData.exerciseDescription"
-              label="Exercise"
+              label="Add Description"
+              rows="2"
             ></v-textarea>
 
             <!-- Exercise File Upload -->
-             <!-- <div>
+             <div>
               <v-file-input
                 label="Add Exercise"
-                v-model="selectedFile"
-                accept="text/*"
+                v-model="formData.exerciseFile"
+                accept="text/*,.txt,.pdf"
               ></v-file-input>
 
               <v-btn class="btn" @click="uploadFile">Upload</v-btn>
 
-              <div v-if="isSelectedFile" class="mt-2">
-                <p>Selected File: {{ selectedFile[0].name }}</p>
+              <div v-if="formData.exerciseFile" class="mt-2">
+                <p>Selected File: {{ formData.exerciseFile[0].name }}</p>
               </div>
-              <div v-if="!isSelectedFile" class="mt-2">
+              <div v-if="!formData.exerciseFile" class="mt-2">
                 <p>No File Selected</p>
               </div>
-            </div>  -->
+            </div> 
           </v-form>
         </v-card-text>
 
@@ -157,7 +158,7 @@ export default {
     //   return this.exerciseArray[0] || {};
     // },
     isSelectedFile() {
-      return this.selectedFile.length === 0 ? false : true;
+      return this.selectedFile?.length === 0 ? false : true;
     },
     showExerciseDiv() {
       if (this.videoArray.length) {
@@ -184,8 +185,9 @@ export default {
     formData: {
       exerciseName: "",
       exerciseDescription: "",
+      exerciseFile: '',
     },
-    selectedFile: [],
+    selectedFile: null,
     selectedExercise: {
       title: '',
       description: ''
@@ -252,6 +254,16 @@ export default {
     clear() {
       this.formData.exerciseName = "";
       this.formData.exerciseDescription = "";
+    },
+
+    async uploadFile() {
+      if (this.formData.exerciseFile[0]) {
+        await this.$store.dispatch("instructor/exerciseFileUpload", {
+          sectionIndex: this.selectedSectionIndex,
+          exerciseIndex: this.selectedExerciseIndex,
+          file: this.formData.exerciseFile[0],
+        });
+      }
     },
     
     editExercise() {

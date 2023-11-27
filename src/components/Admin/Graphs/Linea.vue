@@ -31,35 +31,41 @@ export default {
   components: {
     Line,
   },
+
+  props:['data'],
   data() {
     return {
-      data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
-        datasets: [
-          {
-            label: "Data One",
-            backgroundColor: "#f87979",
-            data: [40, 39, 10, 40, 39, 80, 40],
-          },
-          {
-            label: "Data OnTWO",
-            backgroundColor: "green",
-            data: [140, 139, 110, 140, 139, 80, 140],
-          },
-        ],
-      },
+      // data: {
+      //   labels: [
+      //     "January",
+      //     "February",
+      //     "March",
+      //     "April",
+      //     "May",
+      //     "June",
+      //     "July",
+      //   ],
+      //   datasets: [
+      //     {
+      //       label: "Data One",
+      //       backgroundColor: "#f87979",
+      //       data: [40, 39, 10, 40, 39, 80, 40],
+      //     },
+      //     {
+      //       label: "Data OnTWO",
+      //       backgroundColor: "green",
+      //       data: [140, 139, 110, 140, 139, 80, 140],
+      //     },
+      //   ],
+      // },
       options: {
         responsive: true,
       },
     };
   },
+
+  mounted() {
+    // console.log(this.data);
+  }
 };
 </script>

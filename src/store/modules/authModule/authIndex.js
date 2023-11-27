@@ -62,7 +62,7 @@ export default {
 
         // Login
         async login({ commit, rootState, state }, { value }) {
-            console.log(value);
+            // console.log(value);
 
             try {
                 const res = await axios.post(
@@ -72,7 +72,7 @@ export default {
                         password: value.password,
                     }
                 )
-                if (res.data.token) {
+                if (res.status === 200) {
                     // console.log(res.data.token);
                     console.log("name: " + res.data.name);
                     localStorage.setItem('token', res.data.token);
@@ -85,10 +85,12 @@ export default {
                     // router.push({ name: `${rootState.User[0]}Home` });
 
                 }
+                // else if(res.status === 401) console.error(res.data);
             }
             catch (error) {
-                console.log(chalk.red(error));
-                commit('setLoginError', { value: error.res.data.message });
+                // if()
+                // console.log(chalk.red(error));
+                commit('setLoginError', { value: 'Email or Password Incorrect' });
                 // if (error) commit('setLoginError', { value: error });
             }
         },
