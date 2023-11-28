@@ -30,7 +30,7 @@
                 v-else
                 :src="require(`@/assets/logo.svg`)"
                 alt="NO Image"
-                style="width: 100%; height: 200px; margin: 0px"
+                style="width: 100%; height: 200px; margin: 0px; margin-top: 15px;"
               />
               <!-- title -->
               <v-row
@@ -38,7 +38,7 @@
                 style="display: flex; flex-direction: column"
               >
                 <h5>{{ toTitleCase(course.title) }}</h5>
-                <h6>{{ course.description.miniDescription }}</h6>
+                <h6>{{ shorten(course.description.miniDescription) }}</h6>
 
                 <!-- view course button -->
                 <v-btn
@@ -84,7 +84,7 @@
                 v-else
                 :src="require(`@/assets/logo.svg`)"
                 alt="NO Image"
-                style="width: 100%; height: 200px; margin: 0px"
+                style="width: 100%; height: 200px; margin: 0px; margin-top: 15px;"
               />
               <!-- title -->
               <v-row
@@ -92,7 +92,7 @@
                 style="display: flex; flex-direction: column"
               >
                 <h5>{{ toTitleCase(course.title) }}</h5>
-                <h6>{{ course.description.miniDescription }}</h6>
+                <h6>{{ shorten(course.description.miniDescription) }}</h6>
                 <v-card
                   v-if="
                     !course.enrollment.filter((x) => x.studentID === id).length
@@ -257,6 +257,14 @@ export default defineComponent({
         .split(" ")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+    },
+
+    shorten(val) {
+      if (val.length > 15) {
+        const newVal = (val.substring(0, 15) + '...');
+        return newVal;
+      }
+      else return val;
     },
 
     async viewCourse(course, action) {

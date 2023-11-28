@@ -23,12 +23,12 @@
           class="d-flex"
         >
           <v-list-item-content style="display: flex">
-            <v-checkbox
+            <!-- <v-checkbox
               style="height: 40px; display: flex; margin-top: -14px"
               color="purple"
               
               @click="check(video._id)"
-              ></v-checkbox>
+              ></v-checkbox> -->
             <v-icon icon="mdi-play" color="purple-darken-1"></v-icon>
             <v-list-item-title class="video-title ml-4">{{
               video.title
@@ -47,7 +47,7 @@
           class="d-flex"
         >
           <v-list-item-content style="display: flex">
-            <v-checkbox
+            <!-- <v-checkbox
               style="
                 height: 40px;
                 display: flex;
@@ -56,7 +56,7 @@
               color="purple"
               @click="check(ex._id)"
 
-            ></v-checkbox>
+            ></v-checkbox> -->
             <v-icon icon="mdi-note-edit" color="purple-darken-1"></v-icon>
             <v-list-item-title class="ml-4">{{
               ex.title

@@ -145,7 +145,6 @@
               </v-col>
             </v-row>
 
-            {{ rating }}
             <!-- row9-->
             <v-row class="ml-5 mt-0">
               <v-col cols="4" class="mt-2">
@@ -229,7 +228,7 @@ export default defineComponent({
     },
     numSections() {
       if (this.CourseGetter.Sections) {
-        console.log(this.CourseGetter.sections.length);
+        // console.log(this.CourseGetter.sections.length);
         return this.CourseGetter.sections.length;
       } else return 0;
     },
@@ -270,7 +269,7 @@ export default defineComponent({
     },
 
     async review() {
-      console.log('data');
+      // console.log('data');
       localStorage.setItem("CourseID", this.CourseGetter._id);
       await this.$store.dispatch("player/coursePlayAction");
       this.$router.push("/player");

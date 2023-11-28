@@ -12,7 +12,7 @@
         <v-btn
           variant="text"
           @click="data.dialog = false"
-          class="badge"
+          class="badge mt-4 mr-4"
           style="
             color: white;
             border-radius: 50px;
@@ -38,7 +38,7 @@
                   style="height: 100%; width: 100%; border-radius: 20px"
                 />
               </v-row>
-              <v-row class="mt-12" style="margin: auto; width: 95%">
+              <v-row class="mt-12" style="margin: auto; width: 95%; line-break: anywhere;">
                 {{ data.Course.description.fullDescription }}
               </v-row>
             </v-card>
@@ -218,7 +218,7 @@ export default defineComponent({
 
     bgColor() {
       return localStorage.getItem("role") === "students"
-        ? "purple"
+        ? "rgb(175, 9, 175)"
         : "rgb(131,0,0)";
     },
     showStatus() {
@@ -250,12 +250,6 @@ export default defineComponent({
       }
     },
     showLearnBtn() {
-      // if (this.data.action === "purchased" && this.data.user === "student")
-      //   return true;
-      // else if (this.data.action === "search") {
-      //   // console.log((this.data.purchased === undefined));
-      //   return !(this.data.purchased === undefined);
-      // }
       return localStorage.getItem('role') === "students" ? !this.showPurchaseBtn : false;
     },
   },
@@ -315,6 +309,7 @@ export default defineComponent({
   margin-left: 2%;
   width: 96%;
   margin-top: 20px;
+  background: rgb(175, 9, 175)
 }
 
 .dialog-bottom-transition-enter-active,

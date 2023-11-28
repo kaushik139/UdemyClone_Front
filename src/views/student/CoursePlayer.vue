@@ -27,10 +27,11 @@
           style="height: 300px"
         >
           <v-row class="m-4">
-            <h4>{{ exIndex + 1 }}. {{ this.exercise.title }}</h4>
+            <h4>{{ exIndex + 1 }}. {{ toTitleCase(exercise.title) }}</h4>
           </v-row>
-          <v-row class="ml-10">
-            <p>{{ this.exercise.content }}</p>
+          <v-row class="ml-10 d-block">
+            <p>{{ exercise.content }}</p><br>
+            <v-btn v-show="exercise.file" color="purple" size="x-small" append-icon="mdi-download" @click="download(exercise.file)">Download Resources</v-btn>
           </v-row>
         </v-card>
         <v-card v-if="viewType === 'videos'">
@@ -130,11 +131,17 @@ export default {
       this.$router.push("/adminHome");
     },
 
+      async download(path) {
+      // console.log(path);
+          await this.$store.dispatch('player/downloadExercise', path);
+    },
+
     async mount() {
       await this.$store.dispatch("player/coursePlayAction");
-      // console.log(this['player/getCourse']);
+      // console.log(this['player/getCourse'].sections);
       this.title = this["player/getCourse"].title;
       this.rmData = this["player/getCourse"].sections;
+      // console.log(this.rmData);
       if (this.viewType === "exercises") {
         if (this.rmData[this.sectionIndex]) {
           this.exercise = {
@@ -142,7 +149,10 @@ export default {
             content:
               this.rmData[this.sectionIndex].exercises[this.exIndex]
                 .description,
+                file: this.rmData[this.sectionIndex].exercises[this.exIndex]
+                .filePath,
           };
+          console.log(this.rmData[this.sectionIndex].exercises[this.exIndex]);
         } else {
           // this.exercise = null;
           // this.noData = true;

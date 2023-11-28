@@ -309,6 +309,30 @@ export default {
             }
         },
 
+        async downloadExercise({ state }, value) {
+            // console.log(value);
+            if (value) {
+                try {
+                    const res = await axios.get(`http://localhost:3000/courses/exerciseDownload/${value}`);
+
+                    if (res.data) {
+                        // res.data.download()
+                        // console.log(res.data);
+
+                        const blob = new Blob([res.data], { type: `application/${value.slice(-4)}` });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute('download', value.slice(17));
+    document.body.appendChild(link);
+    link.click();
+
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        },
+
         async checkItem({ state, rootGetters }, value) {
             // console.log(value);
             const user = await rootGetters['auth/userDataGetter'].user;

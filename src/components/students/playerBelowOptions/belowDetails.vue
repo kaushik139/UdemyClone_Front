@@ -1,13 +1,13 @@
 <template>
   <div class="contain">
-    <h5>{{ toTitleCase(course.title) }}</h5>
-    <v-rating v-model="rating" color="purple-darken-3" density="compact" disabled> </v-rating>
-    <v-row class="my-6">
-      {{ desc }}
-    </v-row>
-    <v-row class="mt-6">
-      <v-col v-if="instructor.image" cols="4">
-        <img src="" alt="" />
+  
+    <v-row class="mt-6 ">
+      <v-col v-if="getInstructor.profileImage" cols="4">
+        <img :src="instructorImageURL" alt="" />
+        <h6 class="mt-2">
+        <!-- instructor's Name -->
+            {{ toTitleCase(getInstructor.name) }}
+        </h6>
       </v-col>
       <v-col v-else cols="4">
         <img
@@ -15,12 +15,18 @@
           alt="NO Image"
           style="width: 100%; height: 40%; margin: 0px"
         />
-      </v-col>
-      <!-- instructor's Name -->
-      <v-col cols="8">
-        <h6>
-            By {{ toTitleCase(instructor.name) }},
+        <h6 class="mt-2">
+        <!-- instructor's Name -->
+            {{ toTitleCase(getInstructor.name) }}
         </h6>
+      </v-col>
+     
+      <v-col cols="8" style="line-break: anywhere;">
+        <h5>{{ toTitleCase(course.title) }}</h5>
+    <v-rating v-model="rating" color="purple-darken-3" density="compact" disabled> </v-rating>
+    <v-row class="my-6">
+      {{ desc }}
+    </v-row>
       </v-col>
     </v-row>
   </div>
@@ -35,9 +41,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters("player", ["getCourse"], "player", ["getInstructor"]),
-    instructor() {
-      return this.$store.state.player.instructor;
+    ...mapGetters("player", ["getCourse", "getInstructor"]),
+    instructorImageURL() {
+      return `http://localhost:3000/Images/${this.getInstructor.profileImage}`;
     },
   },
 
@@ -66,12 +72,6 @@ export default {
   async mounted() {
     await this.$store.dispatch("player/coursePlayAction");
 
-    //     if (this.bData.rating) {
-    //         console.log(this.bData);
-    //     this.rating = this.bData.rating.netRating;
-    //     this.desc = this.bData.description.miniDescription;
-    //    }
-
     if (this.getCourse) {
       // console.log(this.getCourse);
       this.course = this.getCourse;
@@ -79,15 +79,9 @@ export default {
         "player/instructordetails",
         this.course.instructor
       );
+      // console.log(this.getInstructor);
       this.rating = this.getCourse.rating.netRating;
       this.desc = this.getCourse.description.fullDescription;
-    }
-
-    if (this.getInstructor) {
-      console.log("ll");
-    }
-    if (this.instructor) {
-      //   console.log(this.instructor);
     }
   },
 };

@@ -381,6 +381,7 @@ export default {
 
                 if (res) {
                     alert(res.data.message);
+                    state.courseDraft.uploadedVideoPath = '';
                     dispatch('getDraftCourse', state.courseDraft.id)
                 }
             }
@@ -443,7 +444,7 @@ export default {
             }
         },
 
-         //upload Video (video File)
+         //upload Exercise (exercise File)
          async exerciseFileUpload({ commit, state }, value) {
             //  console.log(value.sectionIndex);
             //  console.log(value.exerciseIndex);
@@ -469,7 +470,7 @@ export default {
 
                 if (res.data.path !== undefined) {
                     // console.log(res.data.path);
-                    state.courseDraft.uploadedVideoPath = res.data.path;
+                    state.courseDraft.uploadedExercisePath = res.data.path;
                     alert("File uploaded: " + res.data.path);
                 }
             }
@@ -536,7 +537,7 @@ export default {
         //Create new Exercise
         async AddExercise({ dispatch, state }, value) {
             // console.log(value.formData);
-            console.log(state.courseDraft.uploadedExercisePath);
+            // console.log(state.courseDraft.uploadedExercisePath);
 
             try {
                 if (value.formData.exerciseName && value.formData.exerciseDescription) {
@@ -548,9 +549,9 @@ export default {
                             filePath: state.courseDraft.uploadedExercisePath
                         })
                     if (res.data.message) {
-                        alert(res.data.message)
-                        dispatch('getDraftCourse', state.courseDraft.id)
-
+                        alert(res.data.message);
+                        dispatch('getDraftCourse', state.courseDraft.id);
+                        state.courseDraft.uploadedExercisePath = '';
                     }
                 }
             } catch (err) { alert(err) }
@@ -568,12 +569,14 @@ export default {
                         title: value.formData.exerciseName,
                         description: value.formData.exerciseDescription,
                         sectionIndex: value.sectionIndex,
-                        exerciseIndex: value.exerciseIndex
+                        exerciseIndex: value.exerciseIndex,
+                        filePath: state.courseDraft.uploadedExercisePath
                     });
 
                 if (res) {
                     alert(res.data.message)
-                    dispatch('getDraftCourse', state.courseDraft.id)
+                    dispatch('getDraftCourse', state.courseDraft.id);
+                    state.courseDraft.uploadedExercisePath = '';
                 }
             }
             catch (err) {

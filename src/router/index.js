@@ -159,7 +159,7 @@ const routes = [
       try {
         const token = localStorage.getItem('token')
         const type = localStorage.getItem("role");
-        if(!token) next('/')
+        // if(!token) next('/')
         if(!type) next('/');
         if (token && type === "students") {
           next();
@@ -188,14 +188,13 @@ const routes = [
       try {
         const token = localStorage.getItem('token')
         const type = localStorage.getItem("role");
-        if(!token) next('/')
         if(!type) next('/');
-        if (token && type === "students") {
+        if (type === "students") {
           next("/sHome");
-        } else if (token && type === "instructors") {
+        } else if (type === "instructors") {
           next("/iHome");
-        } else if (!token && type === "admin") {
-          next("/adminHome");
+        } else if (type === "admin") {
+          next();
         } else {
           next('/');
         }

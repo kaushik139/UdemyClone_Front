@@ -135,6 +135,12 @@
           {{ selectedExercise.title }}</v-label
         >
       </h6>
+      <h6>
+        Exercise File:
+        <v-label v-if="selectedExercise.filePath">
+          {{ selectedExercise.filePath }}</v-label
+        >
+      </h6>
       <br />
       <h6>
         Exercise Description:
@@ -296,6 +302,7 @@ export default {
       if (this.exercisesArray[val]) {
         this.selectedExercise.title = this.exercisesArray[val].title !== undefined? this.exercisesArray[val].title: "nil";
         this.selectedExercise.description = this.exercisesArray[val].description !== undefined? this.exercisesArray[val].description: "nil";
+        this.selectedExercise.filePath = this.exercisesArray[val].filePath !== undefined? this.exercisesArray[val].filePath: "nil";
         this.selectedExerciseIndex = val;
         this.tabE = val;
       }
@@ -315,6 +322,7 @@ export default {
           if (this.sectionArray[this.selectedSectionIndex].exercises) {
             this.exercisesArray =
               this.sectionArray[this.selectedSectionIndex].exercises;
+              console.log(this.exercisesArray);
           }
                 this.showSection(s);
                 this.showExercise(e);

@@ -6,12 +6,11 @@
       <linea class="m-4" :data="dataL"></linea>
     </div>
     <v-divider></v-divider>
-    <v-table
+    <v-data-table
       v-if="typeof publishedCoursesGetter !== 'string'"
-      fixed-header
-      height="300px"
       class="ml-2"
-    >
+      :items-per-page="1"
+        >
       <thead>
         <tr>
           <th class="text-left">Index</th>
@@ -32,7 +31,7 @@
           v-for="(item, index) in publishedCoursesGetter"
           :key="index"
           :class="item.status === 'requested' ? 'hover' : ''"
-          @click="showCourse(item._id)"
+          @click="view(item._id, item.status)"
         >
           <td class="text-left">{{ index + 1 }}.</td>
           <td class="text-left">{{ toTitleCase(item.title) }}</td>
@@ -42,6 +41,7 @@
             v-if="showStatus"
             class="text-left"
             :style="statusStyle(item.status)"
+
           >
             {{ toTitleCase(item.status) }}
           </td>
@@ -54,10 +54,15 @@
           >
         </tr>
       </tbody>
-    </v-table>
+    </v-data-table>
     <div v-if="typeof publishedCoursesGetter === 'string'">
       <h4>No Data!</h4>
     </div>
+    <!-- ////////////////////VIew Course Dialog/////////////////////////// -->
+    <dialog-course
+     :data="courseData"
+        :key="courseData.dialog"></dialog-course>
+    <!-- ///////////////////////////////////////////////////////////////// -->
 
     <!-- container ending -->
   </div>
@@ -67,13 +72,15 @@
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 import AdminNav from "../adminNav.vue";
+import DialogCourse from "../dialogCourse.vue";
 import Linea from "../Graphs/Linea.vue";
 import Pie from "../Graphs/Pie.vue";
 
 // Components
-
 export default defineComponent({
-  components: { AdminNav, Pie, Linea },
+  components: { AdminNav, Pie, Linea,
+    DialogCourse,
+ },
 
   computed: {
     ...mapGetters("admin", [
@@ -157,11 +164,13 @@ export default defineComponent({
   data() {
     return {
       dialog: false,
-
+      // table: new DataTable('#myTable'),
       options: {
         responsive: true,
         // maintainAspectRatio: false,
       },
+      courseData: { dialog: false },
+
     };
   },
 
@@ -187,11 +196,20 @@ export default defineComponent({
       };
     },
 
-    showCourse(id) {
-      this.dialog = true;
+      view(id, status) {
+          if (status === 'requested') {
+            // console.log(id);
+            this.courseData = {
+            id: id,
+            dialog: true,
+        }   
+        }
     },
+
+
   },
-  mounted() {
+    mounted() {
+
     // console.log(this.overviewGetter);
   },
 });
@@ -201,5 +219,6 @@ export default defineComponent({
 .hover:hover {
   cursor: pointer;
 }
+
 </style>
   

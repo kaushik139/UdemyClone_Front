@@ -206,9 +206,9 @@
             <v-card-text class="m-0 mt-4 p-0 pl-8">
               <v-row class="mx-3 my-1">
                 <v-col class="m-0 p-0 pl-4 text-left" cols="8"
-                  >Purchased Courses :</v-col
+                  >Purchased Courses </v-col
                 >
-                <v-col class="m-0 p-0 text-left" cols="4">{{
+                <v-col class="m-0 p-0 text-left" cols="4">:{{
                   overviewGetter.pcStudents
                 }}</v-col>
               </v-row>
