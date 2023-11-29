@@ -27,7 +27,7 @@
         </v-window-item>
 
         <v-window-item value="Notes">
-          <notes-v-iew :b-Data="bData" :key="bData"></notes-v-iew>
+          <notes-view :b-Data="bData" :key="bData"></notes-view>
         </v-window-item>
 
         <v-window-item value="Ratings">
@@ -41,12 +41,12 @@
     
     <script>
 import BelowDetails from "./belowDetails.vue";
-import NotesVIew from "./notesVIew.vue";
+// import NotesView from "./notesView.vue";
 import QnAView from "./QnAView.vue";
 import RatingsView from "./ratingsView.vue";
 
 export default {
-  components: { QnAView, NotesVIew, BelowDetails, RatingsView },
+  components: { QnAView, NotesView, BelowDetails, RatingsView },
 
         name: "belowOptions",
 

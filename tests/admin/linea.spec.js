@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import HelloWorld from '@/components/HelloWorld.vue'
+import Linea from '@/components/Admin/Graphs/Linea.vue'
 
 describe('HelloWorld.vue', () => {
   it('renders props.msg when passed', () => {

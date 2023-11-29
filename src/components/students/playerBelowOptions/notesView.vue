@@ -13,12 +13,13 @@
         <v-row>
           <!-- Index -->
           <v-col cols="2" class="">
-            <h6>{{ index + 1 }}.</h6>
+            <h6 name="notes-index">{{ index + 1 }}.</h6>
           </v-col>
           <v-spacer></v-spacer>
           <!-- Controls -->
           <v-col cols="3" class="text-right">
             <v-icon
+            name="edit-icon"
               class="mx-1"
               icon="mdi-pencil-outline"
               color="purple"
@@ -26,6 +27,7 @@
             >
             </v-icon>
             <v-icon
+            name="delete-icon"
               class="mx-1"
               icon="mdi-delete-outline"
               color="red"
@@ -34,14 +36,25 @@
           </v-col>
         </v-row>
         <!-- Note Content -->
-        <p>{{ note.note }}</p>
+        <p name="notes-note">{{ note.note }}</p>
       </v-card>
     </div>
     <!-- Create NOte -->
     <v-card class="mb-4 p-3" elevation="4" style="width: 90%; margin: auto">
-      <v-textarea label="New Note" rows="2" v-model="newNote" color="purple">
+      <v-textarea
+        name="note-textarea"
+        label="New Note"
+        rows="2"
+        v-model="newNote"
+        color="purple"
+      >
       </v-textarea>
-      <v-btn append-icon="mdi-send" size="small" color="purple" @click="post"
+      <v-btn
+        name="post-btn"
+        append-icon="mdi-send"
+        size="small"
+        color="purple"
+        @click="post"
         >Create Note</v-btn
       >
     </v-card>
@@ -87,10 +100,7 @@
       <v-card>
         <v-card-text>Are You Sure?</v-card-text>
         <v-card-actions>
-          <v-btn
-            append-icon="mdi-check-circle"
-            color="red"
-            @click="removeNote"
+          <v-btn append-icon="mdi-check-circle" color="red" @click="removeNote"
             >Yes</v-btn
           >
           <v-btn
@@ -107,7 +117,6 @@
 </template>
 
 <script>
-import store from "@/store";
 import { mapGetters } from "vuex";
 
 export default {
@@ -137,8 +146,7 @@ export default {
     dialog2: false,
     editNoteText: "",
     editnoteID: "",
-    deletenoteID: '',
-
+    deletenoteID: "",
   }),
 
   methods: {
@@ -153,7 +161,7 @@ export default {
         });
       }
       await this.mount();
-      this.newNote = '';
+      this.newNote = "";
     },
 
     showEditDialog(text, noteID) {
@@ -189,7 +197,7 @@ export default {
         noteID: this.deletenoteID,
       });
       await this.mount();
-      this.dialog2 = false
+      this.dialog2 = false;
     },
 
     async mount() {
@@ -200,7 +208,7 @@ export default {
         viewType: this.viewType,
       });
       if (this["player/NotesGetter"]) {
-        console.log(this["player/NotesGetter"]);
+        // console.log(this["player/NotesGetter"]);
         this.Notes = this["player/NotesGetter"];
       }
 

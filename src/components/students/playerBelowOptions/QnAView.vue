@@ -15,6 +15,8 @@
             <v-row class="m-1">
               <v-col cols="5" class="m-0 ml-2 p-0 text-left">
                 <v-avatar
+                  name="avatar-post"
+                  data-value="avatar-post"
                   v-if="querry.querry.studentImg"
                   :image="`http://localhost:3000/Images/${querry.querry.studentImg}`"
                 ></v-avatar>
@@ -313,7 +315,6 @@ export default {
     userName: localStorage.getItem("name"),
     replyText: "",
     time: 0,
-
   }),
 
   methods: {
@@ -341,7 +342,7 @@ export default {
         });
         await this.mount();
       } else alert("Empty Field!");
-      this.querry = '';
+      this.querry = "";
     },
 
     async editPost(querryIndex, text) {
@@ -374,7 +375,7 @@ export default {
         });
       } else alert("Reply Empty!");
 
-      this.replyText = '';
+      this.replyText = "";
       this.dialogArray[querryIndex] = false;
       await this.mount();
     },
@@ -457,10 +458,19 @@ export default {
       // console.log([this.viewType]);
       // console.log(this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA);
       if (
-        this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA.length) {
-        await this.$store.dispatch("player/getQNA",this["player/getCourse"].sections[this.sectionIndex][this.viewType][this.viewIndex].QnA);
+        this["player/getCourse"].sections[this.sectionIndex][this.viewType][
+          this.viewIndex
+        ].QnA.length
+      ) {
+        await this.$store.dispatch(
+          "player/getQNA",
+          this["player/getCourse"].sections[this.sectionIndex][this.viewType][
+            this.viewIndex
+          ].QnA
+        );
 
-        if (this["player/getterQNA"]) {this.QNA = this["player/getterQNA"];
+        if (this["player/getterQNA"]) {
+          this.QNA = this["player/getterQNA"];
           // console.log(this.QNA);
 
           // console.log(this.QNA.length);
