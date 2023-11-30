@@ -7,12 +7,13 @@
         <!-- BackGround Image -->
         <div class="mb-6">
           <v-file-input
+            name="Image-File"
             label="Add a Background Image"
             v-model="selectedFile"
             accept="image/*"
           ></v-file-input>
 
-          <v-btn class="btn" @click="upload">Upload</v-btn>
+          <v-btn name="Upload-Btn" class="btn" @click="upload">Upload</v-btn>
 
           <!-- preview image -->
           <div
@@ -23,11 +24,11 @@
               margin-right: 10%;
             "
           >
-            <v-img :src="imgURL" alt="Preview Image" />
+            <v-img name="Image-Preview" :src="imgURL" alt="Preview Image" />
           </div>
 
           <div v-if="isSelectedFile" class="mt-2">
-            <p>Selected File: {{ selectedFile[0].name }}</p>
+            <p name="Image-File-Name">Selected File: {{ selectedFile[0].name }}</p>
           </div>
           <div v-if="!isSelectedFile" class="mt-2">
             <p>No File Selected</p>
@@ -35,13 +36,13 @@
         </div>
 
         <!-- Full Description -->
-        <v-textarea label="Enter Full Description" v-model="fullDesc">
+        <v-textarea name="Full-Description" label="Enter Full Description" v-model="fullDesc">
         </v-textarea>
 
         <!-- Intended Audience -->
         <!-- <v-select :items="items" label="Intended Audience" v-model="planData.category"></v-select> -->
 
-        <v-btn class="btn" @click="submit">Submit</v-btn>
+        <v-btn name="Submit-Btn" class="btn" @click="submit">Submit</v-btn>
       </v-col>
     </v-row>
   </v-container>

@@ -2,17 +2,18 @@
   <div class="contain">
     <!-- Overview -->
     <v-card
-    class="d-flex flex-column mx-auto py-8 my-4"
-    elevation="10"
-    height="500"
-    width="500"
-    style="width: 80%"
+      class="d-flex flex-column mx-auto py-8 my-4"
+      elevation="10"
+      height="500"
+      width="500"
+      style="width: 80%"
     >
-    
-      <div class="d-flex justify-center mt-auto text-h5">Rating overview {{ counts }}</div>
+      <div name="overview" class="d-flex justify-center mt-auto text-h5">
+        Rating overview {{ counts }}
+      </div>
 
       <div class="d-flex align-center flex-column my-auto">
-        <div class="text-h2 mt-5">
+        <div name="net-Rating" class="text-h2 mt-5">
           {{ $store.state.player.Rating.netRated }}
           <span class="text-h6 ml-n3">/5</span>
         </div>
@@ -23,7 +24,9 @@
           readonly
           half-increments
         ></v-rating>
-        <div class="px-3">Rated by {{ RatingsGetter.totalRatings }} users</div>
+        <div name="total-ratings" class="px-3">
+          Rated by {{ RatingsGetter.totalRatings }} users
+        </div>
       </div>
 
       <v-list
@@ -54,7 +57,9 @@
 
           <template v-slot:append>
             <div class="rating-values">
-              <span class="d-flex justify-end"> {{ rating }} </span>
+              <span data-value="rating-span" class="d-flex justify-end">
+                {{ rating }}
+              </span>
             </div>
           </template>
         </v-list-item>
@@ -73,7 +78,7 @@
         density="comfortable"
       >
       </v-rating>
-      
+
       <v-textarea
         v-model="userRatingText"
         placeholder="Feedback"
@@ -138,10 +143,7 @@ export default {
 
     async mount() {
       await this.$store.dispatch("player/getRating", this.id);
-      console.log(this.RatingsGetter);
       this.userRating = parseInt(this.$store.state.player.Rating.netRated);
-      
-      console.log(this.userRating);
       this.userRatingText = this.RatingsGetter.UserRating.text;
     },
   },

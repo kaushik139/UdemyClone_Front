@@ -19,7 +19,8 @@
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
-          <v-list-item
+          <v-list-item 
+            name="home-btn"
             prepend-icon="mdi-home"
             title="Home"
             value="home"
@@ -40,7 +41,7 @@
       >
         <v-card class="m-4 p-5">
           <v-btn @click="newCourse">Create New Course</v-btn>
-        <v-btn v-show="course" @click="this.$router.push('/create'); this.dialog = false">Continue editing "{{ course }}"</v-btn>
+        <v-btn name="create-btn" v-show="course" @click="this.$router.push('/create'); this.dialog = false">Continue editing "{{ course }}"</v-btn>
         </v-card>
       </v-dialog>
 

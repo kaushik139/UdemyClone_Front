@@ -13,7 +13,7 @@
           <v-card elevation="3" class="m-2">
             <!-- profile Image -->
             <v-row class="m-1">
-              <v-col cols="5" class="m-0 ml-2 p-0 text-left">
+              <v-col name="post-creater-name" cols="5" class="m-0 ml-2 p-0 text-left">
                 <v-avatar
                   name="avatar-post"
                   data-value="avatar-post"
@@ -21,6 +21,7 @@
                   :image="`http://localhost:3000/Images/${querry.querry.studentImg}`"
                 ></v-avatar>
                 <v-avatar
+                  name="no-avatar-post"
                   v-else
                   :image="require('@/assets/account.svg')"
                 ></v-avatar>
@@ -28,7 +29,7 @@
               </v-col>
               <!-- Reply Button -->
               <v-col cols="6" class="text-purple" align="right">
-                <span>
+                <span name="reply-btn">
                   Reply
 
                   <!-- Reply Dialog -->
@@ -40,10 +41,10 @@
                   >
                     <v-card>
                       <v-card-text>
-                        <span style="color: purple; font-size: 12px"
+                        <span name="reply-dialog-text" style="color: purple; font-size: 12px"
                           >Reply as {{ toTitleCase(userName) }},</span
                         >
-                        <v-textarea rows="3" v-model="replyText"></v-textarea>
+                        <v-textarea name="reply-text" rows="3" v-model="replyText"></v-textarea>
                       </v-card-text>
                       <v-card-actions>
                         <v-btn
@@ -62,8 +63,8 @@
                     </v-card>
                   </v-dialog>
                 </span>
-
-                <span v-if="showDeleteButton(index)" class="mx-2" color="danger"
+                <!-- delete button, and dialog -->
+                <span name="delete-btn" v-if="showDeleteButton(index)" class="mx-2" color="danger"
                   >Delete
                   <!-- delete dialog -->
                   <v-dialog
@@ -92,8 +93,8 @@
                   </v-dialog>
                 </span>
 
-                <!-- Edit Post -->
-                <span v-if="showDeleteButton(index)" class="mx-0" color="red"
+                <!-- edit button, and dialog -->
+                <span name="edit-btn" v-if="showDeleteButton(index)" class="mx-0" color="red"
                   >Edit
                   <!-- delete dialog -->
                   <v-dialog
@@ -133,7 +134,7 @@
             </v-row>
             <!-- <v-divider class="m-0"></v-divider> -->
             <!-- Question -->
-            <v-col
+            <v-col name="querry-text"
               class="p-2 text-center"
               style="
                 color: rgb(99, 98, 98);
@@ -158,7 +159,7 @@
               >
                 <!-- {{reply}}   -->
                 <v-col cols="3" class="m-0 ml-2 py-0 text-left">
-                  <v-avatar
+                  <v-avatar name="reply-avatar"
                     v-if="reply.profileImage"
                     :image="`http://localhost:3000/Images/${reply.profileImage}`"
                     size="x-small"
