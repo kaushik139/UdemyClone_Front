@@ -4,10 +4,11 @@
       <v-col cols="12">
         <!-- Base Price -> to Instructor -->
         <v-row>
-          <v-col class="mt-4" cols="4"><h5>Enter a Basic Amount:</h5></v-col>
+          <v-col name="col-1" class="mt-4" cols="4"><h5>Enter a Basic Amount:</h5></v-col>
           <v-col cols="8">
             <div class="row">
               <v-text-field
+              name="basePrice"
                 prepend-icon="mdi-currency-inr"
                 label="Enter a Price"
                 v-model="basePrice"
@@ -21,6 +22,7 @@
           <!-- slider -->
           <v-row class="justify-content-center" style="max-width: 80%">
             <v-slider
+            name="base-price-slider"
               v-model="basePrice"
               step="1"
               color="rgb(131,0,0)"

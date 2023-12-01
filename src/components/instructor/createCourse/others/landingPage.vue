@@ -31,7 +31,7 @@
             <p name="Image-File-Name">Selected File: {{ selectedFile[0].name }}</p>
           </div>
           <div v-if="!isSelectedFile" class="mt-2">
-            <p>No File Selected</p>
+            <p name="No-Image-File-Name">No File Selected</p>
           </div>
         </div>
 
@@ -68,10 +68,10 @@ export default {
   }),
 
   methods: {
-    upload() {
+    async upload() {
       if (this.selectedFile.length !== 0) {
         // console.log(this.selectedFile[0]);
-        this.$store.dispatch("instructor/bgImageUpload", this.selectedFile[0]);
+        await this.$store.dispatch("instructor/bgImageUpload", this.selectedFile[0]);
       } else alert("No Image Selected!");
          this.getPreview();
     },
@@ -82,12 +82,12 @@ export default {
       } else alert("Please fill form Completely!");
     },
 
-    getPreview() {
-      setTimeout(() => {
-         const res = `http://localhost:3000/Images/${this.$store.getters['instructor/courseDraftGetter'].image.bgImage}`;
+    async getPreview() {
+        const path = await this.$store.getters['instructor/courseDraftGetter'].image.bgImage;
+         const res = `http://localhost:3000/Images/${path}`;
+        //  const res = `http://localhost:3000/Images/${this.$store.getters['instructor/courseDraftGetter'].image.bgImage}`;
         // console.log(this.$store.getters['instructor/courseDraftGetter'].image.bgImage);
         this.imgURL = res;
-      },100)
     },
   },
 

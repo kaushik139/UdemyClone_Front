@@ -1,6 +1,10 @@
 <template>
-  <form @submit.prevent="submit">
-    <v-text-field label="Course Name" v-model="planData.name"></v-text-field>
+  <form @submit.prevent="su">
+    <v-text-field
+      label="Course Name"
+      data-value="lol"
+      v-model="planData.name"
+    ></v-text-field>
 
     <v-textarea
       label="Mini Description"
@@ -13,7 +17,9 @@
       v-model="planData.category"
     ></v-select>
 
-    <v-btn class="me-4 btn" type="submit"> submit </v-btn>
+    <v-btn name="submit-button" class="me-4 btn" @click="submit">
+      submit
+    </v-btn>
 
     <v-btn class="btn" @click="handleReset"> clear </v-btn>
   </form>
@@ -21,12 +27,12 @@
 
 
   <script >
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   name: "PlanCourse",
 
-   computed: {
- ...mapGetters(['instructor/courseDraftGetter'])
+  computed: {
+    ...mapGetters(["instructor/courseDraftGetter"]),
   },
 
   data: () => ({
@@ -41,23 +47,23 @@ export default {
 
   methods: {
     async submit() {
-      console.log('//');
       if (
         this.planData.name !== "" &&
         this.planData.miniDesc !== "" &&
         this.planData.category !== ""
       ) {
-
-        this.planData.email = localStorage.getItem('email');
+        this.planData.email = localStorage.getItem("email");
         console.log(this.planData);
-        console.log(';;');
+        console.log(";;");
 
-        await this.$store.dispatch("instructor/planCourseAction", this.planData);
+        await this.$store.dispatch(
+          "instructor/planCourseAction",
+          this.planData
+        );
 
         // alert("Course Planning Completed!");
         // this.$emit("changeComp", "LandingPage");
-      }
-        else alert("Please Fill the Form Completely!");
+      } else alert("Please Fill the Form Completely!");
     },
     handleReset() {
       this.planData.name = "";
@@ -65,25 +71,24 @@ export default {
       this.planData.category = "";
     },
 
-    mount(){
+    mount() {
       setTimeout(() => {
-          if (this['instructor/courseDraftGetter']) {
+        if (this["instructor/courseDraftGetter"]) {
           // console.log(this['instructor/courseDraftGetter']);
           // console.log(this['instructor/courseDraftGetter'].title);
-              this.planData.name = this['instructor/courseDraftGetter'].title;
-              this.planData.miniDesc = this['instructor/courseDraftGetter'].miniDescription;
-              this.planData.category = this['instructor/courseDraftGetter'].category;
-
-      }
-        },100)
-    }
-
+          this.planData.name = this["instructor/courseDraftGetter"].title;
+          this.planData.miniDesc =
+            this["instructor/courseDraftGetter"].miniDescription;
+          this.planData.category =
+            this["instructor/courseDraftGetter"].category;
+        }
+      }, 100);
+    },
   },
 
-    mounted() {
-        this.mount()
-  }
-
+  mounted() {
+    this.mount();
+  },
 };
 </script>
 
