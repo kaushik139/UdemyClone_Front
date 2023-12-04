@@ -65,10 +65,10 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          <router-link to="/auth/s">Sign up now</router-link>
+          <router-link name="signUp-button" to="/auth/s">Sign up now</router-link>
           <v-icon icon="mdi-chevron-right"></v-icon>
         </a>
-        <br>
+        <br />
         <span class="errMsg" v-show="errMessageVisible">{{ errMessage }}</span>
       </v-card-text>
     </v-card>
@@ -78,7 +78,7 @@
 
   <script>
 import { mapGetters } from "vuex";
-import chalk from "chalk";
+// import chalk from "chalk";
 
 export default {
   computed: {
@@ -93,78 +93,57 @@ export default {
     symbol() {
       return this.getUser === "instructors" ? "rgb(131, 0, 0)" : "purple";
       // return localStorage.getItem('role') === "instructors" ? "rgb(131, 0, 0)" : "purple";
-          },
-          userInitial() {
-        return this.getUser[0]
     },
-    ...mapGetters(["getUser", 'auth/loginErrorGetter', 'auth/routePathGetter']),
+    userInitial() {
+      return this.getUser[0];
+    },
+    ...mapGetters(["getUser", "auth/loginErrorGetter", "auth/routePathGetter"]),
   },
   data: () => ({
-        visible: false,
-        email: '',
-        password: '',
-        errMessage: '',
-      errMessageVisible: false,
-      adminData: {
-          email: 'admin@a.com',
-          password: 'qqqqq111'
-        }
+    visible: false,
+    email: "",
+    password: "",
+    errMessage: "",
+    errMessageVisible: false,
+    adminData: {
+      email: "admin@a.com",
+      password: "qqqqq111",
+    },
   }),
 
   methods: {
     async login() {
-            // console.log(chalk.red("login triggered:->"));
-        if (this.email && this.password) {
-            if (this.email === this.adminData.email && this.password === this.adminData.password) {
-              localStorage.setItem('role', 'admin');
-              this.$router.push('adminHome');
-          }
-              else {
-                const info = {
+      // console.log(chalk.red("login triggered:->"));
+      if (this.email && this.password) {
+        if (
+          this.email === this.adminData.email &&
+          this.password === this.adminData.password
+        ) {
+          localStorage.setItem("role", "admin");
+          this.$router.push("adminHome");
+        } else {
+          const info = {
             email: this.email,
-            password: this.password
-          }
-          await this.$store.dispatch('auth/login', { value: info });
+            password: this.password,
+          };
+          await this.$store.dispatch("auth/login", { value: info });
           this.showError(this["auth/loginErrorGetter"]);
 
           if (this["auth/routePathGetter"] !== null) {
-                console.log("from .vue::::: " + this['auth/routePathGetter']);
-              this.$router.push(`/${this["auth/routePathGetter"]}`);
-            }
+            console.log("from .vue::::: " + this["auth/routePathGetter"]);
+            this.$router.push(`/${this["auth/routePathGetter"]}`);
+          }
+        }
+      } else this.showError("All fields required!");
+    },
 
-
-           
-                // try {
-                //     const response = await axios.post(
-                //         `http://localhost:3000/${this.getUser}/login`,
-                //         {
-                //             email: this.email,
-                //             password: this.password,
-                //         }
-                //     )
-                //     if (response.data.token) {
-                //         localStorage.setItem('token', response.data.token);
-                //         localStorage.setItem('email', this.email);
-                //         this.$router.push(`/${this.userInitial}home`);
-                //     }
-                // }
-                // catch (error) {
-                //     this.showError(error.response.data.message);
-                //     console.log(chalk.red(error.response.data.message));
-            // }
-      
-            }
-            }
-            else this.showError('All fields required!');
-        },
-
-      showError(val) {
-            this.errMessage = val;
-          this.errMessageVisible = true;
-              setTimeout(() => {
-                  this.errMessageVisible = false;
-              }, 2500);
-    }
+    showError(val) {
+      this.errMessage = val;
+      this.errMessageVisible = true;
+      setTimeout(() => {
+        this.errMessageVisible = false;
+      }, 2500);
+    },
   },
 };
 </script>
@@ -201,12 +180,12 @@ export default {
   background: rgb(131, 0, 0);
 }
 
-.errMsg{
-    color: red;
-    font-size: 15px;
+.errMsg {
+  color: red;
+  font-size: 15px;
 }
 
-.container1{
+.container1 {
   margin-bottom: 70px;
 }
 </style>

@@ -50,7 +50,6 @@
         ></v-list-item>
       </v-list>
 
-      <!-- <button class="btn btn-primary" @click="test">Test</button> -->
     </v-card>
   </v-card>
 </template>
@@ -71,10 +70,6 @@ export default {
   methods: {
     currentComponent(val) {
       this.$store.commit("instructor/changeCurrentComp", val);
-    },
-    test() {
-      this.activeTab = "landingPage";
-      console.log("test");
     },
   },
 };

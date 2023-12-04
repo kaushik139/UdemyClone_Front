@@ -10,7 +10,7 @@
           show-arrows="hover"
           class="m-0"
         >
-          <v-carousel-item v-for="(slide, i) in slides" :key="i" class="m-0">
+          <v-carousel-item name="carousel-items" v-for="(slide, i) in slides" :key="i" class="m-0">
             <v-sheet height="100%" class="m-0">
               <!-- :color="colors[i]" -->
               <div class="d-flex fill-height justify-center align-center m-0 ">
@@ -65,6 +65,7 @@
          v-if="!isLogged"
          style="position: absolute; top: 50%; left: 45%">
                     <v-btn
+                    name="getStarted-Button"
                       class="text-white mt-5"
                       size="large"
                       style="background-color: purple"
@@ -76,12 +77,6 @@
                       <v-dialog v-model="dialog" activator="parent" width="500" height="400">
                           
                           <log-in></log-in>
-  
-                          <v-card-actions>
-                            <!-- <v-btn color="primary" block @click="dialog = false"
-                              >Close Dialog</v-btn -->
-                            
-                          </v-card-actions>
                       </v-dialog>
                     </v-btn>
                   </div>
@@ -137,13 +132,6 @@ import { mapGetters } from "vuex";
           },
         ],
       };
-    },
-  
-    methods: {
-    //   async start() {
-    //     this.$store.state.User = "students";
-    //     this.$router.push("/auth/l");
-    //   },
     },
   });
   </script>

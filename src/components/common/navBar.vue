@@ -153,12 +153,6 @@ export default {
       // this.$router.push('/s')
     },
     logoClick() {
-      // this.$router.push("/auth/l");
-      console.log(this.isLogged);
-      // console.log(this.getUser);
-      // this.$router.push('/sHome')
-      // this.$router.push("/auth/l");
-
       this.isLogged === true
         ? this.getUser === "students"
           ? this.$router.push("/sHome")
@@ -183,20 +177,14 @@ export default {
       this.$router.push('/')
     },
 
-    test() {
-      console.log(this["auth/tokenGetter"]);
-    },
-
     async mount() {
-      // console.log(';;');
       await this.$store.dispatch("auth/refreshUserAction", {
         email: localStorage.getItem("email"),
         role: localStorage.getItem("role"),
       });
 
       if (localStorage.getItem("email")) this.isLogged = true;
-        if (this["auth/userDataGetter"].user !== undefined) {
-          // console.log(this["auth/userDataGetter"].user);
+        if (this["auth/userDataGetter"] !== undefined) {
         this.userDetails = this["auth/userDataGetter"].user;
           this.editName = this["auth/userDataGetter"].user.name;
       }

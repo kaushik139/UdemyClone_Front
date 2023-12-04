@@ -21,7 +21,7 @@
       submit
     </v-btn>
 
-    <v-btn class="btn" @click="handleReset"> clear </v-btn>
+    <v-btn name="clear" class="btn" @click="handleReset"> clear</v-btn>
   </form>
 </template>
 
@@ -66,13 +66,19 @@ export default {
       } else alert("Please Fill the Form Completely!");
     },
     handleReset() {
+      // console.log(';;');
       this.planData.name = "";
       this.planData.miniDesc = "";
       this.planData.category = "";
     },
 
     mount() {
-      setTimeout(() => {
+    
+    },
+  },
+
+ async mounted() {
+    if(localStorage.getItem("courseDraft")) await this.$store.dispatch("instructor/getDraftCourse",localStorage.getItem("courseDraft"));
         if (this["instructor/courseDraftGetter"]) {
           // console.log(this['instructor/courseDraftGetter']);
           // console.log(this['instructor/courseDraftGetter'].title);
@@ -82,13 +88,7 @@ export default {
           this.planData.category =
             this["instructor/courseDraftGetter"].category;
         }
-      }, 100);
     },
-  },
-
-  mounted() {
-    this.mount();
-  },
 };
 </script>
 

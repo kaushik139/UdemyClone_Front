@@ -202,11 +202,13 @@ export default {
       if (this.basePrice > 1000) {
         this.basePrice = 1000;
       }
-      if (this.baseSavedValue === true) {
+        if (typeof(this['instructor/courseDraftGetter']) === Object) {
+          if (this.baseSavedValue === true) {
         this.discountAmount =
           this["instructor/courseDraftGetter"].pricing.discountAmount;
         this.baseSavedValue = false;
       } else this.discountAmount = 0;
+     }
     },
   },
 

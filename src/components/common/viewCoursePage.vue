@@ -202,7 +202,7 @@
       
   
   <script>
-import axios from "axios";
+// import axios from "axios";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 export default defineComponent({

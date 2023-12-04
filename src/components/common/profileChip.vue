@@ -189,7 +189,7 @@ export default {
       });
 
       if (localStorage.getItem("email")) this.isLogged = true;
-      if (this["auth/userDataGetter"].user) {
+      if (this["auth/userDataGetter"]) {
         // console.log(this["auth/userDataGetter"].user.profileImage);
         this.userDetails = this["auth/userDataGetter"].user;
         this.editName = this["auth/userDataGetter"].user.name;

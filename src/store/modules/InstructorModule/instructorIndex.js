@@ -132,7 +132,7 @@ export default {
                 try {
                     const res = await axios.get(`http://localhost:3000/courses/${value}`)
 
-                    if (res) {
+                    if (res.data) {
                         // console.log(res.data.item.title);
                         // console.log(res.data.item.price.basePrice);
                         // console.log(state.courseDraft.pricing);
