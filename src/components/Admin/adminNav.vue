@@ -44,14 +44,7 @@ import { mapGetters } from "vuex";
         },
         
     data() {
-          return {
-            items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
-          }
+          return {}
     },
   
         methods: {

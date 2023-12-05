@@ -78,16 +78,10 @@ import Pie from "../Graphs/Pie.vue";
 
 // Components
 export default defineComponent({
-  components: { AdminNav, Pie, Linea,
-    DialogCourse,
- },
+  components: { AdminNav, Pie, Linea, DialogCourse },
 
   computed: {
-    ...mapGetters("admin", [
-      "publishedCoursesGetter",
-      "navTitleGetter",
-      "overviewGetter",
-    ]),
+    ...mapGetters("admin", [ "publishedCoursesGetter", "navTitleGetter", "overviewGetter", ]),
 
     showStatus() {
       return this.navTitleGetter === "View Unpublished Courses"

@@ -147,12 +147,6 @@ export default {
       }
     },
 
-    async test() {
-    // console.log("HERE")
-    //   await this.$router.push("/auth/l");
-
-    },
-
     clearForm() {
       (this.name = ""), (this.email = ""), (this.password = "");
     },

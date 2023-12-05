@@ -10,6 +10,7 @@
         <!-- background-color: rgb(131, 0, 0); -->
 
         <v-btn
+          name="close"
           variant="text"
           @click="data.dialog = false"
           class="badge mt-4 mr-4"
@@ -21,8 +22,7 @@
           :style="{
             backgroundColor: bgColor,
           }"
-                    append-icon="mdi-close-circle-outline"
-        >
+                    append-icon="mdi-close-circle-outline"  >
           Close
         </v-btn>
 
@@ -33,12 +33,13 @@
             <v-card elevation="4" height="100%" width="100%" rounded="4">
               <v-row style="height: 70%; width: 95%; margin: auto">
                 <img
+                name="image"
                   :src="data.ImgURL"
                   alt="Course Image"
                   style="height: 100%; width: 100%; border-radius: 20px"
                 />
               </v-row>
-              <v-row class="mt-12" style="margin: auto; width: 95%; line-break: anywhere;">
+              <v-row name="fullDescription" class="mt-12" style="margin: auto; width: 95%; line-break: anywhere;">
                 {{ data.Course.description.fullDescription }}
               </v-row>
             </v-card>
@@ -174,13 +175,13 @@
                 <v-icon class="mdi-currency-inr mdi mb-1">{{
                   mdiCurrencyInr
                 }}</v-icon>
-                <h6 style="display: inline">{{ data.Revenue }}</h6>
+                <h6 name="revenue" style="display: inline">{{ data.Revenue }}</h6>
               </v-col>
             </v-row>
 
             <!-- row11-->
             <v-row v-if="showPurchaseBtn" class="m-0 ml-12">
-              <v-btn color="purple" @click="purchase(data.Course._id)"
+              <v-btn name="purchase-button" color="purple" @click="purchase(data.Course._id)"
                 >Purchase Now!</v-btn
               >
               <!-- {{ data.Course.stripePriceID }} -->
@@ -188,7 +189,7 @@
 
             <!-- row12-->
             <v-row v-if="showLearnBtn" class="m-0 mt-4 ml-12">
-              <v-btn color="purple" @click="learn(data.Course._id)"
+              <v-btn name="learn" color="purple" @click="learn(data.Course._id)"
                 >Learn Now</v-btn
               >
             </v-row>
@@ -286,7 +287,7 @@ export default defineComponent({
   mounted() {
     // this.data.dialog = true;
     // console.log(this.data);
-    if (this.data.action === "search") {
+    if (this.data?.action === "search") {
     } else {
       if (localStorage.getItem("roles") === "students") {
         this["student/getSelectedCourse"];
@@ -298,23 +299,4 @@ export default defineComponent({
   },
 });
 </script>
-  
-  <style scoped>
-.contain {
-  text-align: center;
-  margin-top: -20px;
-}
-
-.navi {
-  margin-left: 2%;
-  width: 96%;
-  margin-top: 20px;
-  background: rgb(175, 9, 175)
-}
-
-.dialog-bottom-transition-enter-active,
-.dialog-bottom-transition-leave-active {
-  transition: transform 0.2s ease-in-out;
-}
-</style>
   

@@ -51,7 +51,7 @@
                 <h4>Title:</h4>
               </v-col>
               <v-col cols="8" class="m-0 ml-0">
-                <h4>{{ toTitleCase(CourseGetter.title) }}</h4>
+                <h4>{{ toTitleCase(title) }}</h4>
               </v-col>
             </v-row>
 
@@ -113,7 +113,7 @@
                 <h6 class="m-0 p-0">Status:</h6>
               </v-col>
               <v-col cols="7" class="m-0 ml-0">
-                <h6 class="m-0 p-0">{{ toTitleCase(CourseGetter.status) }}</h6>
+                <h6 class="m-0 p-0">{{ toTitleCase(status) }}</h6>
               </v-col>
             </v-row>
 
@@ -199,7 +199,6 @@
             
         
         <script>
-import axios from "axios";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
 export default defineComponent({
@@ -212,29 +211,34 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("admin", ["CourseGetter", "getInstructor"]),
-
+            title() {
+              if (this.CourseGetter && this.CourseGetter.title) return this.CourseGetter.title;
+    },
+    status() {
+              if (this.CourseGetter && this.CourseGetter.status) return this.CourseGetter.status;
+    },
     imgURl() {
-      if (this.CourseGetter.images)
+      if (this.CourseGetter && this.CourseGetter.images && this.CourseGetter.images.bgImage)
         return `http://localhost:3000/Images/${this.CourseGetter.images.bgImage}`;
     },
     description() {
-      if (this.CourseGetter.description)
+      if (this.CourseGetter && this.CourseGetter.description && this.CourseGetter.description.miniDescription)
         return this.CourseGetter.description.miniDescription;
       else return "";
     },
     category() {
-      if (this.CourseGetter.category) return this.CourseGetter.category;
+      if (this.CourseGetter && this.CourseGetter.category) return this.CourseGetter.category;
       else return "";
     },
     numSections() {
-      if (this.CourseGetter.Sections) {
+      if (this.CourseGetter && this.CourseGetter.Sections) {
         // console.log(this.CourseGetter.sections.length);
         return this.CourseGetter.sections.length;
       } else return 0;
     },
     numVideos() {
       const videos = 0;
-      if (this.CourseGetter.Sections) {
+      if (this.CourseGetter && this.CourseGetter.Sections) {
         for (let i = 0; i < this.CourseGetter.Sections.length; i++) {
           videos += this.CourseGetter.Sections[i].videos.length;
         }

@@ -184,7 +184,7 @@ export default {
       });
 
       if (localStorage.getItem("email")) this.isLogged = true;
-        if (this["auth/userDataGetter"] !== undefined) {
+        if (this["auth/userDataGetter"].user !== undefined) {
         this.userDetails = this["auth/userDataGetter"].user;
           this.editName = this["auth/userDataGetter"].user.name;
       }

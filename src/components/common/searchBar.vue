@@ -146,7 +146,6 @@ export default {
 
   },
 
-  mounted() {},
 };
 </script>
 

@@ -8,7 +8,7 @@
       transition="scale-transition"
     >
       <template v-slot:activator="{ props }">
-        <v-chip pill v-bind="props" link>
+        <v-chip name="chip" pill v-bind="props" link>
           <v-avatar start>
             <v-img
               v-if="userDetails.profileImage"
@@ -34,9 +34,9 @@
             ></v-avatar>
           </template>
 
-          <v-list-item-title>{{ userDetails.name }}</v-list-item-title>
+          <v-list-item-title name="user-name">{{ userDetails.name }}</v-list-item-title>
 
-          <v-list-item-subtitle>{{ userDetails.email }}</v-list-item-subtitle>
+          <v-list-item-subtitle name="user-email">{{ userDetails.email }}</v-list-item-subtitle>
 
           <template v-slot:append>
             <v-btn icon variant="text" @click="menu = false">
@@ -107,16 +107,17 @@
             style="text-align: center; width: 40%"
           >
             <v-card class="p-4 rounded-2">
-              <h5>Are you sure you want to <span class="text-red">Logout?</span></h5>
+              <h5 name="logout-text">Are you sure you want to <span name="logout-span" class="text-red">Logout?</span></h5>
               <!-- dialog butons -->
               <v-card-actions>
                 <v-col cols="6">
-                  <v-btn elevation="2" color="red-darken-2" variant="text" @click="logout" append-icon="mdi-logout">
+                  <v-btn name="logout-yes" elevation="2" color="red-darken-2" variant="text" @click="logout" append-icon="mdi-logout">
                     Yes
                   </v-btn>
                 </v-col>
                 <v-col cols="6">
                   <v-btn
+                  name="logout-no"
                   elevation="2"
                     color="green-darken-2"
                     variant="text"
@@ -177,10 +178,6 @@ export default {
       this.$router.push("/");
     },
 
-    test() {
-      console.log(this["auth/tokenGetter"]);
-    },
-
     async mount() {
       // console.log(';;');
       await this.$store.dispatch("auth/refreshUserAction", {
@@ -189,15 +186,18 @@ export default {
       });
 
       if (localStorage.getItem("email")) this.isLogged = true;
-      if (this["auth/userDataGetter"]) {
+      if(this["auth/userDataGetter"]) {
+        if (this["auth/userDataGetter"].user) {
         // console.log(this["auth/userDataGetter"].user.profileImage);
         this.userDetails = this["auth/userDataGetter"].user;
         this.editName = this["auth/userDataGetter"].user.name;
+      }
       }
     },
   },
 
   async mounted() {
+    // console.log('mm');
     await this.mount();
   },
 };
